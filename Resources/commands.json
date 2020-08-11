@@ -1,0 +1,204 @@
+{
+    "Moderation":{
+        "kick":{
+            "name":"kick",
+            "description":"Kick a user",
+            "usage":"[prefix]kick [user]",
+            "permissions":"Kick members",
+            "aliases":["kick"]
+        },
+        "ban":{
+            "name":"ban",
+            "description":"Ban a user",
+            "usage":"[prefix]ban [user]",
+            "permissions":"Ban members",
+            "aliases":["ban"]
+        },
+        "warn":{
+            "name":"warn",
+            "description":"Warn/strike a user",
+            "usage":"[prefix]warn [user] *[reason]",
+            "permissions":"Manage messages",
+            "aliases":["warn"]
+        },
+        "warns":{
+            "name":"warns",
+            "description":"Get warns for a user or server",
+            "usage":"[prefix]warns *[user]",
+            "permissions":"none",
+            "aliases":["warns"]
+        },
+        "delwarn":{
+            "name":"delwarn",
+            "description":"Delete warns for a user or server",
+            "usage":"[prefix]delwarn [id/all] *[user]",
+            "permissions":"Manage messages",
+            "aliases":["delwarn"]
+        },
+        "purge":{
+            "name":"purge",
+            "description":"Purge a certain amount of messages",
+            "usage":"[prefix]purge [amount]",
+            "permissions":"Manage messages",
+            "aliases":["nuke", "purge", "massdelete"]
+        },
+        "disable":{
+            "name":"disable",
+            "description":"Disable a channel from the bot working in",
+            "usage":"[prefix]disable [channel]",
+            "permissions":"Manage channels",
+            "aliases":["block", "disable"]
+        },
+        "enable":{
+            "name":"enable",
+            "description":"Enable a disabled channel",
+            "usage":"[prefix]enable [channel]",
+            "permissions":"Manage channels",
+            "aliases":["unblock", "enable"]
+        },
+        "prefix":{
+            "name":"prefix",
+            "description":"See and set server prefix",
+            "usage":"[prefix]prefix *[prefix to set]",
+            "permissions":"Manage server",
+            "aliases":["prefix", "setprefix", "serverprefix"]
+        }
+    },
+    "Economy": {
+        "work": {
+            "name":"work",
+            "description":"Work and get money",
+            "usage":"[prefix]work",
+            "permissions":"none",
+            "aliases":["work"]
+        },
+        "balance": {
+            "name":"balance",
+            "description":"Get a user's (or your own) balance",
+            "usage":"[prefix]balance *[user]",
+            "permissions":"none",
+            "aliases":["balance", "bal"]
+        },
+        "leaderboard": {
+            "name":"leaderboard",
+            "description":"Get the server's economy leaderboard!",
+            "usage":"[prefix]leaderboard",
+            "permissions":"none",
+            "aliases":["lb", "leaders", "leaderboard"]
+        },
+        "workreplies": {
+            "name":"workreplies",
+            "description":"Get all work replies for the server",
+            "usage":"[prefix]workreplies",
+            "permissions":"none",
+            "aliases":["workreplies", "wps"]
+        },
+        "addreply": {
+            "name":"addreply",
+            "description":"Add a work reply to the server",
+            "usage":"[prefix]addreply [reply message ({amount} = amount, {balance}=balance)]",
+            "permissions":"Manage server",
+            "aliases":["addreply"]
+        },
+        "removereply": {
+            "name":"removereply",
+            "description":"Remove a reply",
+            "usage":"[prefix]removereply [id/all]",
+            "permissions":"Manage server",
+            "aliases":["removereply", "deletereply", "delreply"]
+        },
+        "addmoney": {
+            "name":"addmoney",
+            "description":"Add money to a user for the server!",
+            "usage":"[prefix]addmoney [user] [amount]",
+            "permissions":"Manage server",
+            "aliases":["addmoney"]
+        },
+        "removemoney": {
+            "name":"removemoney",
+            "description":"Remove money to a user for the server!",
+            "usage":"[prefix]removemoney [user] [amount]",
+            "permissions":"Manage server",
+            "aliases":["removemoney"]
+        },
+        "sharereplies": {
+            "name":"sharereplies",
+            "description":"Share work replies with a ShareID",
+            "usage":"[prefix]sharereplies",
+            "permissions":"Manage server",
+            "aliases":["sharereplies", "shareid"]
+        },
+        "loadreplies": {
+            "name":"loadreplies",
+            "description":"Load replies from another server with a ShareID",
+            "usage":"[prefix]loadreplies",
+            "permissions":"Manage server",
+            "aliases":["loadreplies"]
+        },
+        "currency": {
+            "name":"currency",
+            "description":"Get or set server currency (can be emoji or text)",
+            "usage":"[prefix]currency *[currency to set]",
+            "permissions":"Manage server",
+            "aliases":["currency", "emoji", "setemoji", "serveremoji", "setcurrency"]
+        }
+    },
+    "Fun": {
+        "dog":{
+            "name":"dog",
+            "description":"Get a random dog picture",
+            "usage":"[prefix]dog",
+            "permissions":"none",
+            "aliases":["dog"]
+        },
+        "meme":{
+            "name":"meme",
+            "description":"Get a random meme from reddit",
+            "usage":"[prefix]meme",
+            "permissions":"none",
+            "aliases":["meme", "randomreddit", "randommeme"]
+        }
+    },
+    "Misc":{
+        "math": {
+            "name":"math",
+            "description":"Calculate a math equasion",
+            "usage":"[prefix]math [calculation]",
+            "permissions":"none",
+            "aliases":["math"]
+        },
+        "botinfo": {
+            "name":"botinfo",
+            "description":"Get info on the bot",
+            "usage":"[prefix]botinfo",
+            "permissions":"none",
+            "aliases":["botinfo"]
+        },
+        "help": {
+            "name":"help",
+            "description":"Get all bot commands",
+            "usage":"[prefix]help",
+            "permissions":"none",
+            "aliases":["help", "commands", "cmds"]
+        }
+    },
+    "pages":{
+        "intro":0, 
+        "info":0, 
+        "information":0, 
+        "introduction":0, 
+        "0":0,
+        "moderation":1,
+        "mod":1,
+        "1":1,
+        "2":2,
+        "economy":2,
+        "money":2,
+        "3":3,
+        "fun":3,
+        "funcommands":3,
+        "misc":4,
+        "miscellaneous":4,
+        "4":4
+    }
+}

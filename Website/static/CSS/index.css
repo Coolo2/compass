@@ -1,0 +1,349 @@
+html {
+    scroll-behavior: smooth;
+}
+body {
+    font-family: 'Alatsi';
+    font-size: 22px;
+}
+.noscroll {
+    overflow-y: hidden;
+}
+
+.selectDisable {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.selectEnable {
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -o-user-select: text;
+    user-select: text;
+}
+
+.container {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 25px;
+    padding-bottom: 50px;
+    padding-right: 300px;
+    padding-left: 300px;
+    padding-top: 50px;
+    -webkit-transition: left 0.5s;
+    z-index: 1;
+}
+
+.centerbutton {
+    position: absolute;
+    border-radius: 10px;
+    border-color: white;
+    top: 50%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    font-size: 25px;
+    opacity: 0%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    -webkit-transition: all 0.5s;
+    color: white;
+    background-color: #6d93c3;
+    box-shadow: 0px 0px 20px 5px #ffffff50;
+}
+
+.appear {
+    opacity: 100%;
+    left: 57%;
+}
+
+.appearmobile {
+    opacity: 100%;
+    left: 80%;
+}
+
+.bigger {
+    padding-right: 50px
+}
+
+.invarrow {
+    position: absolute;
+    right: 5px;
+}
+
+.block {
+    width: 100px;
+    height: 100px;
+    background: #eee;
+    margin: 10px;
+    display: inline-block;
+}
+
+.hover {
+    left: 45%;
+}
+
+.text {
+    position: relative;
+    padding-bottom: 100px;
+    background-color: #383d49;
+    right: 0;
+    left: 0;
+    padding-top: 20px;
+    padding-bottom:1850px
+}
+
+.textanimate {
+    animation: typewriter 4s steps(30) 1s 1 normal both,
+        blinkTextCursor 500ms steps(30) infinite normal;
+}
+
+.thetext {
+    top: 0px;
+    -webkit-transition: all 0.5s;
+    padding-top: 0px;
+    color: white;
+    .textanimate
+}
+
+.textmove {
+    top: 20px;
+}
+
+.line-1 {
+    position: relative;
+    width: 15em;
+    margin: 0 auto;
+    border-right: 2px solid rgba(255, 255, 255, .75);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    transform: translateY(-50%);
+}
+
+@keyframes typewriter {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 15em;
+    }
+}
+
+@keyframes blinkTextCursor {
+    from {
+        border-right-color: rgba(255, 255, 255, .75);
+    }
+
+    to {
+        border-right-color: #ffffff00;
+    }
+}
+.imgs {
+    border:10px solid white;
+    border-radius:50px;
+    width:30%;
+    height:auto;
+    margin-top:100px;
+    position: absolute;
+    left: -40%;
+    animation-name: example2;
+animation-duration: 4s;
+animation-iteration-count: infinite;
+    -webkit-transition: all 0.5s;
+    box-shadow: 0px 0px 20px 5px #00000050;
+}
+.imgmove {
+    left: 0px;
+    margin-left:100px;
+}
+.modal {
+    -webkit-transition: all 0.5s;
+    z-index:100;
+    position:fixed;
+    left: 25%;
+    right:25%;
+    top:5%;
+    overflow:scroll;
+    height:90%;
+    overflow-y: hidden;
+    box-shadow: 0px 0px 20px 5000px #00000090;
+
+}
+.container5
+{
+    -webkit-transition: all 0.5s;
+    width:800px;
+    height:350px;
+    position:relative;
+    overflow-x:hidden;
+    float:right;
+    right:-1300px;
+    margin-top:160px;
+}
+.movecontainer {
+    overflow-x:hidden;
+    right:0px;
+}
+.image5
+{    
+    overflow:hidden;
+    position:absolute;
+    opacity:10%;
+    margin-top:20px;
+    transform: scale(1.5);
+    pointer-events: none;
+}
+.text5
+{
+    overflow:hidden;
+    z-index:1;
+    position:absolute;   
+    right:10%; 
+    top:25%;
+    color:white;
+    font-weight:bold;
+}
+.grid-container {
+    -webkit-transition: all 0.5s;
+display: grid;
+grid-template-columns: auto auto auto;
+padding: 10px;
+background-color:#383D48;border-radius:25px;box-shadow: 0px 0px 20px 5px #00000050;user-select: none;
+}
+.grid-item {
+padding: 20px;
+font-size: 30px;
+text-align: center;
+border-color:white;
+color:white;
+border:5px;
+}
+.grid-hover {
+    background-color:#434957;
+    border-radius:15px;
+    box-shadow: 0px 0px 50px 5px #00000050;
+}
+.footer {
+position: absolute;
+left: 0;
+bottom: 0;
+width: 100%;
+background-color: #1C1F26;
+color: lightgray;
+padding-top:100px;
+padding-bottom:100px;
+}
+.button{
+    border-radius: 10px;
+    border:white 2px solid;
+    font-size: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right:5px;
+    padding-left:5px;
+    -webkit-transition: all 0.5s;
+    color: white;
+    background-color: #6d93c3;
+    background: linear-gradient(145deg, #6d93c3 50%, #6587b1 50%);
+    box-shadow: 0px 0px 20px 5px #00000050;
+    text-align:center;
+    text-decoration: none;
+}
+a.link:hover {
+    padding-right:30px;
+    padding-left:30px
+}
+.container6
+{
+    -webkit-transition: all 0.5s;
+    width:850px;
+    height:400px;
+    position:absolute;
+    overflow-x:hidden;
+    float:left;
+    left:100px;
+}
+.image6
+{    
+    overflow:hidden;
+    position:absolute;
+    opacity:10%;
+    left:90px;
+    pointer-events: none;
+    transform:scale(-1.5)
+}
+.text6
+{
+    overflow:hidden;
+    z-index:1;
+    position:absolute;   
+    left:10%; 
+    top:25%;
+    color:white;
+    font-weight:bold;
+}
+.imgs2 {
+    border:10px solid white;
+    border-radius:50px;
+    width:30%;
+    height:auto;
+    margin-top:100px;
+    position: absolute;
+    left: 65%;
+    -webkit-transition: all 0.5s;
+    animation-name: example;
+animation-duration: 4s;
+animation-iteration-count: infinite;
+    box-shadow: 0px 0px 20px 5px #00000050;
+    top:1000px
+}
+.movecontainer2 {
+    overflow-x:hidden;
+    right:0px;
+}
+.modal2 {
+    -webkit-transition: all 0.5s;
+    z-index:10;
+    position:fixed;
+    left: 25%;
+    right:25%;
+    top:5%;
+    overflow:scroll;
+    height:90%;
+    overflow-y: hidden;
+    
+    box-shadow: 0px 0px 20px 500px #00000090;
+
+}
+@keyframes example {
+0%   {top:900px;}
+50%  {top:920px;}
+100% {top:900px;}
+}
+@keyframes example2 {
+0%   {top:200px;}
+50%  {top:220px;}
+100% {top:200px;}
+}
+.navbar {overflow: hidden;background-color: #2c2f33;position:fixed;width:100%;z-index:10;border-bottom: 2px solid white;top:0;left:0;}
+  .navbar a {float: left;font-size:20px;color: white;text-align: center;padding: 14px 16px;text-decoration: none;}
+  .dropdown {float: left;overflow: hidden;}
+  .dropdown .dropbtn {font-size: 20px;  border: none;outline: none;color: white;padding: 14px 16px;background-color: inherit;font-family: inherit;margin: 0;}
+  .navbar a:hover, .dropdown:hover .dropbtn {background-color: #111;}
+  .active {background-color: gray;}
+  .dropdown-content {display: none;position: absolute;background-color: #2c2f33;min-width: 160px;box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);z-index: 1;position:fixed;border:2px solid white;}
+  .dropdown-content a {float: none;color:white;padding: 12px 16px;text-decoration: none;display: block;text-align: left;}
+  .dropdown-content a:hover {background-color: #111}
+  .dropdown:hover .dropdown-content {display: block;}

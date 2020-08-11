@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Alatsi' rel='stylesheet'>
+    <title>Unnamed Bot</title>
+<link rel="icon" href="https://cdn.discordapp.com/avatars/732208102652379187/07cdc23792f9c6ecf7dd2c976f1e8111.webp?size=1024">
+    <link href="/CSS/docs.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body id="thebody" style="background:#1C1F26">
+    <div class="navbar">
+        <a class="h" href="<%= address %>/">Home</a>
+        <a class="h" href="<%= status %>">Status</a>
+        <a class="h" href="<%= address %>/app">Dashboard</a></li>
+        <div class="dropdown">
+            <button class="dropbtn" style="background-color:gray">More
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a class="h active" href="<%= address %>/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i> </a>
+                <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <a style="float:right" class="h" target="_blank" href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot" >Invite me</a>
+        <a style="float:right"class="h" href="https://discord.gg/fDUs68p" target="_blank">Support Server</a>
+    </div>
+    <div style="padding:21px"></div>
+    <div class="container">
+        <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage"
+            src="https://i.ibb.co/V9ZZ4r5/cubes.png">
+        <div class="centered" onselectstart="return false" style="cursor: pointer;">Unnamed bot - Documentation</div>
+    </div>
+    <ul>
+        <li style="padding-bottom:50px;"></li>
+        <li><a href="#intro">Intro</a></li>
+        <li><a href="#questions">Questions</a></li>
+        <li style="position:absolute;bottom:75px;" class="active"><a href="/documentation">Bot</a></li>
+        <li style="position:absolute;bottom:30px;"><a href="/documentation/api">API</a></li>
+      </ul>
+    <div class="text">
+        <h3 style="color:white;text-align:center;">Documentation and help on bot functions and use. More detailed descriptions and help. 
+            <br>
+        For a simple command list, see the <a href="<%- address %>/commands" style="color:blue">command page</a>.</h3>
+      <div style="background-color:#272b33;padding: 70px 0;text-align: center;margin-top:100px;box-shadow: 0px 0px 20px 5px #00000030;">
+        
+        <div style="color:white;margin-left:50px;text-align:left;margin-right:50%">
+            
+
+
+            <div style="border:3px red solid;padding:30px;border-style:dashed;background-color:#24272e"><b>BEWARE:</b> All commands shown on this webpage will use the default prefix (?), however servers may have custom prefixes setup. To see the prefix, type:
+<pre><code>      @UnNamed prefix</code></pre>
+            </div>
+            <br>
+            <h3 style="padding-top:50px;padding-bottom:50px" id="intro">
+                Basic information 
+            </h3>
+            <p>UnNamed is a discord bot made for customizability, advanced and fun commands, 
+                web integration and more. Most features will be listed here with descriptions 
+                on how to use them. Keep in mind that this bot is in beta, and gets constant updates
+                and improvements</p>
+            <h3 style="padding-top:50px;padding-bottom:50px" id="questions">
+                General questions
+            </h3>
+            <h4 style="padding-top:25px;padding-bottom:25px"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> <u>    How do I add/remove work replies?</u></h4>
+            <span style="color:rgb(194, 194, 194);font-style:italic">Beware:</span> These functions require
+                manage_server permissions.
+            <p>
+                <b>Through web dashboard: </b>
+                Navigate to the <a href="<%- address %>/app" style="color:blue;" target='_blank'>web dashboard</a>, 
+                and click on the server you want to edit. The tab you are set on
+                by default is for adding and removing work replies. Near the server 
+                name you will notice buttons for addnig work replies. Any work replies 
+                listed below will have a delete button for deleting it.
+            </p>
+            <p>
+            </p>
+            <p>
+                <b>Through the bot/comamnds: </b>
+                You can use the two below commands for adding and removing work replies.
+            </p>
+            <p>
+<pre><code>      ?addreply [response]</code></pre> 
+<pre><code>      ?removereply [replyID/all]</code></pre> 
+            </p>
+            <h4 style="padding-top:25px;padding-bottom:25px"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> <u>    What are share IDs?</u></h4>
+            <p>
+                Share IDs are unique server specific identifiers for sharing your work reply setups. 
+                Sharing this will allow other servers to copy your work reply setup and sync it whenever 
+                they like. To get a Share ID navigate to your server in the <a href="<%- address %>/app" style="color:blue;" target='_blank'>web dashboard</a>
+                and if you have sufficient permissions it will be listed with the server name above the work replies. 
+                To get a server ShareID through commands, use:
+            </p>
+<pre><code>      ?sharereplies</code></pre> 
+            <h4 style="padding-top:25px;padding-bottom:25px"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> <u>    How do I load another servers work replies?</u></h4>
+            <span style="color:rgb(194, 194, 194);font-style:italic">Beware:</span> These functions require
+                manage_server permissions.
+            <p>
+                You can load a servers work replies with ShareIDs, more information about them can be found above.
+                There are ways to load work replies through the web dashboard and through commands, here are how 
+                they are done:
+            </p>
+            <p>
+                <b>Through the web dashboard: </b>
+                Navigate to the <a href="<%- address %>/app" style="color:blue;" target='_blank'>web dashboard</a>, 
+                and click on the server you want to edit. You will be directed to the work replies page. Around the server 
+                name is a button saying "Load work replies from ShareID", type in the box to the left of this the ShareID 
+                of the server you want to copy on and click the button. You should have synced work replies!
+            </p>
+            <p>
+                <b>Through the bot/comamnds: </b>
+                You can use the below command to load work replies from a ShareID
+            </p>
+            <p>
+<pre><code>      ?loadreplies [ShareID]</code></pre> 
+            </p>
+            <h4 style="padding-top:25px;padding-bottom:25px"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> <u>   How do I disable the bot from working in a channel?</u></h4>
+            <span style="color:rgb(194, 194, 194);font-style:italic">Beware:</span> These functions require
+                manage_channels permissions.
+            <p>
+                You can disable and enable the bot from working in certain channels through the web 
+                dashboard and through commands:
+            </p>
+            <p>
+                <b>Through the web dashboard: </b>
+                Navigate to the <a href="<%- address %>/app" style="color:blue;" target='_blank'>web dashboard</a>, 
+                and click on the server you want to edit. Near the top will be a list of different sections, click 
+                "channels". Through this page you can disable and enable channels!
+            </p>
+            <p>
+                <b>Through the bot/comamnds: </b>
+                You can use the below command to enable or disable channels
+            </p>
+            <pre><code>      ?disable [channel]</code></pre> 
+            <pre><code>      ?enable [channel]</code></pre> 
+        </div>
+    </div>
+        
+</div>
+      
+</div>
+    
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/JS/dashboardexcept.js"></script>
+
+</html>
