@@ -1,5 +1,5 @@
 const SQLite = require("better-sqlite3");
-const sql = new SQLite(__dirname + '../../Databases/balances.sqlite');
+const sql = new SQLite('./Databases/balances.sqlite');
 const functions = require('../functions')
 
 function user(guild, user) {

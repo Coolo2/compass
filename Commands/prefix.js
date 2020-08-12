@@ -3,7 +3,7 @@ const functions = require('../functions')
 const setup = require('./databasesetup')
 
 const SQLite = require("better-sqlite3");
-const sql = new SQLite(__dirname + '../../Databases/prefixes.sqlite');
+const sql = new SQLite('./Databases/prefixes.sqlite');
 
 
 function prefix(message) {

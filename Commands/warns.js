@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 const functions = require('../functions')
 const SQLite = require("better-sqlite3");
-const sql = new SQLite(__dirname + '../../Databases/warns.sqlite');
+const sql = new SQLite('./Databases/warns.sqlite');
 
 function onready(table1) {
     // H.

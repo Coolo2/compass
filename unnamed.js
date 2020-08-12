@@ -57,6 +57,7 @@ bot.on('message', message => {
   takereplies.share(message)
   emojis.emojis(message)
   apis.meme(message)
+  apis.ascii(message)
 });
 
 bot.on("error", error => console.log(error));
@@ -71,7 +72,6 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const router = express.Router();
-const vhost = require("vhost");
 
 const domain = JSON.parse(fs.readFileSync('.//Resources/website.json')).domain
 const address = JSON.parse(fs.readFileSync('.//Resources/website.json')).address
@@ -82,9 +82,9 @@ app.engine('html', require('ejs').renderFile);
 oauth = require('./Website/oauth2/oauth')
 var testRoutes = require('./Website/database');
 
-app.use(vhost(`status.${domain}`, function handle (req, res, next) {
-  res.render(__dirname + '/Website/HTML/status.html', {address:address, status:`http://status.${domainall}`});
-}))
+router.get('/status', function (req, res) {
+  res.render(__dirname + '/Website/HTML/status.html', {address:address, status:`${address}/status`});
+})
 
 app.use(express.static(__dirname+'/Website/static'));
 

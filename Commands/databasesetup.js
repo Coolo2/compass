@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const SQLite = require("better-sqlite3");
-const sql = new SQLite(__dirname + '../../Databases/balances.sqlite');
+const sql = new SQLite('./Databases/balances.sqlite');
 const functions = require('../functions')
 const talkedRecently = new Set();
 const fs = require('fs')
@@ -33,7 +33,7 @@ function startup(server, member) {
     }
 };
 
-const pfx = new SQLite(__dirname + '../../Databases/prefixes.sqlite');
+const pfx = new SQLite('./Databases/prefixes.sqlite');
 function prefixes(server) {
     const table = pfx.prepare(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'prefixes';`).get();
     if (!table['count(*)']) {
@@ -45,7 +45,7 @@ function prefixes(server) {
         pfx.pragma("journal_mode = wal");
     }
 };
-const emo = new SQLite(__dirname + '../../Databases/emojis.sqlite');
+const emo = new SQLite('./Databases/emojis.sqlite');
 function emojis(server) {
     const table = emo.prepare(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'emojis';`).get();
     if (!table['count(*)']) {

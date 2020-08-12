@@ -172,11 +172,10 @@ animation-iteration-count: infinite;
     -webkit-transition: all 0.5s;
     z-index:100;
     position:fixed;
-    left: 25%;
-    right:25%;
+    left: 10%;
     top:5%;
     overflow:scroll;
-    height:90%;
+    height:80%;
     overflow-y: hidden;
     box-shadow: 0px 0px 20px 5000px #00000090;
 
@@ -184,7 +183,7 @@ animation-iteration-count: infinite;
 .container5
 {
     -webkit-transition: all 0.5s;
-    width:800px;
+    width:50%;
     height:350px;
     position:relative;
     overflow-x:hidden;
@@ -268,7 +267,7 @@ a.link:hover {
 .container6
 {
     -webkit-transition: all 0.5s;
-    width:850px;
+    width:50%;
     height:400px;
     position:absolute;
     overflow-x:hidden;
@@ -317,11 +316,10 @@ animation-iteration-count: infinite;
     -webkit-transition: all 0.5s;
     z-index:10;
     position:fixed;
-    left: 25%;
-    right:25%;
+    left: 50%;
     top:5%;
     overflow:scroll;
-    height:90%;
+    width:80%;
     overflow-y: hidden;
     
     box-shadow: 0px 0px 20px 500px #00000090;
@@ -338,12 +336,12 @@ animation-iteration-count: infinite;
 100% {top:200px;}
 }
 .navbar {overflow: hidden;background-color: #2c2f33;position:fixed;width:100%;z-index:10;border-bottom: 2px solid white;top:0;left:0;}
-  .navbar a {float: left;font-size:20px;color: white;text-align: center;padding: 14px 16px;text-decoration: none;}
-  .dropdown {float: left;overflow: hidden;}
-  .dropdown .dropbtn {font-size: 20px;  border: none;outline: none;color: white;padding: 14px 16px;background-color: inherit;font-family: inherit;margin: 0;}
-  .navbar a:hover, .dropdown:hover .dropbtn {background-color: #111;}
-  .active {background-color: gray;}
-  .dropdown-content {display: none;position: absolute;background-color: #2c2f33;min-width: 160px;box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);z-index: 1;position:fixed;border:2px solid white;}
-  .dropdown-content a {float: none;color:white;padding: 12px 16px;text-decoration: none;display: block;text-align: left;}
-  .dropdown-content a:hover {background-color: #111}
-  .dropdown:hover .dropdown-content {display: block;}
+.navbar a {float: left;font-size:20px;color: white;text-align: center;padding: 14px 16px;text-decoration: none;}
+.dropdown {float: left;overflow: hidden;}
+.dropdown .dropbtn {font-size: 20px;  border: none;outline: none;color: white;padding: 14px 16px;background-color: inherit;font-family: inherit;margin: 0;}
+.navbar a:hover, .dropdown:hover .dropbtn {background-color: #111;}
+.active {background-color: gray;}
+.dropdown-content {display: none;position: absolute;background-color: #2c2f33;min-width: 160px;box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);z-index: 1;position:fixed;border:2px solid white;}
+.dropdown-content a {float: none;color:white;padding: 12px 16px;text-decoration: none;display: block;text-align: left;}
+.dropdown-content a:hover {background-color: #111}
+.dropdown:hover .dropdown-content {display: block;}

@@ -180,6 +180,13 @@
             "usage":"[prefix]help",
             "permissions":"none",
             "aliases":["help", "commands", "cmds"]
+        },
+        "binary": {
+            "name":"binary",
+            "description":"Convert text to binary and vice versa",
+            "usage":"[prefix]binary [binary/text to convert]",
+            "permissions":"none",
+            "aliases":["ascii", "binary"]
         }
     },
     "pages":{

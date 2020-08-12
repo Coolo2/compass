@@ -36,7 +36,7 @@ router.get('/', function (req, res) {
     servers: allguilds,
     users: users1,
     channels: channels1,
-    address:address, status:`http://status.${domainall}`
+    address:address, status:`${address}/status`
   })
 });
 
@@ -47,28 +47,28 @@ router.get('/api', function (req, res) {
 router.get('/about', function (req, res) {
   res.render(path.join(__dirname + '/HTML/about.html'), {
     address:address, 
-    status:`http://status.${domainall}`
+    status:`${address}/status`
 });
 });
 
 router.get('/changelogs', function (req, res) {
   res.render(path.join(__dirname + '/HTML/changelogs.html'), {
       address:address, 
-      status:`http://status.${domainall}`
+      status:`${address}/status`
   });
 });
 
 router.get('/documentation', function (req, res) {
   res.render(path.join(__dirname + '/HTML/Docs/help.html'), {
       address:address, 
-      status:`http://status.${domainall}`
+      status:`${address}/status`
   });
 });
 
 router.get('/documentation/api', function (req, res) {
   res.render(path.join(__dirname + '/HTML/Docs/api.html'), {
       address:address, 
-      status:`http://status.${domainall}`
+      status:`${address}/status`
   });
 });
 
@@ -96,7 +96,7 @@ router.get('/commands', function (req, res) {
   misc = misc.concat(`</table></div>`)
   res.render(path.join(__dirname + '/HTML/commands.html'), {
       address:address, 
-      status:`http://status.${domainall}`,
+      status:`${address}/status`,
       data:moderation + economy + fun + misc
   });
 });
@@ -151,7 +151,8 @@ router.get('/app', (req, res) => {
   bot.guilds.cache.forEach((guild) => {
     try {
       if (guild.member(user.id)) {
-        li = li.concat(`<img onerror="this.src='https://i.ibb.co/zHmYPLq/noicon.png'" class="listimg dasb" onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
+        if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
+          li = li.concat(`<img onerror="this.src='https://i.ibb.co/zHmYPLq/noicon.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
         in1 = 1
       }
     } catch {}
@@ -164,7 +165,7 @@ router.get('/app', (req, res) => {
       id: id,
       avatar: `<img class="avatar" id="output" src="${avatar}">`,
       address:address, 
-      status:`http://status.${domainall}`
+      status:`${address}/status`
     });
   
   

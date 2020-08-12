@@ -138,7 +138,8 @@ router.get('/app/:guildid/members', (req, res) => {
     bot.guilds.cache.forEach((guild) => {
       try {
         if (guild.member(user.id)) {
-          li = li.concat(`<img onerror="this.src='https://i.ibb.co/zHmYPLq/noicon.png'" class="listimg dasb" onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
+          if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
+          li = li.concat(`<img onerror="this.src='https://i.ibb.co/zHmYPLq/noicon.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
           in1 = 1
         }
       } catch {}
@@ -156,7 +157,7 @@ router.get('/app/:guildid/members', (req, res) => {
       id: id,
       avatar: `<img class="avatar" id="output" src="${avatar}">`,
       address: address,
-      status: `http://status.${domainall}`,
+      status: `${address}/status`,
       data: data,
       membersection:`<a class="sectionactive" href="${address}/app/${guild.id}/members">Members</a>`,
       worksection:`<a class="section" href="${address}/app/${guild.id}">Work replies</a>`,

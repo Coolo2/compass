@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const SQLite = require("better-sqlite3");
 const path = require('path')
 const fs = require('fs')
-const sql = new SQLite(__dirname + '../../Databases/balances.sqlite');
+const sql = new SQLite('./Databases/balances.sqlite');
 const functions = require('../functions')
 var express = require('express'),
   router = express.Router();
@@ -113,7 +113,7 @@ router.get('/app/:guildid/help', (req, res, next) => {
       <div style="position:absolute;left:1100px;top:350px;transform: translate(-50%, -50%);z-index:10;"><a onselectstart="return false" class="button link" href="${address}/app/${guild.id}">Back</a></span>`
       res.render(path.join(__dirname + '/HTML/custom.html'), {
           address:address, 
-          status:`http://status.${domainall}`,
+          status:`${address}/status`,
           data:data,
           title:"Dashboard help"
       });
@@ -219,7 +219,8 @@ router.get('/app/:guildid', (req, res) => {
     bot.guilds.cache.forEach((guild) => {
       try {
         if (guild.member(user.id)) {
-          li = li.concat(`<img onerror="this.src='https://i.ibb.co/zHmYPLq/noicon.png'" class="listimg dasb" onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
+          if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
+          li = li.concat(`<img onerror="this.src='https://i.ibb.co/zHmYPLq/noicon.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
           in1 = 1
         }
       } catch {}
@@ -252,7 +253,7 @@ router.get('/app/:guildid', (req, res) => {
       id: id,
       avatar: `<img class="avatar" id="output" src="${avatar}">`,
       address: address,
-      status: `http://status.${domainall}`,
+      status: `${address}/status`,
       data: data,
       membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
       worksection:`<a class="sectionactive" href="${address}/app/${guild.id}">Work replies</a>`,

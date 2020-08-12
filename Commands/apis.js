@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const functions = require('../functions')
-const request = require('request')
 const fetch = require('node-fetch');
 PythonShell = require('python-shell').PythonShell;
 const fs = require('fs')

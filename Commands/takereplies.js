@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 //const bot = require('../unnamed').bot
 const SQLite = require("better-sqlite3");
-const sql = new SQLite(__dirname + '../../Databases/balances.sqlite');
+const sql = new SQLite('./Databases/balances.sqlite');
 const functions = require('../functions')
 const talkedRecently = new Set();
 const fs = require('fs')

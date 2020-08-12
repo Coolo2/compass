@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const functions = require('../functions')
-const setup = JSON.parse(require('fs').readFileSync(__dirname + '../../Resources/test.json'))
+const setup = JSON.parse(require('fs').readFileSync('./Resources/test.json'))
 
 function botinfo(message, bot) {
     const args = message.content.slice(prefix.length).split(' ');
