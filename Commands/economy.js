@@ -5,7 +5,6 @@ const functions = require('../functions')
 const talkedRecently = new Set();
 const fs = require('fs')
 const emojis = require('./emoji');
-const { table } = require("console");
 const prefixes = require("./prefix");
 
 function contents() {

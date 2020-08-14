@@ -1,6 +1,4 @@
-html {
-    scroll-behavior: smooth;
-}
+
 
 body {
     font-family: 'Alatsi';
@@ -250,7 +248,7 @@ div.topcornerdiv:hover {
 }
 .sectionactive {
     position: relative;
-    border-radius:15px;
+    border-radius:5px;
     padding-bottom:10px;
     padding-top:10px;
     padding-right:5px;

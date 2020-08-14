@@ -114,8 +114,7 @@ function checkchannel(message) {
       if (message.member.hasPermission("MANAGE_CHANNELS")) {
 		message.channel.send(`This channel is disabled! You can not use commands here! Enable it using ?enable <#${message.channel.id}>`).then(msg => {msg.delete({ timeout: 5000 })})
         return true
-      } 
-      else {
+      } else {
 		message.channel.send(`This channel is disabled! You can not use commands here!`).then(msg => {msg.delete({ timeout: 5000 })})
         return true
       };

@@ -1,18 +1,37 @@
 console.log("Stop spying on the cosnole bro ")
 function sizeimage() {
-    document.getElementById('image1').classList.toggle("modal");
-    document.getElementById('image1').classList.toggle("imgs");
-    document.getElementById('thebody').classList.toggle("noscroll")
-    if (document.getElementById('topper').style.display === "none") {document.getElementById('topper').style.display = "block";} 
-    else {document.getElementById('topper').style.display = "none";}
+    document.getElementById('image2').classList.remove("modal");
+    document.getElementById('image2').classList.add("imgs2");
+    if (document.getElementById('image1').classList.value.includes("modal")) {
+        document.getElementById('topper').style.display = "block";
+        document.getElementById('image1').classList.remove("modal");
+        document.getElementById('image1').classList.add("imgs");
+        document.getElementById('thebody').classList.remove("noscroll")
+    } else {
+        if (document.getElementById('image1').classList.value.includes("imgs")) {
+            document.getElementById('topper').style.display = "none";
+            document.getElementById('image1').classList.add("modal");
+            document.getElementById('image1').classList.remove("imgs");
+            document.getElementById('thebody').classList.add("noscroll")    
+        }
+    }
+    
     
 }
 function sizeimage2() {
-    document.getElementById('image2').classList.toggle("modal");
-    document.getElementById('image2').classList.toggle("imgs2");
-    document.getElementById('thebody').classList.toggle("noscroll")
-    if (document.getElementById('topper').style.display === "none") {document.getElementById('topper').style.display = "block";} 
-    else {document.getElementById('topper').style.display = "none";}
+    document.getElementById('image1').classList.remove("modal");
+    document.getElementById('image1').classList.add("imgs");
+    if (document.getElementById('image2').classList[1] == "modal") {
+        document.getElementById('topper').style.display = "block";
+        document.getElementById('image2').classList.remove("modal");
+        document.getElementById('image2').classList.add("imgs2");
+        document.getElementById('thebody').classList.remove("noscroll")
+    } else {
+        document.getElementById('topper').style.display = "none";
+        document.getElementById('image2').classList.add("modal");
+        document.getElementById('image2').classList.remove("imgs2");
+        document.getElementById('thebody').classList.add("noscroll")    
+    }
 }
 //On open start the type effect
 window.onload = function () {

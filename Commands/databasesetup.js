@@ -58,6 +58,20 @@ function emojis(server) {
     }
 };
 
+const time = new SQLite('./Databases/times.sqlite');
+function times(guild) {
+    const table = time.prepare(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'times${guild.id}';`).get();
+    if (!table['count(*)']) {
+        time.prepare(`CREATE TABLE times${guild.id} (user TEXT, time TEXT)`).run();
+        try {
+        time.prepare(`CREATE UNIQUE INDEX idx_times_${guild.id} ON times${guild.id} (user);`).run();
+        } catch{}
+        time.pragma("synchronous = 1");
+        time.pragma("journal_mode = wal");
+    }
+};
+
 module.exports.startup = startup
 module.exports.prefixes = prefixes
 module.exports.emojis = emojis
+module.exports.times = times

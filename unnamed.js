@@ -15,6 +15,9 @@ const blocking = require('.//Commands/blocking')
 const prefixes = require('.//Commands/prefix')
 const takereplies = require('.//Commands/takereplies')
 const emojis = require('.//Commands/emoji')
+const timely = require('.//Commands/timely')
+const messages = require('.//Commands/messages')
+
 
 module.exports.bot = bot
 
@@ -58,6 +61,8 @@ bot.on('message', message => {
   emojis.emojis(message)
   apis.meme(message)
   apis.ascii(message)
+  timely.daily(message)
+  messages.welcome(message)
 });
 
 bot.on("error", error => console.log(error));
@@ -66,7 +71,7 @@ module.exports.bot = bot
 
 bot.login(setup.token);
 
-
+// Web initialization .
 
 const express = require('express');
 const app = express();
@@ -94,6 +99,7 @@ app.use('/', require('./Website/Modules/channels'));
 app.use('/', require('./Website/Modules/currency'));
 app.use('/', require('./Website/Modules/prefixes'));
 app.use('/', require('./Website/backend'));
+app.use('/', require('./Website/HTML/Editor/editor'));
 
 
 const getAppCookies = (req, res) => {
@@ -133,4 +139,5 @@ module.exports.getAppCookies = getAppCookies
 app.use('/', router);
 app.listen(process.env.port || 5000);
 
-//
+// DBL
+

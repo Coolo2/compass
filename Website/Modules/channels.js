@@ -121,7 +121,7 @@ router.get('/app/:guildid/channels', (req, res) => {
       try {
         if (guild.member(user.id)) {
           if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
-          li = li.concat(`<img onerror="this.src='https://i.ibb.co/zHmYPLq/noicon.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
+          li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
           in1 = 1
         }
       } catch {}
@@ -144,7 +144,8 @@ router.get('/app/:guildid/channels', (req, res) => {
       membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
       worksection:`<a class="section" href="${address}/app/${guild.id}">Work replies</a>`,
       channelsection:`<a class="sectionactive" href="${address}/app/${guild.id}/channels">Channels</a>`,
-      prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`
+      prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
+      editor:`<a class="section" href="${address}/app/${guild.id}/editor/join">JM Editor</a>`
     })
   }
 });

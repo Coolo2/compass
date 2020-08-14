@@ -151,8 +151,7 @@ router.get('/app', (req, res) => {
   bot.guilds.cache.forEach((guild) => {
     try {
       if (guild.member(user.id)) {
-        if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
-          li = li.concat(`<img onerror="this.src='https://i.ibb.co/zHmYPLq/noicon.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
+          li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
         in1 = 1
       }
     } catch {}

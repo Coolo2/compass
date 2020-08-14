@@ -163,16 +163,19 @@ animation-duration: 4s;
 animation-iteration-count: infinite;
     -webkit-transition: all 0.5s;
     box-shadow: 0px 0px 20px 5px #00000050;
+    z-index:2;
 }
 .imgmove {
     left: 0px;
     margin-left:100px;
 }
 .modal {
+    border:5px solid white;
+    border-radius:20px;
     -webkit-transition: all 0.5s;
     z-index:100;
     position:fixed;
-    left: 10%;
+    left: 25%;
     top:5%;
     overflow:scroll;
     height:80%;
@@ -183,7 +186,7 @@ animation-iteration-count: infinite;
 .container5
 {
     -webkit-transition: all 0.5s;
-    width:50%;
+    width:45%;
     height:350px;
     position:relative;
     overflow-x:hidden;
@@ -267,7 +270,7 @@ a.link:hover {
 .container6
 {
     -webkit-transition: all 0.5s;
-    width:50%;
+    width:40%;
     height:400px;
     position:absolute;
     overflow-x:hidden;
@@ -306,7 +309,8 @@ a.link:hover {
 animation-duration: 4s;
 animation-iteration-count: infinite;
     box-shadow: 0px 0px 20px 5px #00000050;
-    top:1000px
+    top:1000px;
+    z-index:2;
 }
 .movecontainer2 {
     overflow-x:hidden;

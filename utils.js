@@ -1,4 +1,4 @@
-// async/await error catcher
+
 const catchAsyncErrors = fn => (
     (req, res, next) => {
       const routePromise = fn(req, res, next);
@@ -8,4 +8,4 @@ const catchAsyncErrors = fn => (
     }
   );
   
-  exports.catchAsync = catchAsyncErrors;
+exports.catchAsync = catchAsyncErrors;

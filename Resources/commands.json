@@ -72,6 +72,13 @@
             "permissions":"none",
             "aliases":["work"]
         },
+        "daily": {
+            "name":"daily",
+            "description":"Get money on a daily basis",
+            "usage":"[prefix]daily",
+            "permissions":"none",
+            "aliases":["daily"]
+        },
         "balance": {
             "name":"balance",
             "description":"Get a user's (or your own) balance",

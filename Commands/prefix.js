@@ -4,6 +4,9 @@ const setup = require('./databasesetup')
 
 const SQLite = require("better-sqlite3");
 const sql = new SQLite('./Databases/prefixes.sqlite');
+const fs = require('fs')
+
+defaultPFX = JSON.parse(fs.readFileSync('.//Resources/test.json')).prefix
 
 
 function prefix(message) {
@@ -33,7 +36,7 @@ function get(guild) {
     try {
         final = sql.prepare(`SELECT * FROM prefixes WHERE server = ?`).get(guild.id).prefix
     } catch {
-        final = "?"
+        final = defaultPFX
     }
     return final
 }
@@ -47,8 +50,8 @@ function getmess(message) {
         if (message.content.toLowerCase().startsWith(final + " ")) return final + " ";
         else return final
     } catch {
-        if (message.content.toLowerCase().startsWith("? ")) return "? ";
-        else return "?";
+        if (message.content.toLowerCase().startsWith("? ")) return defaultPFX + " ";
+        else return defaultPFX;
     }
 }
 

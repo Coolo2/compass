@@ -19,7 +19,7 @@ function help(message1) {
                     .then(() => message.react("⏩"))
                 function getpage(message, page){
                     if (page == 0) {
-                        message.edit(functions.embed(`Help page ${page} - Introduction`, "Use the emojis to navigate around help", '#990099'))
+                        message.edit(functions.embed(`Help page ${page} - Introduction`, "Use the emojis to navigate around help.\nUnNamed is an advanced and deeply customizable economy and moderation bot.", '#990099'))
                     }
                     if (page == 1) {
                         message.edit(functions.embed(`Help page ${page} - Moderation`, functions.GetHelp(message.guild, 'Moderation'), '#990099'))

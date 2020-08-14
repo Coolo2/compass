@@ -1,6 +1,3 @@
-const {
-    get
-} = require("request");
 const fetch = require("node-fetch");
 
 const fs = require('fs')

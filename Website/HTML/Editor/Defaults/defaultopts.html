@@ -1,0 +1,28 @@
+            <span>BG: <input oninput="load_inp()" id="bgcolor" value="#0E0E0E"></span>
+            <br>
+            <span>Color: <input oninput="load_inp()" id="textcolor" value="white"></span>
+            <br>
+            <span><input oninput="load_inp()" id="borderradius">px</span>
+            <br>
+            <span>Title: <input oninput="load_inp()" id="titlesize" value="40">px</span>
+            <br>
+            <span>Text: <input oninput="load_inp()" id="textsize" value="16">px</span>
+            <br>
+            <span>URL: <input oninput="load_inp()" id="bgimg"></span>
+            <br>
+
+            <input type="checkbox" onclick="bold('title')" id="titlecheck">
+            <label for="vehicle3" onclick="bold('title')"> Bold title</label>
+            <br>
+            <input type="checkbox" onclick="bold('textbox')" id="textcheck">
+            <label for="vehicle3" onclick="bold('textbox')"> Bold text</label>
+
+            <br>
+            <span><input oninput="load_inp()" id="imageradius">px</span>
+            <br>
+            <span><input oninput="load_inp()" id="imagesize">px</span>
+            
+            <br><br><br>
+            <button onclick="buttonmoment()">Render (save)</button>
+            <br>
+            <button onclick="window.open('/app/guild/reset/join', '_self')">Reset</button>

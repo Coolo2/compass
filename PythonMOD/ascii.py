@@ -166,12 +166,9 @@ class Bin:
                 
                 power = 0   #make power variable
                 
-                
                 for number in binary:
                     if number == '1':
-                        
-                        decimal += 2**power    
-                    
+                        decimal += 2**power      
                     power += 1 #increase the power variable by one  
                 
                 if wentinto != 1:
