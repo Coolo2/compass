@@ -22,6 +22,8 @@ const CLIENT_ID = "732208102652379187";
 const CLIENT_SECRET = "Qj4t6sMoeE_ecXCWdcAQFoI7L2v2Qxak";
 const redirect = encodeURIComponent(address + '/dashboard');
 
+const redirectSUPPORT = encodeURIComponent(address + '/joinsupport');
+const setup = JSON.parse(fs.readFileSync('.//Resources/test.json'))
 
 
 //app.engine('html', require('ejs').renderFile);
@@ -72,6 +74,26 @@ router.get('/documentation/api', function (req, res) {
   });
 });
 
+router.get('/join/success', (req, res, next) => {
+  data = `<h2 style="color:white;text-align:center">Joined the <a href="https://discord.com/channels/732554558773133333">Support Server!</a> You may now close the tab</h2>`
+  res.render(path.join(__dirname + '/HTML/custom.html'), {
+      address:address, 
+      status:`${address}/status`,
+      data:data,
+      title:"Support Server"
+  });
+});
+
+router.get('/join/error', (req, res, next) => {
+  data = `<h2 style="color:white;text-align:center">Error: ${req.query.e}</h2>`
+  res.render(path.join(__dirname + '/HTML/custom.html'), {
+      address:address, 
+      status:`${address}/status`,
+      data:data,
+      title:"Support Server"
+  });
+});
+
 router.get('/commands', function (req, res) {
   commands = JSON.parse(fs.readFileSync(`.//Resources/commands.json`))
   moderation = `<button style="border-top-right-radius:10px;border-top-left-radius:10px;" class="collapsible">Moderation</button><div class="content"><table><tr><th style="border-left:1px solid rgb(168, 168, 168);color:">Command</th><th>Aliases</th><th style="border-right:1px solid rgb(168, 168, 168);">Description</th></tr>`
@@ -102,8 +124,20 @@ router.get('/commands', function (req, res) {
 });
 
 router.get('/login', (req, res) => {
+  res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&prompt=none&redirect_uri=${redirect}`);
+});
+
+router.get('/loginswitch', (req, res) => {
   res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}`);
 });
+
+router.get('/supportserver', function (req, res) {
+  res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&scope=guilds.join&prompt=none&redirect_uri=${redirectSUPPORT}`)
+})
+
+router.get('/supportserverswitch', function (req, res) {
+  res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&scope=guilds.join&redirect_uri=${redirectSUPPORT}`)
+})
 
 oauth = require('./oauth2/oauth')
 router.get('/dashboard', catchAsync(async (req, res) => {
@@ -124,6 +158,25 @@ router.get('/dashboard', catchAsync(async (req, res) => {
   res.redirect('/app')
   }
 }));
+
+router.get('/joinsupport', async function (req, res) {
+  const code = req.query.code;
+  const data = oauth.joindata(CLIENT_ID, CLIENT_SECRET, code)
+
+  params = oauth.encode(data)
+  responses = await oauth.response(params)
+  json1 = await responses.json()
+  
+  result = await oauth.join({
+    token:setup.token,
+    access_token:json1.access_token
+  })
+  if (await result == true) {
+    res.redirect('/join/success')
+  } else {res.redirect('/join/error?e=You%20are%20already%20in%20the%20support%20server%20or%20an%20error%20occured%20while%20trying%20to%20add%20you.%20%0A%3Cbr%3E%0ATry%20%3Ca%20style%3D%22color%3A%23c9c9c9%22%20href%3D%22https%3A%2F%2Fdiscord.gg%2FfDUs68p%22%3Ethe%20server%20invite%3C%2Fa%3E%20or%0A%3Cbr%3E%0ATry%20%3Ca%20style%3D%22color%3A%23c9c9c9%22%20href%3D%22%2Fsupportserverswitch%22%3Eanother%20account%3C%2Fa%3E')}
+  
+});
+
 var testRoutes = require('./database');
 
 router.get('/redirect', (req, res) => {

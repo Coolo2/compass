@@ -26,6 +26,17 @@ function data(CLIENT_ID, CLIENT_SECRET, code) {
     }
 }
 
+function joindata(CLIENT_ID, CLIENT_SECRET, code) {
+    return {
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': address + "/joinsupport",
+        'scope': 'guilds.join%20identify'
+    }
+}
+
 function encode(obj) {
     let string = "";
 
@@ -44,7 +55,28 @@ async function response(params) {
         body: params
     });
 }
+
+async function join(json) {
+    userINFO = await get_user_info(json)
+    console.log(await userINFO.id)
+    const fetchDiscordUserInfo = await fetch('http://discord.com/api/guilds/732554558773133333/members/' + await userINFO.id, {
+        method: 'PUT',
+        headers: {
+            Authorization: `Bot ${json.token}`,
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({
+            access_token:json.access_token, 
+            roles:["740945609028010045"]
+        })
+    });
+    console.log(await fetchDiscordUserInfo)
+    try{await fetchDiscordUserInfo.json();return true} catch {return false}
+}
+
 module.exports.get_user_info = get_user_info
 module.exports.data = data
 module.exports.encode = encode
 module.exports.response = response
+module.exports.joindata = joindata
+module.exports.join = join

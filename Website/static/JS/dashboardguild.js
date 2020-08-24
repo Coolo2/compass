@@ -18,7 +18,7 @@ function change() {
     document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
     document.cookie = "id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
     document.cookie = "avatar=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
-    window.open('/login', "_self");
+    window.open('/loginswitch', "_self");
 }
 var windw = this;
 
@@ -41,4 +41,4 @@ $.fn.followTo = function (pos) {
     });
 };
 
-$('#topcorner').followTo(165);
+$('#topcorner').followTo(200);

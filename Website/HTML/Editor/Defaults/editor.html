@@ -89,12 +89,16 @@
 <script src="/JS/dashboardguild.js"></script>
 <script>
     function drag_start(event) {
+        document.getElementById("enablewelcome").setAttribute("checked", "checked")
+        document.getElementById("joinchannel_main").removeAttribute("disabled")
         var style = window.getComputedStyle(event.target, null);
         var str = (parseInt(style.getPropertyValue("left")) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top")) - event.clientY) + ',' + event.target.id;
         event.dataTransfer.setData("Text", str);
     }
 
     function drop(event) {
+        document.getElementById("enablewelcome").setAttribute("checked", "checked")
+        document.getElementById("joinchannel_main").removeAttribute("disabled")
         var offset = event.dataTransfer.getData("Text").split(',');
         var dm = document.getElementById(offset[2]);
         dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
@@ -104,6 +108,8 @@
     }
 
     function drag_over(event) {
+        document.getElementById("enablewelcome").setAttribute("checked", "checked")
+        document.getElementById("joinchannel_main").removeAttribute("disabled")
         event.preventDefault();
         return false;
     }
@@ -111,25 +117,38 @@
     images = ["editorimage1"]
 
     function buttonmoment() {
+        e = document.getElementById("joinchannel_main");
+        if (document.getElementById("enablewelcome").getAttribute("checked")) {if (e.options[e.selectedIndex].value == "false") {return window.alert("You haven't chosen a channel!")}}
         texts.forEach(element => {
             document.getElementById(element).style.backgroundColor = "rgba(51, 170, 51, 0)"
             document.getElementById(element).style.border = "0"
         }); images.forEach(element => {
             document.getElementById(element).setAttribute("src", "{avatar}")
         })
-        window.open("<%- address %>/app/<%- guild %>/editor/render/join?html=" + encodeURIComponent(document.getElementById('capture').innerHTML) + "&opts=" + encodeURIComponent(document.getElementById('opts').innerHTML), "_self")
+        options = document.getElementById('opts').innerHTML.split("<!--ignore-->")[0] + document.getElementById('opts').innerHTML.split("<!--ignore-->")[2]
+        if (document.getElementById("enablewelcome").getAttribute("checked")) {
+            
+            window.open("<%- address %>/app/<%- guild %>/editor/render/join?html=" + encodeURIComponent(document.getElementById('capture').innerHTML) + "&opts=" + encodeURIComponent(options.replace("Enable welcome image</label>", "Enable welcome image</label><2- joinchannels 2>".split("2").join("%"))) + "&enabled=true" + "&channel=" + encodeURIComponent(e.options[e.selectedIndex].value), "_self")
+        } else {window.open("<%- address %>/app/<%- guild %>/editor/render/join?html=" + encodeURIComponent(document.getElementById('capture').innerHTML) + "&opts=" + encodeURIComponent(options.replace("Enable welcome image</label>", "Enable welcome image</label><2- joinchannels 2>".split("2").join("%"))) + "&enabled=false" + "&channel=" + encodeURIComponent(e.options[e.selectedIndex].value), "_self")
+        }
+        
     }
-    function load_inp () {
+    function load_inp() {
+        document.getElementById("enablewelcome").setAttribute("checked", "checked")
+        document.getElementById("joinchannel_main").removeAttribute("disabled")
         document.querySelectorAll(".title").forEach(item => {item.style.fontSize = document.getElementById("titlesize").value + "px"})
         document.querySelectorAll(".textbox").forEach(item => {item.style.fontSize = document.getElementById("textsize").value + "px"})
-        document.getElementById("text1").setAttribute("value", document.getElementById("text1").value)
-        document.getElementById("title1").setAttribute("value", document.getElementById("title1").value)
+        
         document.getElementById("bg").style.backgroundColor = document.getElementById("bgcolor").value
-        document.getElementById("bg").style.borderRadius = document.getElementById("borderradius").value.replace("px", "") + "px";
-        document.getElementById("bg").style.backgroundImage = "url('" + document.getElementById("bgimg").value + "')"
+        document.getElementById("bg").style.borderRadius = document.getElementById("borderradius").value.replace("px", "") + "px"
+        if (["{guild_icon}", "guild", "guild_icon", "{guild}"].includes(document.getElementById("bgimg").value)) {
+            document.getElementById("bg").style.backgroundImage = "url('<%- guildicon %>')"
+        } else {document.getElementById("bg").style.backgroundImage = "url('" + document.getElementById("bgimg").value + "')"}
+
         document.getElementById("bg").style.backgroundSize = "cover"
         texts.forEach(element => {
             document.getElementById(element).style.color = document.getElementById("textcolor").value
+            document.getElementById(element).setAttribute("value", document.getElementById(element).value)
         });
         images.forEach(element => {
             document.getElementById(element).style.borderRadius = document.getElementById("imageradius").value.replace("px", "") + "px"
@@ -155,5 +174,9 @@
         document.querySelectorAll("." + where).forEach(item => {item.classList.toggle("bold");})
     }
     
+    function enablewelcome() {
+        enable = document.getElementById("enablewelcome")
+        if (!enable.hasAttribute("checked")) {enable.setAttribute("checked", "checked");document.getElementById("joinchannel_main").removeAttribute("disabled")} else {enable.removeAttribute("checked");document.getElementById("joinchannel_main").setAttribute("disabled", "disabled")}
+    }
 </script>
 </html>

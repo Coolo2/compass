@@ -54,14 +54,34 @@ router.get('/app/:guildid/editor/join', function (req, res) {
     } catch {}
   })
   li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot')" id="dasb" src='https://i.ibb.co/dG0x5Ch/plus2.png'>`)
+
+  //JoinCHANNEL
+  f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
+  if (!f[req.params.guildid] || !f[req.params.guildid]["join"]) {f[req.params.guildid] = {"join":"false"}}
+  displaychannel = f[req.params.guildid]["join"]
+  displaychannelid = f[req.params.guildid]["join"]
+  if (displaychannel != "false") {displaychannel = bot.channels.cache.get(displaychannel).name;readonly=""} else {if(!displaychannel) {displaychannel = "None";readonly="disabled='disabled'"} else{displaychannel = "None";readonly="disabled='disabled'"} };
+  joinchannels = `<!--ignore--><select name="autorole" ${readonly} id="joinchannel_main"><option value="false">None</option>`
+  guild.channels.cache.forEach(channel => {
+    if (channel.type == "text") {
+      if (displaychannelid == channel.id) {
+        joinchannels = joinchannels.concat(`<option name="joinchannel" class='select' value="${channel.id}" selected>#${channel.name}</option>`)
+      } else{
+        joinchannels = joinchannels.concat(`<option name="joinchannel" class='select' value="${channel.id}">#${channel.name}</option>`)
+      }
+      
+    }
+  });joinchannels = joinchannels.concat("</select><!--ignore-->")
+
+
   avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
   if (fs.existsSync(dir + "/" + req.params.guildid + "/welcome.html")){
-    defaulthtml = fs.readFileSync(dir + "/" + req.params.guildid + "/welcome.html", "utf8").split("{avatar}").join("https://cdn.discordapp.com/avatars/368071242189897728/477724f300e7d7142945b6ac53fb62e7.webp?size=1024")
-  } else {defaulthtml = fs.readFileSync("./Website/HTML/Editor/Defaults/default.html", "utf8") }
+    defaulthtml = fs.readFileSync(dir + "/" + req.params.guildid + "/welcome.html", "utf8").split("{avatar}").join(user.displayAvatarURL())
+  } else {defaulthtml = fs.readFileSync("./Website/HTML/Editor/Defaults/default.html", "utf8").split("{avatar}").join(user.displayAvatarURL()) }
   if (fs.existsSync(dir + "/" + req.params.guildid + "/welcomeopts.html")){
-    defaultopts = fs.readFileSync(dir + "/" + req.params.guildid + "/welcomeopts.html", "utf8")
-  } else {defaultopts = fs.readFileSync("./Website/HTML/Editor/Defaults/defaultopts.html", "utf8") }
-    res.render(__dirname + '/Defaults/editor.html', {guild:req.params.guildid, defaulthtml:defaulthtml, opts:defaultopts.replace("guild", req.params.guildid), address:address,
+    defaultopts = fs.readFileSync(dir + "/" + req.params.guildid + "/welcomeopts.html", "utf8").split("<%- joinchannels %>").join(joinchannels)
+  } else {defaultopts = fs.readFileSync("./Website/HTML/Editor/Defaults/defaultopts.html", "utf8").split("<%- joinchannels %>").join(joinchannels) }
+    res.render(__dirname + '/Defaults/editor.html', {guild:req.params.guildid, defaulthtml:defaulthtml, opts:defaultopts.replace("guildid", req.params.guildid), address:address,
     membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
     worksection:`<a class="section" href="${address}/app/${guild.id}">Work replies</a>`,
     channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
@@ -72,11 +92,30 @@ router.get('/app/:guildid/editor/join', function (req, res) {
     servers: li,
     name: decodeURIComponent(getAppCookies(req, res)['name']),
     id: id,
-    avatar: `<img class="avatar" id="output" src="${avatar}">`,});
+    avatar: `<img class="avatar" id="output" src="${avatar}">`,
+    guildicon: guild.iconURL() + "?size=1024",
+    joinchannels:joinchannels
+  })
 })
 
 router.get('/app/:guildid/editor/render/join', function (req, res) {
     if (!bot.guilds.cache.get(req.params.guildid)) {return res.send("invaluid guikdl")}
+  if (req.query.enabled == "true") {
+    
+    f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
+    if (!f[req.params.guildid]) {f[req.params.guildid] = {}}
+    if (req.query.channel == "undefined" || req.query.channel == "None") {
+      delete f[req.params.guildid]["join"]
+    } else {
+      f[req.params.guildid]["join"] = req.query.channel
+    }
+    fs.writeFile("./Databases/messages.json", JSON.stringify(f), function(err) {if (err) {console.log(err)}});
+  } else {
+    f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
+    if (!f[req.params.guildid]) {f[req.params.guildid] = {}}
+    delete f[req.params.guildid]["join"]
+    fs.writeFile("./Databases/messages.json", JSON.stringify(f), function(err) {if (err) {console.log(err)}});
+  }
   if (!fs.existsSync(dir + "/" + req.params.guildid)){
     fs.mkdirSync(dir + "/" + req.params.guildid);
   }
@@ -88,13 +127,17 @@ router.get('/app/:guildid/editor/render/join', function (req, res) {
 router.get('/app/:guildid/reset/join', function (req, res) {
     if (!bot.guilds.cache.get(req.params.guildid)) {return res.send("invaluid guikdl")}
   if (!fs.existsSync(dir + "/" + req.params.guildid)){
-    return res.redirect(address + "/" + req.params.guildid)
+    return res.redirect(address + "/app/" + req.params.guildid + "/editor/join#main")
   }
-  
+  f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
+  if (!f[req.params.guildid]) {f[req.params.guildid] = {}}
+  delete f[req.params.guildid]["join"]
+  fs.writeFile("./Databases/messages.json", JSON.stringify(f), function(err) {if (err) {console.log(err)}});
+
   fs.unlinkSync(dir + "/" + req.params.guildid + "/welcome.html")
   fs.unlinkSync(dir + "/" + req.params.guildid + "/welcomeopts.html")
   fs.rmdirSync(dir + "/" + req.params.guildid)
   res.redirect(address + "/app/" + req.params.guildid + "/editor/join#main")
 })
 
-module.exports = router
+module.exports.router = router

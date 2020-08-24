@@ -28,6 +28,22 @@ bot.on('ready', () => {
 
 //const prefix = setup.prefix;
 
+var nodeHtmlToImage = require('node-html-to-image');
+
+var dir = './Website/HTML/Editor/Guilds';
+
+bot.on('guildMemberAdd', member => {
+  guild = member.guild
+  f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
+  if (!f[guild.id] || !f[guild.id]["join"] || f[guild.id] == "false") {return}
+  channel = bot.channels.cache.get(f[guild.id]["join"])
+  html = `<body style="height:300px;width:500px;">` + fs.readFileSync(dir + "/" + guild.id + '/welcome.html', 'utf8').split("{server}").join(guild.name).split("{user}").join(member.user.username).split("{avatar}").join(member.user.displayAvatarURL())  + "</body>"
+  nodeHtmlToImage({html: html,transparent:true})
+      .then(buffer => {
+          channel.send(new Discord.MessageAttachment(buffer, 'welcome-image.png'))
+      }) 
+});
+
 bot.on('message', message => {
   if (message.author.bot) return
   prefix = prefixes.getmess(message)
@@ -99,7 +115,7 @@ app.use('/', require('./Website/Modules/channels'));
 app.use('/', require('./Website/Modules/currency'));
 app.use('/', require('./Website/Modules/prefixes'));
 app.use('/', require('./Website/backend'));
-app.use('/', require('./Website/HTML/Editor/editor'));
+app.use('/', require('./Website/HTML/Editor/editor').router);
 
 
 const getAppCookies = (req, res) => {
