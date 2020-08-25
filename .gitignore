@@ -11,18 +11,21 @@ test2.js
 test.py
 
 
-
+Website/HTML/Editor/Guilds
 balances.sqlite
 emojis.sqlite 
 prefixes.sqlite
 warns.sqlite
+times.sqlite
 
 balances.sqlite-wal
 emojis.sqlite-wal
 prefixes.sqlite-wal
 warns.sqlite-wal
+times.sqlite-wal
 
 balances.sqlite-shm
 emojis.sqlite-shm
 prefixes.sqlite-shm
 warns.sqlite-shm
+times.sqlite-shm

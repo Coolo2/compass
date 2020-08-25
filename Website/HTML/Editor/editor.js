@@ -81,6 +81,7 @@ router.get('/app/:guildid/editor/join', function (req, res) {
   if (fs.existsSync(dir + "/" + req.params.guildid + "/welcomeopts.html")){
     defaultopts = fs.readFileSync(dir + "/" + req.params.guildid + "/welcomeopts.html", "utf8").split("<%- joinchannels %>").join(joinchannels)
   } else {defaultopts = fs.readFileSync("./Website/HTML/Editor/Defaults/defaultopts.html", "utf8").split("<%- joinchannels %>").join(joinchannels) }
+  if (!guild.member(user).hasPermission("MANAGE_GUILD")) {defaulthtml = "<h3 style='color:white'>You are missing manage server permissions to use the Editor</h3><div style='padding-bottom:1900px;'></div>";defaultopts = ""}
     res.render(__dirname + '/Defaults/editor.html', {guild:req.params.guildid, defaulthtml:defaulthtml, opts:defaultopts.replace("guildid", req.params.guildid), address:address,
     membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
     worksection:`<a class="section" href="${address}/app/${guild.id}">Work replies</a>`,
@@ -99,8 +100,12 @@ router.get('/app/:guildid/editor/join', function (req, res) {
 })
 
 router.get('/app/:guildid/editor/render/join', function (req, res) {
-    if (!bot.guilds.cache.get(req.params.guildid)) {return res.send("invaluid guikdl")}
-  if (req.query.enabled == "true") {
+    if (!bot.guilds.cache.get(req.params.guildid)) {return res.send("ERROR - Invalid guild")}
+    guild = bot.guilds.cache.get(req.params.guildid)
+    id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+    user = bot.users.cache.get(String(id))
+    if (!guild.member(user).hasPermission("MANAGE_GUILD")) {return res.redirect(address + "/app/" + req.params.guildid + "/editor/join#main")}
+  //if (req.query.enabled == "true") {
     
     f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
     if (!f[req.params.guildid]) {f[req.params.guildid] = {}}
@@ -108,14 +113,17 @@ router.get('/app/:guildid/editor/render/join', function (req, res) {
       delete f[req.params.guildid]["join"]
     } else {
       f[req.params.guildid]["join"] = req.query.channel
+      if (req.query.enabled == "false") {
+        f[req.params.guildid]["joinmessage"] = "noimg" + req.query.joinmessage
+      } else {f[req.params.guildid]["joinmessage"] = req.query.joinmessage
+      }
+      if (req.query.enabled == "false" && req.query.joinmessage == "false") {
+        if (!f[req.params.guildid]) {f[req.params.guildid] = {}}
+        delete f[req.params.guildid]["join"]
+      }
     }
     fs.writeFile("./Databases/messages.json", JSON.stringify(f), function(err) {if (err) {console.log(err)}});
-  } else {
-    f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
-    if (!f[req.params.guildid]) {f[req.params.guildid] = {}}
-    delete f[req.params.guildid]["join"]
-    fs.writeFile("./Databases/messages.json", JSON.stringify(f), function(err) {if (err) {console.log(err)}});
-  }
+  
   if (!fs.existsSync(dir + "/" + req.params.guildid)){
     fs.mkdirSync(dir + "/" + req.params.guildid);
   }
@@ -125,13 +133,18 @@ router.get('/app/:guildid/editor/render/join', function (req, res) {
 })
 
 router.get('/app/:guildid/reset/join', function (req, res) {
-    if (!bot.guilds.cache.get(req.params.guildid)) {return res.send("invaluid guikdl")}
+    if (!bot.guilds.cache.get(req.params.guildid)) {return res.send("ERROR - Invalid guild")}
+    guild = bot.guilds.cache.get(req.params.guildid)
+    id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+    user = bot.users.cache.get(String(id))
+    if (!guild.member(user).hasPermission("MANAGE_GUILD")) {return res.redirect(address + "/app/" + req.params.guildid + "/editor/join#main")}
   if (!fs.existsSync(dir + "/" + req.params.guildid)){
     return res.redirect(address + "/app/" + req.params.guildid + "/editor/join#main")
   }
   f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
   if (!f[req.params.guildid]) {f[req.params.guildid] = {}}
   delete f[req.params.guildid]["join"]
+  delete f[req.params.guildid]["joinmessage"]
   fs.writeFile("./Databases/messages.json", JSON.stringify(f), function(err) {if (err) {console.log(err)}});
 
   fs.unlinkSync(dir + "/" + req.params.guildid + "/welcome.html")

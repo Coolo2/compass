@@ -2,20 +2,20 @@
             <div style="color:white">
                 <div style="background-color:#15181a;float: left;height:200px;width:33.33%">
                     <div style="float:top;float:right;padding-right:5px;">Background <i class="fa fa-picture-o" aria-hidden="true"></i> </div>
-                    <span>BG color: <input oninput="load_inp()" id="bgcolor" value="#0E0E0E"></span>
+                    <span>BG color: <input class="forminput" oninput="load_inp()" id="bgcolor" value="#0E0E0E"></span>
                     <br>
-                    <span>BG (image) URL: <input oninput="load_inp()" id="bgimg"></span>
+                    <span>BG (image) URL: <input class="forminput" oninput="load_inp()" id="bgimg"></span>
                     <br>
-                    <span>BG border radius:<input oninput="load_inp()" id="borderradius" value="0">px</span>
+                    <span>BG border radius:<input class="forminput" oninput="load_inp()" id="borderradius" value="0">px</span>
                     <br>
                 </div>
                 <div style="background-color:#1d2022;display: inline-block;float: left;height:200px;width:33.33%">
                     <div style="float:top;float:right;padding-right:5px;">Text <i class="fa fa-font" aria-hidden="true"></i> </div>
-                    <span>Text color: <input oninput="load_inp()" id="textcolor" value="white"></span>
+                    <span>Text color: <input class="forminput" oninput="load_inp()" id="textcolor" value="white"></span>
                     <br>
-                    <span>Title: <input oninput="load_inp()" id="titlesize" value="40">px</span>
+                    <span>Title: <input class="forminput" oninput="load_inp()" id="titlesize" value="40">px</span>
                     <br>
-                    <span>Text: <input oninput="load_inp()" id="textsize" value="16">px</span>
+                    <span>Text: <input class="forminput" oninput="load_inp()" id="textsize" value="16">px</span>
                     <br>
                     <input type="checkbox" onclick="bold('title')" id="titlecheck">
                     <label for="titlecheck"> Bold title</label>
@@ -25,17 +25,19 @@
                 </div>
                 <div style="background-color:#15181a;float: left;height:200px;width:33.33%">
                     <div style="float:top;float:right;padding-right:5px;">Images <i class="fa fa-file-image-o" aria-hidden="true"></i> </div>
-                    <span>Border radius: <input oninput="load_inp()" id="imageradius" value="0">px</span>
+                    <span>Border radius: <input class="forminput" oninput="load_inp()" id="imageradius" value="0">px</span>
                     <br>
-                    <span>Size: <input oninput="load_inp()" id="imagesize" value="100">px</span>
+                    <span>Size: <input class="forminput" oninput="load_inp()" id="imagesize" value="100">px</span>
                 </div>
                 <div style="padding-bottom:200px"></div>
-                <div style="background-color:#111314;height:100px;width:100%">
+                <div style="background-color:#111314;height:150px;width:100%">
                     <span><input type="checkbox" onclick="enablewelcome()" id="enablewelcome">
                     <label for="enablewelcome"> Enable welcome image</label><%- joinchannels %></span>
+                    <div></div>
+                    <span><input type="checkbox" onclick="enablewelcomemessage()" id="enablewelcomemessage"><input oninput="welcometype()" id="joinmessage" class="forminputdisabled" disabled="disabled" value=""><span id="joinmessagelabel" style="color:gray">Welcome message</span></span>
                     <br>
-                    <button onclick="buttonmoment()">Render (save)</button>
+                    <button class="formbutton" onclick="buttonmoment()">Render (save)</button>
                     <br>
-                    <button onclick="window.open('/app/guildid/reset/join', '_self')">Reset</button>
+                    <button class="formbutton" style="background-color:red" onclick="window.open('/app/guildid/reset/join', '_self')">Reset</button>
                 </div>
             </div>

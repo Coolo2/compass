@@ -37,7 +37,8 @@ function daily(message) {
             }
         }
         final = time.prepare(`SELECT * FROM times${message.guild.id} WHERE user='${message.author.id}'`).get() 
-        if (!final.time == now) {access = true} 
+        
+        if (final.time != now) {access = true} 
         
 
         if (access == true) {
@@ -50,6 +51,7 @@ function daily(message) {
                 sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, toadd);
             }
             score = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get(message.author.id).balance
+            time.prepare(`INSERT OR REPLACE into times${message.guild.id} (user, time) VALUES (?, ?)`).run(message.author.id, now) 
             return message.channel.send(functions.embed(
                 "You got your daily!", 
                 `You completed your daily for ${message.guild.name} and got ${toadd + emojis.get(message.guild)}! You are now on ${score + emojis.get(message.guild)}!`, 

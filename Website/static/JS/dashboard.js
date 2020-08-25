@@ -39,4 +39,4 @@ function getCookie(name) {
     });
 };
 
-$('#topcorner').followTo(165);
+$('#topcorner').followTo(200);

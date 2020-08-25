@@ -118,7 +118,8 @@
 
     function buttonmoment() {
         e = document.getElementById("joinchannel_main");
-        if (document.getElementById("enablewelcome").getAttribute("checked")) {if (e.options[e.selectedIndex].value == "false") {return window.alert("You haven't chosen a channel!")}}
+        if (document.getElementById("enablewelcome").getAttribute("checked") || document.getElementById("enablewelcomemessage").getAttribute("checked")) {if (e.options[e.selectedIndex].value == "false") {return window.alert("You haven't chosen a channel!")}}
+        if (!document.getElementById("enablewelcomemessage").getAttribute("checked")) {document.getElementById("joinmessage").value = ""}
         texts.forEach(element => {
             document.getElementById(element).style.backgroundColor = "rgba(51, 170, 51, 0)"
             document.getElementById(element).style.border = "0"
@@ -126,10 +127,11 @@
             document.getElementById(element).setAttribute("src", "{avatar}")
         })
         options = document.getElementById('opts').innerHTML.split("<!--ignore-->")[0] + document.getElementById('opts').innerHTML.split("<!--ignore-->")[2]
+        joinmessage = document.getElementById("joinmessage").value;if (joinmessage == "") {joinmessage = "false"};joinmessage = encodeURIComponent(joinmessage)
         if (document.getElementById("enablewelcome").getAttribute("checked")) {
             
-            window.open("<%- address %>/app/<%- guild %>/editor/render/join?html=" + encodeURIComponent(document.getElementById('capture').innerHTML) + "&opts=" + encodeURIComponent(options.replace("Enable welcome image</label>", "Enable welcome image</label><2- joinchannels 2>".split("2").join("%"))) + "&enabled=true" + "&channel=" + encodeURIComponent(e.options[e.selectedIndex].value), "_self")
-        } else {window.open("<%- address %>/app/<%- guild %>/editor/render/join?html=" + encodeURIComponent(document.getElementById('capture').innerHTML) + "&opts=" + encodeURIComponent(options.replace("Enable welcome image</label>", "Enable welcome image</label><2- joinchannels 2>".split("2").join("%"))) + "&enabled=false" + "&channel=" + encodeURIComponent(e.options[e.selectedIndex].value), "_self")
+            window.open("<%- address %>/app/<%- guild %>/editor/render/join?html=" + encodeURIComponent(document.getElementById('capture').innerHTML) + "&opts=" + encodeURIComponent(options.replace("Enable welcome image</label>", "Enable welcome image</label><2- joinchannels 2>".split("2").join("%"))) + "&enabled=true" + "&channel=" + encodeURIComponent(e.options[e.selectedIndex].value) + "&joinmessage=" + joinmessage, "_self")
+        } else {window.open("<%- address %>/app/<%- guild %>/editor/render/join?html=" + encodeURIComponent(document.getElementById('capture').innerHTML) + "&opts=" + encodeURIComponent(options.replace("Enable welcome image</label>", "Enable welcome image</label><2- joinchannels 2>".split("2").join("%"))) + "&enabled=false" + "&channel=" + encodeURIComponent(e.options[e.selectedIndex].value) + "&joinmessage=" + joinmessage, "_self")
         }
         
     }
@@ -167,6 +169,8 @@
         document.getElementById("imagesize").setAttribute("value", document.getElementById("imagesize").value) 
     }
     function bold(where) {
+        document.getElementById("enablewelcome").setAttribute("checked", "checked")
+        document.getElementById("joinchannel_main").removeAttribute("disabled")
         title = document.getElementById("titlecheck")
         text = document.getElementById("textcheck")
         if (where == 'title') {if (!title.hasAttribute("checked")) {title.setAttribute("checked", "checked")} else {title.removeAttribute("checked")}}
@@ -176,7 +180,33 @@
     
     function enablewelcome() {
         enable = document.getElementById("enablewelcome")
-        if (!enable.hasAttribute("checked")) {enable.setAttribute("checked", "checked");document.getElementById("joinchannel_main").removeAttribute("disabled")} else {enable.removeAttribute("checked");document.getElementById("joinchannel_main").setAttribute("disabled", "disabled")}
+        if (!enable.hasAttribute("checked")) {
+            enable.setAttribute("checked", "checked");
+            document.getElementById("joinchannel_main").removeAttribute("disabled")
+        } else {
+            enable.removeAttribute("checked");
+            
+        }
+    }
+    function enablewelcomemessage() {
+        enable = document.getElementById("enablewelcomemessage")
+        if (!enable.hasAttribute("checked")) {
+            enable.setAttribute("checked", "checked");
+            document.getElementById("joinmessage").className = "forminput"
+            document.getElementById("joinmessage").removeAttribute("disabled")
+            document.getElementById("joinmessagelabel").style = "color:white"
+            document.getElementById("joinchannel_main").removeAttribute("disabled")
+        } else {
+            enable.removeAttribute("checked");
+            document.getElementById("joinmessage").className = "forminputdisabled"
+            //document.getElementById("joinmessage").value = ""
+            document.getElementById("joinmessage").setAttribute("disabled", "disabled")
+            document.getElementById("joinmessagelabel").style = "color:gray"
+        }
+    }
+    function welcometype() {
+        document.getElementById("joinmessage").setAttribute("value", document.getElementById("joinmessage").value)
+        document.getElementById("joinchannel_main").removeAttribute("disabled")
     }
 </script>
 </html>
