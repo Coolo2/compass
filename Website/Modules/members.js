@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const SQLite = require("better-sqlite3");
 const path = require('path')
-const sql = new SQLite(__dirname + '../../../Databases/balances.sqlite');
+const sql = new SQLite('./Databases/balances.sqlite');
 const functions = require('../../functions')
 var express = require('express'),
   router = express.Router();
@@ -109,7 +109,31 @@ router.get('/app/:guildid/:memberid/add', (req, res, next) => {
   } else {
     res.redirect(`${address}/app/${guild.id}/members`)
   }
+});
 
+router.get('/app/:guildid/:memberid/set', (req, res, next) => {
+  guild = bot.guilds.cache.get(req.params.guildid)
+  user = bot.users.cache.get(req.params.memberid)
+  id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+  member = functions.memberfromarg(guild, id)
+  reply = req.query.replydata
+  if (req.query.balance=="") {return res.redirect(`${address}/app/${guild.id}/members`)}
+  if (isNaN(req.query.balance)) {return res.redirect(`${address}/app/${guild.id}/members`)}
+  if (guild.member(member).hasPermission("MANAGE_GUILD") && !member.bot) {
+    startup(guild, user)
+    toadd = Math.floor(req.query.balance)
+    try {
+      score = sql.prepare(`SELECT * FROM balances${guild.id}${user.id} WHERE user = ?`).get(user.id).balance
+      sql.prepare(`INSERT OR REPLACE INTO balances${guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(user.id, toadd);
+    }
+    catch {
+        sql.prepare(`INSERT OR REPLACE INTO balances${guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(user.id, toadd);
+    }
+    score = sql.prepare(`SELECT * FROM balances${guild.id}${user.id} WHERE user = ?`).get(user.id).balance
+    res.redirect(`${address}/app/${guild.id}/members`)
+  } else {
+    res.redirect(`${address}/app/${guild.id}/members`)
+  }
 });
 
 router.get('/app/:guildid/members', (req, res) => {
@@ -127,9 +151,9 @@ router.get('/app/:guildid/members', (req, res) => {
           disabled = "disabled"
         }
         if (!member.user.bot) {
-            humans = humans.concat(`<div class="members"><img src='${member.user.displayAvatarURL()}' width='50px' height='50px' style='border-radius:50px;top:50px;'><b>Member: ${member.user.username}</b> - Balance: ${require('../../Extras/balance').user(guild, member.user)}<span style="padding-left:30px;"> </span><form action="${member.id}/add" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Add money" ${disabled}/></form><form action="${member.id}/remove" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Remove money" ${disabled}/></form></div><div style="padding:10px;"></div>`)
+            humans = humans.concat(`<div class="members"><img src='${member.user.displayAvatarURL()}' width='50px' height='50px' style='border-radius:50px;top:50px;'><b>Member: ${member.user.username}</b> - Balance: ${require('../../Extras/balance').user(guild, member.user)}<span style="padding-left:30px;"> </span><form action="${member.id}/add" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Add money" ${disabled}/></form><form action="${member.id}/remove" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Remove money" ${disabled}/></form><form action="${member.id}/set" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Set balance" ${disabled}/></form></div><div style="padding:10px;"></div>`)
         } else {
-          bots = bots.concat(`<div class="members"><img src='${member.user.displayAvatarURL()}' width='50px' height='50px' style='border-radius:50px;top:50px;'><b>Bot: ${member.user.username}</b> - Balance: ${require('../../Extras/balance').user(guild, member.user)}<span style="padding-left:30px;"> </span><form action="${member.id}/add" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Add money" ${disabled}/></form><form action="${member.id}/remove" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Remove money" ${disabled}/></form></div><div style="padding:10px;"></div>`)
+          bots = bots.concat(`<div class="members"><img src='${member.user.displayAvatarURL()}' width='50px' height='50px' style='border-radius:50px;top:50px;'><b>Bot: ${member.user.username}</b> - Balance: ${require('../../Extras/balance').user(guild, member.user)}<span style="padding-left:30px;"> </span><form action="${member.id}/add" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Add money" ${disabled}/></form><form action="${member.id}/remove" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Remove money" ${disabled}/></form><form action="${member.id}/set" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Set balance" ${disabled}/></form></div><div style="padding:10px;"></div>`)
       }
     })
     returnvalue = humans + bots
@@ -160,7 +184,8 @@ router.get('/app/:guildid/members', (req, res) => {
       status: `${address}/status`,
       data: data,
       membersection:`<a class="sectionactive" href="${address}/app/${guild.id}/members">Members</a>`,
-      worksection:`<a class="section" href="${address}/app/${guild.id}">Work replies</a>`,
+      worksection:`<a class="section" href="${address}/app/${guild.id}">Replies</a>`,
+      optionsection:`<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
       channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
       prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
       editor:`<a class="section" href="${address}/app/${guild.id}/editor/join">JM Editor</a>`

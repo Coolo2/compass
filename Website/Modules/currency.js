@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const SQLite = require("better-sqlite3");
 const path = require('path')
-const sql = new SQLite(__dirname + '../../../Databases/emojis.sqlite');
+const sql = new SQLite('./Databases/emojis.sqlite');
 const functions = require('../../functions')
 var express = require('express'),
   router = express.Router();

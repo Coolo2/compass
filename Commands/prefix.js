@@ -8,6 +8,7 @@ const fs = require('fs')
 
 defaultPFX = JSON.parse(fs.readFileSync('.//Resources/test.json')).prefix
 
+const r = require('../Resources/rs')
 
 function prefix(message) {
     prefix1 = require('./prefix').getmess(message)
@@ -16,7 +17,7 @@ function prefix(message) {
     if (["prefix", "serverprefix", "setprefix"].includes(command)) {
         if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
        choice = args.splice(0, 1).join(" ")
-       if (!choice) {return message.channel.send(functions.embed(`Prefix for ${message.guild.name}`, `The prefix for ${message.guild.name} is ${get(message.guild)}\n\n**Change it with ${get(message.guild)}prefix [prefix to set]**!`, "#0099ff"))}
+       if (!choice) {return message.channel.send(functions.embed(`Prefix for ${message.guild.name}`, `The prefix for ${message.guild.name} is ${get(message.guild)}\n\n**Change it with ${get(message.guild)}prefix [prefix to set]**!`, r.d))}
        if (!message.member.hasPermission("MANAGE_GUILD")) {
             return message.channel.send(functions.error("You are missing manage server permissions to use this command"))
         }
@@ -28,7 +29,7 @@ function prefix(message) {
             console.log(err)
         }
         score = sql.prepare(`SELECT * FROM prefixes WHERE server = ?`).get(message.guild.id).prefix
-        message.channel.send(functions.embed("Set prefix for " + message.guild.name, `Set the prefix for ${message.guild.name} to ${score}`, "#0099ff"))
+        message.channel.send(functions.embed("Set prefix for " + message.guild.name, `Set the prefix for ${message.guild.name} to ${score}`, r.s))
     }
 }
 
@@ -50,7 +51,7 @@ function getmess(message) {
         if (message.content.toLowerCase().startsWith(final + " ")) return final + " ";
         else return final
     } catch {
-        if (message.content.toLowerCase().startsWith("? ")) return defaultPFX + " ";
+        if (message.content.toLowerCase().startsWith("^ ")) return defaultPFX + " ";
         else return defaultPFX;
     }
 }

@@ -1,0 +1,27 @@
+{
+    "pay":{
+        "1":"You pick up cash of the floor and get {amount}",
+        "2":"You help a kid download an antivirus and are paid {amount}",
+        "3":"You avoid a tech support scam and are donated {amoumnt}",
+        "4":"You create a clickbait stream and are donated {amount} thinking it's real",
+        "5":"You find a penny on the floor and it turns out to be an ancient coin. You are paid {amount}",
+        "6":"You get tripped up and are paid {amount} for literally no reason",
+        "7":"You're randomly given {amount} on the streets",
+        "8":"Here, have {amount}",
+        "9":"You work for epic games and fix fortnite for {amount}",
+        "10":"You build a PC for someone and they pay you {amount}",
+        "11":"You delete the free ram that you downloaded the other day and {amount} randomly appear",
+        "12":"You work as a babysitter and earn {amount}", 
+        "13":"You help someone fix a flat tire and they kindly give you {amount}", 
+        "14":"You do your chores for once and your mom gives you {amount}", 
+        "15":"You sold you OG fortnite account and got {amount}", 
+        "16":"You help a blind man find his way home and earn {amount}", 
+        "17":"You helped a homeless man and then realized it was all part of a social experiement and you got paid {amount}", 
+        "18":"Yow code a bot called Botty that is identical to UnNamed and get {amount} in payment", 
+        "19":"You helped a drowning person at the beach and he kindly gave you {amount} because you saved their life", 
+        "20":"You helped an old man get home and he kindly gave you {amount}"
+    },
+    "fine": {
+        "1":"Haha big fine {amount}"
+    }
+}

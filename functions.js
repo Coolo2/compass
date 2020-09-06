@@ -1,6 +1,10 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
+const prefixes = require('./Commands/prefix')
+
+const r = require('./Resources/rs')
+
 function getUserFromMention(mention) {
 	if (!mention) return;
 
@@ -26,7 +30,7 @@ function CreateEmbed(title, description, color) {
 
 function ErrorEmbed(error) {
 	const exampleEmbed = new Discord.MessageEmbed()
-		.setColor("#FF0000")
+		.setColor(r.f)
 		.setTitle("Seems like you ran into an error")
 		.setDescription("```" + error + "```")
 		.setTimestamp()
@@ -76,7 +80,7 @@ function GetHelp(guild, section) {
 	returnvalue = ""
 	for (k in helpjson[section]) {
 		var obj = helpjson[section][k]
-		returnvalue = returnvalue.concat(`** ${obj.usage.replace("[prefix]", require('.//Commands/prefix').get(guild))}** - ${obj.description} (${obj.permissions})\n`)
+		returnvalue = returnvalue.concat(`>_ _** ${obj.usage.replace("[prefix]", require('.//Commands/prefix').get(guild))}** - ${obj.description} (${obj.permissions})\n`)
 	}
 	return returnvalue
 }
@@ -112,10 +116,10 @@ function checkchannel(message) {
 	if (JSON.parse(fs.readFileSync('.//Databases/blocked.json'))["channels"].includes(message.channel.id) && !(message.content.startsWith(prefix + "enable") || message.content.startsWith(prefix + "unblock"))) {
     if (returnvalue) {
       if (message.member.hasPermission("MANAGE_CHANNELS")) {
-		message.channel.send(`This channel is disabled! You can not use commands here! Enable it using ?enable <#${message.channel.id}>`).then(msg => {msg.delete({ timeout: 5000 })})
+		message.channel.send(`This channel is disabled! You can not use commands here, maybe try another channel or enable it using **${prefixes.get(message.guild)}enable <#${message.channel.id}>**`).then(msg => {msg.delete({ timeout: 5000 })})
         return true
       } else {
-		message.channel.send(`This channel is disabled! You can not use commands here!`).then(msg => {msg.delete({ timeout: 5000 })})
+		message.channel.send(`This channel is disabled! You can not use commands here, maybe try another channel?`).then(msg => {msg.delete({ timeout: 5000 })})
         return true
       };
     } else return true

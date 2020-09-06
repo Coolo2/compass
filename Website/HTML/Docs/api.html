@@ -41,6 +41,8 @@
         <li><a href="#prefix">Prefix Fetch</a></li>
         <li><a href="#workreply">Work replies</a></li>
         <li><a href="#currency">Currency fetch</a></li>
+        <li><a href="#cooldown">Cooldown fetch</a></li>
+        <li><a href="#returns">Credit-return</a></li>
         <li style="position:absolute;bottom:75px;"><a href="/documentation">Bot</a></li>
         <li style="position:absolute;bottom:30px;" class="active"><a href="/documentation/api">API</a></li>
       </ul>
@@ -57,31 +59,43 @@
             </p>
             <h3 style="padding-top:50px;padding-bottom:50px">
                 Base URL
-            </h3> <pre><code>   <%- address %>/api</code></pre> 
+            </h3> <div style="padding-left:40px"><pre><code><%- address %>/api</code></pre> </div>
             <h3 style="padding-top:50px;padding-bottom:50px" id="balance">
                 Balance Fetching
             </h3>
             <p>You can fetch user balances using this API. Just use the following url structure:</p>
-            <pre><code>   /balance/[guild_id]/[member_id]</code></pre> 
+            <div style="padding-left:40px"><pre><code>/balance/[guild_id]/[member_id]</code></pre> </div>
             The API should return JSON with information about the user and their balances
             <h3 style="padding-top:50px;padding-bottom:50px" id="prefix">
                 Prefix Fetching
             </h3>
             <p>You can fetch guild prefixes using this API. Just use the following url structure:</p>
-            <pre><code>   /prefix/[guild_id]</code></pre> 
+            <div style="padding-left:40px"><pre><code>/prefix/[guild_id]</code></pre> </div>
             This will return simple JSON with the servers prefix
             <h3 style="padding-top:50px;padding-bottom:50px" id="workreply">
                 Work reply fetching
             </h3>
             <p>You can fetch guild work replies using this API. Just use the following url structure:</p>
-            <pre><code>   /workreplies/[guild_id]</code></pre> 
+            <div style="padding-left:40px"><pre><code>/workreplies/[guild_id]</code></pre> </div>
             This will return an array filled with json containing reply IDs and responses
             <h3 style="padding-top:50px;padding-bottom:50px" id="currency">
                 Currency fetching
             </h3>
             <p>You can fetch server currencies using this API. Just use the following url structure:</p>
-            <pre><code>   /currency/[guild_id]</code></pre> 
+            <div style="padding-left:40px"><pre><code>/currency/[guild_id]</code></pre> </div>
             This will return json about the guilds currency
+            <h3 style="padding-top:50px;padding-bottom:50px" id="cooldown">
+                Cooldown fetching
+            </h3>
+            <p>You can fetch server cooldowns of economy commands using the following url structure:</p>
+            <div style="padding-left:40px"><pre><code>/cooldowns/[guild_id]</code></pre> </div>
+            This will return json with the guilds cooldowns
+            <h3 style="padding-top:50px;padding-bottom:50px" id="returns">
+                Lower - Upper credit return fetching
+            </h3>
+            <p>You can fetch server credit return values, lower to upper of economy commands using the following url structure:</p>
+            <div style="padding-left:40px"><pre><code>/returns/[guild_id]</code></pre> </div>
+            This will return json with the guilds returns
         </div>
     </div>
         

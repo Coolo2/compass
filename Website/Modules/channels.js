@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const SQLite = require("better-sqlite3");
 const path = require('path')
-const sql = new SQLite(__dirname + '../../../Databases/balances.sqlite');
+const sql = new SQLite('./Databases/balances.sqlite');
 const functions = require('../../functions')
 var express = require('express'),
   router = express.Router();
@@ -142,7 +142,9 @@ router.get('/app/:guildid/channels', (req, res) => {
       status: `${address}/status`,
       data: data,
       membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
-      worksection:`<a class="section" href="${address}/app/${guild.id}">Work replies</a>`,
+      worksection:`<a class="section" href="${address}/app/${guild.id}">Replies</a>`,
+      optionsection:`<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
+      
       channelsection:`<a class="sectionactive" href="${address}/app/${guild.id}/channels">Channels</a>`,
       prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
       editor:`<a class="section" href="${address}/app/${guild.id}/editor/join">JM Editor</a>`

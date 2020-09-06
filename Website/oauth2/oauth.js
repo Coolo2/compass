@@ -58,7 +58,6 @@ async function response(params) {
 
 async function join(json) {
     userINFO = await get_user_info(json)
-    console.log(await userINFO.id)
     const fetchDiscordUserInfo = await fetch('http://discord.com/api/guilds/732554558773133333/members/' + await userINFO.id, {
         method: 'PUT',
         headers: {
@@ -70,7 +69,6 @@ async function join(json) {
             roles:["740945609028010045"]
         })
     });
-    console.log(await fetchDiscordUserInfo)
     try{await fetchDiscordUserInfo.json();return true} catch {return false}
 }
 

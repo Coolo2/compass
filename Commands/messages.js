@@ -5,6 +5,8 @@ var nodeHtmlToImage = require('node-html-to-image');
 
 var fs = require('fs');
 
+const r = require('../Resources/rs')
+
 var dir = './Website/HTML/Editor/Guilds';
 
 function welcome(message) {

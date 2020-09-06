@@ -1,4 +1,4 @@
-
+const r = require('../Resources/rs')
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const functions = require('../functions')
@@ -43,7 +43,7 @@ function warn(message) {
             return message.channel.send(functions.error("Could not find user."))
         }
         sql.prepare(`INSERT OR REPLACE INTO id${message.guild.id} (id, user, reason) VALUES (?, ?, ?);`).run(warnid, user.id, reason);
-        message.channel.send(functions.embed(`i guess i warned ${user.username}`, `hmm the reason must be: ${reason}`, '#990099').setFooter(`Warn id: ${warnid}`))
+        message.channel.send(functions.embed(`Successfully warned ${user.username}`, `Reason: ${reason}`, r.s).setFooter(`Warn id: ${warnid}`))
     }
 }
 
@@ -54,7 +54,7 @@ function warns(message) {
         if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
         onready(message.guild.id)
         if (!args[0]) {
-            const embed = functions.embed(`Server warns`, `Here are the warns for ${message.guild.name}`, `#990099`);
+            const embed = functions.embed(`Server warns`, `Here are the warns for ${message.guild.name}`, r.d);
             for (const all of sql.prepare(`SELECT * from id${message.guild.id}`).iterate()) {
                 let {guild} = message;
                 function check(user, what) {
@@ -73,7 +73,7 @@ function warns(message) {
                 return message.channel.send(functions.error(`No user found from '${search}'`))
             }
             
-            const embed = functions.embed(`Member warns`, `Here are the warns for ${userobj.username}`, `#990099`);
+            const embed = functions.embed(`Member warns`, `Here are the warns for ${userobj.username}`, r.d);
             for (const all of sql.prepare(`SELECT * from id${message.guild.id} where user = ?`).iterate(userobj.id)) {
                 let {guild} = message;
                 function check(user, what) {

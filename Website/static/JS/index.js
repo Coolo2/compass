@@ -88,7 +88,6 @@ if (window.innerWidth < 960) {
     
     
 }
-
 var oAuth = "https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot"
 function clickfunction() {
     window.open(oAuth);

@@ -5,6 +5,8 @@ const fetch = require('node-fetch');
 PythonShell = require('python-shell').PythonShell;
 const fs = require('fs')
 
+const r = require('../Resources/rs')
+
 string1 = fs.readFileSync('.//PythonMOD/apifetch.py','utf8')
 file = fs.readFileSync('.//PythonMOD/ascii.py', 'utf8')
 
@@ -28,7 +30,6 @@ function meme(message) {
         fetch('https://api.reddit.com/r/memes/random')
             .then(response => response.json())
             .then(data => {
-                console.log()
                 message.channel.send( functions.embed(data[0]["data"]["children"][0]["data"]["title"], "", Math.floor(Math.random() * 16777214) + 1).setImage(data[0]["data"]["children"][0]["data"]["url"]) )
             })
             .catch(err => console.log(err))

@@ -72,12 +72,40 @@
             "permissions":"none",
             "aliases":["work"]
         },
+        "crime": {
+            "name":"crime",
+            "description":"Attempt a crime, either get a huge reward or get a fine!",
+            "usage":"[prefix]crime",
+            "permissions":"none",
+            "aliases":["crime"]
+        },
         "daily": {
             "name":"daily",
             "description":"Get money on a daily basis",
             "usage":"[prefix]daily",
             "permissions":"none",
             "aliases":["daily"]
+        },
+        "lower": {
+            "name":"lower",
+            "description":"Guess a higher number than the bot and win! Lower the guess, higher the winning.",
+            "usage":"[prefix]lower [1-99] [bet]",
+            "permissions":"none",
+            "aliases":["lower"]
+        },
+        "crash": {
+            "name":"crash",
+            "description":"Stop before you crash! Multiplier of profit gains every 2 seconds.",
+            "usage":"[prefix]crash [bet]",
+            "permissions":"none",
+            "aliases":["crash"]
+        },
+        "vote": {
+            "name":"vote",
+            "description":"Vote for the bot and get 2500 in every server",
+            "usage":"[prefix]vote",
+            "permissions":"none",
+            "aliases":["vote"]
         },
         "balance": {
             "name":"balance",
@@ -86,6 +114,20 @@
             "permissions":"none",
             "aliases":["balance", "bal"]
         },
+        "deposit": {
+            "name":"deposit",
+            "description":"Deposit to bank",
+            "usage":"[prefix]deposit [amount/all]",
+            "permissions":"none",
+            "aliases":["deposit", "dep", "d"]
+        },
+        "withdraw": {
+            "name":"withdraw",
+            "description":"Withdraw to cash",
+            "usage":"[prefix]withdraw [amount/all]",
+            "permissions":"none",
+            "aliases":["withdraw", "with", "w"]
+        },
         "leaderboard": {
             "name":"leaderboard",
             "description":"Get the server's economy leaderboard!",
@@ -93,24 +135,38 @@
             "permissions":"none",
             "aliases":["lb", "leaders", "leaderboard"]
         },
-        "workreplies": {
-            "name":"workreplies",
-            "description":"Get all work replies for the server",
-            "usage":"[prefix]workreplies",
+        "set-cooldown": {
+            "name":"set-cooldown",
+            "description":"Set and view server cooldowns",
+            "usage":"[prefix]set-cooldown *[work/crime] *[cooldown(m/s/h)]",
+            "permissions":"Manage server",
+            "aliases":["sc", "set-cooldown", "cooldown", "cooldowns", "setcooldown"]
+        },
+        "set-return": {
+            "name":"set-return",
+            "description":"Set the lower and upper choices for the return randomizer",
+            "usage":"[prefix]set-cooldown *[command] *[return-lower] *[return-upper]",
+            "permissions":"Manage server",
+            "aliases":["set-return", "setreturn", "return", "returns", "returnamounts", "return-amounts"]
+        },
+        "replies": {
+            "name":"replies",
+            "description":"Get all work and crime replies for the server through web dashboard",
+            "usage":"[prefix]replies",
             "permissions":"none",
-            "aliases":["workreplies", "wps"]
+            "aliases":["replies", "rs"]
         },
         "addreply": {
             "name":"addreply",
-            "description":"Add a work reply to the server",
-            "usage":"[prefix]addreply [reply message ({amount} = amount, {balance}=balance)]",
+            "description":"Add a work or crime reply to the server",
+            "usage":"[prefix]addreply [work/crime-fine/crime-pay] [reply message ({amount} = amount, {balance}=balance)]",
             "permissions":"Manage server",
             "aliases":["addreply"]
         },
         "removereply": {
             "name":"removereply",
-            "description":"Remove a reply",
-            "usage":"[prefix]removereply [id/all]",
+            "description":"Remove a work or crime pay/fine reply",
+            "usage":"[prefix]removereply [work/crime-pay/crime-fine] [id/all]",
             "permissions":"Manage server",
             "aliases":["removereply", "deletereply", "delreply"]
         },
@@ -180,6 +236,13 @@
             "usage":"[prefix]botinfo",
             "permissions":"none",
             "aliases":["botinfo"]
+        },
+        "links": {
+            "name":"links",
+            "description":"Get bot links",
+            "usage":"[prefix]links",
+            "permissions":"none",
+            "aliases":["links", "link", "support", "invite", "website"]
         },
         "help": {
             "name":"help",

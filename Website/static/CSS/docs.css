@@ -206,7 +206,14 @@ border-radius:128px;
   .dropdown:hover .dropdown-content {display: block;}
 
 code {
+    border-radius:10px;
+    background-color:#40444B;
+    border:2px solid #202225;
+    padding:10px;
     color:gray;
+}
+h3 {
+    text-decoration: underline;
 }
 ul {
     position:fixed;

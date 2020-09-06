@@ -3,6 +3,8 @@ const client = new Discord.Client();
 const math = require('mathjs');
 const functions = require('../functions')
 
+const r = require('../Resources/rs')
+
 function maths(command, args, message) {
     if (["math", "evaluate", "eval", "calculate", "cal", "calc"].includes(command)) {
         if (!args.length) {
@@ -10,7 +12,7 @@ function maths(command, args, message) {
         }
         var equasion = args.splice(0,500).join(" ")
         try {
-            message.channel.send(functions.embed("Successfully calculated", `${equasion} = ${math.evaluate(equasion)}`, "#0099ff"));
+            message.channel.send(functions.embed("Successfully calculated", `${equasion} = ${math.evaluate(equasion)}`, r.d));
         }
         catch {
             message.channel.send(functions.error("Invalid calculation"))

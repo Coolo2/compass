@@ -307,3 +307,19 @@ a.section:visited, a.section:link, a.section:active {
 a.sectionactive:visited, a.sectionactive:link, a.sectionactive:active {
     text-decoration: none;
 }
+
+.replyoption {
+    display: inline-block;
+    position:relative;
+    background-color:#525764;
+    -webkit-transition: all 0.2s;
+    top:50px;
+    padding:10px;
+    border-radius:10px;
+    box-shadow: 0px 0px 20px 10px #00000070;
+}
+.replyoption:hover {
+    top:45px;
+    background-color:#616675;
+    border-radius:5px;
+}

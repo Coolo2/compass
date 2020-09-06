@@ -2,6 +2,7 @@ node_modules/
 Resources/test.json
 .vscode/
 Website/Junk/
+.env
 
 package-lock.json 
 package.json

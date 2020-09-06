@@ -4,8 +4,11 @@ const SQLite = require("better-sqlite3");
 const sql = new SQLite('./Databases/balances.sqlite');
 const time = new SQLite('./Databases/times.sqlite');
 
+const returns = require('./returns')
+
+const r = require('../Resources/rs')
+
 const functions = require('../functions')
-const talkedRecently = new Set();
 const fs = require('fs')
 const emojis = require('./emoji');
 const prefixes = require("./prefix");
@@ -42,7 +45,7 @@ function daily(message) {
         
 
         if (access == true) {
-            toadd = functions.int(500, 2000) 
+            toadd = functions.int(returns.get(message.guild, 'daily')[0], returns.get(message.guild, 'daily')[1]) 
             try {
                 score = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get(message.author.id).balance
                 sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, score + toadd);
@@ -55,7 +58,7 @@ function daily(message) {
             return message.channel.send(functions.embed(
                 "You got your daily!", 
                 `You completed your daily for ${message.guild.name} and got ${toadd + emojis.get(message.guild)}! You are now on ${score + emojis.get(message.guild)}!`, 
-                '#00FF00'))
+                r.s))
         } else {return message.channel.send(functions.error("You have already completed your daily today! Try again later!"))}
     }
 }

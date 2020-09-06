@@ -84,7 +84,9 @@ router.get('/app/:guildid/editor/join', function (req, res) {
   if (!guild.member(user).hasPermission("MANAGE_GUILD")) {defaulthtml = "<h3 style='color:white'>You are missing manage server permissions to use the Editor</h3><div style='padding-bottom:1900px;'></div>";defaultopts = ""}
     res.render(__dirname + '/Defaults/editor.html', {guild:req.params.guildid, defaulthtml:defaulthtml, opts:defaultopts.replace("guildid", req.params.guildid), address:address,
     membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
-    worksection:`<a class="section" href="${address}/app/${guild.id}">Work replies</a>`,
+    worksection:`<a class="section" href="${address}/app/${guild.id}">Replies</a>`,
+      optionsection:`<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
+      
     channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
     prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
     editor:`<a class="sectionactive" href="${address}/app/${guild.id}/editor/join">JM Editor</a>`,

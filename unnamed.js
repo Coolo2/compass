@@ -4,8 +4,13 @@ const fs = require('fs')
 const setup = JSON.parse(fs.readFileSync('.//Resources/test.json'))
 const functions = require('./functions')
 
+const DBL = require('dblapi.js');
+const dbl = new DBL(setup.dbl, { webhookPort: 3000, webhookAuth: 'password' });
+
 const maths = require('./Commands/math');
 const database = require('./Commands/economy')
+const economy2 = require('./Commands/economy2')
+const economy3 = require('./Commands/economy3extras')
 const moderation = require('./Commands/moderation')
 const warns = require('./Commands/warns')
 const help = require('./Commands/help')
@@ -17,12 +22,14 @@ const takereplies = require('.//Commands/takereplies')
 const emojis = require('.//Commands/emoji')
 const timely = require('.//Commands/timely')
 const messages = require('.//Commands/messages')
+const cooldown = require('.//Commands/cooldowns')
+const returns = require('.//Commands/returns')
 
 
 module.exports.bot = bot
 
 bot.on('ready', () => {
-  bot.user.setActivity(`?help | ${JSON.parse(fs.readFileSync('.//Resources/website.json')).domainall} | ${bot.guilds.cache.size} servers`);
+  bot.user.setActivity(`^help | ${JSON.parse(fs.readFileSync('.//Resources/website.json')).domainall} | ${bot.guilds.cache.size} servers`);
   console.log(`Logged in as ${bot.user.tag}!`);
 });
 
@@ -57,7 +64,6 @@ bot.on('message', message => {
   const command = args.shift().toLowerCase();
   maths.math(command, args, message)
   database.work(message)
-  database.balance(message)
   moderation.ban(message)
   moderation.kick(message)
   warns.warn(message)
@@ -65,6 +71,7 @@ bot.on('message', message => {
   warns.delwarn(message)
   help.help(message)
   info.botinfo(message, bot)
+  info.support(message)
   apis.dog(message)
   database.workreplies(message)
   database.addreply(message)
@@ -83,9 +90,18 @@ bot.on('message', message => {
   apis.ascii(message)
   timely.daily(message)
   messages.welcome(message)
+  cooldown.cooldown(message)
+  database.crime(message)
+  returns.returns(message)
+  economy2.lower(message)
+  economy3.deposit(message)
+  economy3.withdrawl(message)
+  economy3.balance(message)
+  economy2.vote(message)
+  economy2.crash(message)
 });
 
-bot.on("error", error => console.log(error));
+bot.on("error", error => console.log(error.message));
 
 module.exports.bot = bot
 
@@ -115,6 +131,8 @@ app.use(express.static(__dirname+'/Website/static'));
 
 app.use('/', testRoutes);
 app.use('/', require('./Website/Modules/members'));
+app.use('/', require('./Website/Modules/crimereplies'));
+app.use('/', require('./Website/Modules/options'));
 app.use('/', require('./Website/Modules/channels'));
 app.use('/', require('./Website/Modules/currency'));
 app.use('/', require('./Website/Modules/prefixes'));
@@ -154,10 +172,21 @@ router.get('*', function (req, res) {
   res.sendFile(path.join(__dirname + '/Website/HTML/404.html'));
 });
 
-module.exports.getAppCookies = getAppCookies
-
 app.use('/', router);
 app.listen(process.env.port || 5000);
 
-// DBL
+//DBL
 
+votes = {}
+
+dbl.webhook.on('ready', hook => {
+  console.log(`Webhook running at http://${hook.hostname}:${hook.port}${hook.path}`);
+});
+
+dbl.webhook.on('vote', vote => {
+  votes[String(vote.user)] = true
+  console.log(`User with ID ${vote.user} just voted!`);
+});
+
+module.exports.votes = votes
+module.exports.getAppCookies = getAppCookies

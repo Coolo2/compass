@@ -1,7 +1,9 @@
 const Discord = require('discord.js');
 const functions = require('../functions')
 const fs = require('fs')
-const setup = JSON.parse(fs.readFileSync(__dirname + '../../Resources/test.json'))
+const setup = JSON.parse(fs.readFileSync('./Resources/test.json'))
+
+const r = require('../Resources/rs')
 
 function block(message) {
     const args = message.content.slice(prefix.length).split(' ');

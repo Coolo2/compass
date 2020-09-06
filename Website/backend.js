@@ -4,9 +4,7 @@ const fs = require('fs')
 const path = require('path');
 const router = express.Router();
 const fetch = require('node-fetch');
-const btoa = require('btoa');
 const cookie = require('cookie')
-const vhost = require("vhost");
 const {
   catchAsync
 } = require('../utils');

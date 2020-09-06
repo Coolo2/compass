@@ -10,12 +10,16 @@ function contents() {
     return fs.readFileSync('.//Resources/workreplies.json')
 }
 
+function crimecontents() {
+    return fs.readFileSync('.//Resources/crimereplies.json')
+}
+
 function startup(server, member) {
     const table = sql.prepare(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'balances${server.id}${member.id}';`).get();
     if (!table['count(*)']) {
         sql.prepare(`CREATE TABLE balances${server.id}${member.id} (user TEXT, balance INTEGER)`).run();
         try {
-        sql.prepare(`CREATE UNIQUE INDEX idx_balances_user_${member.id} ON balances${server.id}${member.id} (user);`).run();
+        sql.prepare(`CREATE UNIQUE INDEX idx_balances_user_${member.id}_server_${server.id} ON balances${server.id}${member.id} (user);`).run();
         } catch{}
         sql.pragma("synchronous = 1");
         sql.pragma("journal_mode = wal");
@@ -30,6 +34,16 @@ function startup(server, member) {
         sql.pragma("journal_mode = wal");
         sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(server.id, contents());
         
+    }
+    const table3 = sql.prepare(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'crimereplies';`).get();
+    if (!table3['count(*)']) {
+        sql.prepare(`CREATE TABLE crimereplies (server TEXT, data TEXT)`).run();
+        try {
+        sql.prepare(`CREATE UNIQUE INDEX idx_servers_crime ON crimereplies (server);`).run();
+        } catch{}
+        sql.pragma("synchronous = 1");
+        sql.pragma("journal_mode = wal");
+        sql.prepare(`INSERT OR REPLACE INTO crimereplies (server, data) VALUES (?, ?);`).run(server.id, crimecontents());
     }
 };
 
@@ -71,7 +85,36 @@ function times(guild) {
     }
 };
 
+const cld = new SQLite('./Databases/cooldowns.sqlite');
+function cooldowns(guild) {
+    const table = cld.prepare(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'cooldowns${guild.id}';`).get();
+    if (!table['count(*)']) {
+        
+        cld.prepare(`CREATE TABLE cooldowns${guild.id} (type TEXT, value INTEGER)`).run();
+        try {
+        cld.prepare(`CREATE UNIQUE INDEX idx_cooldowns_${guild.id} ON cooldowns${guild.id} (type);`).run();
+        } catch{}
+        cld.pragma("synchronous = 1");
+        cld.pragma("journal_mode = wal");
+    }
+};
+
+function returns(guild) {
+    const table = cld.prepare(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'returns${guild.id}';`).get();
+    if (!table['count(*)']) {
+        
+        cld.prepare(`CREATE TABLE returns${guild.id} (type TEXT, value INTEGER)`).run();
+        try {
+        cld.prepare(`CREATE UNIQUE INDEX idx_returns_${guild.id} ON returns${guild.id} (type);`).run();
+        } catch{}
+        cld.pragma("synchronous = 1");
+        cld.pragma("journal_mode = wal");
+    }
+};
+
 module.exports.startup = startup
 module.exports.prefixes = prefixes
 module.exports.emojis = emojis
 module.exports.times = times
+module.exports.cooldowns = cooldowns
+module.exports.returns = returns

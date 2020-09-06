@@ -6,6 +6,7 @@ const functions = require('../functions')
 const talkedRecently = new Set();
 const fs = require('fs')
 
+const r = require('../Resources/rs')
 
 function contents() {
     return fs.readFileSync('.//Resources/workreplies.json')
@@ -36,7 +37,7 @@ function take (bot, message) {
         }
         replies = JSON.parse(sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(guild.id).data)
         sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(message.guild.id, JSON.stringify(replies));
-        message.channel.send(functions.embed("Loaded replies from " + guild.name, `To see your new replies use **${require('./prefix').get(message.guild.id)}workreplies** or see them on the [Web dashboard](${JSON.parse(fs.readFileSync('.//Resources/website.json')).address}/app/${message.guild.id})`, '#00FF00'))
+        message.channel.send(functions.embed("Loaded replies from " + guild.name, `To see your new replies use **${require('./prefix').get(message.guild.id)}workreplies** or see them on the [Web dashboard](${JSON.parse(fs.readFileSync('.//Resources/website.json')).address}/app/${message.guild.id})`, r.s))
     }
 }
 function share (message) {
@@ -53,7 +54,7 @@ function share (message) {
         
         3. You should have all work replies synced! To sync again just follow step 1 and 2 again. 
         
-        4. If you need any support join the [support server](https://discord.gg/fDUs68p)`, '#00FF00'))
+        4. If you need any support join the [support server](https://discord.gg/fDUs68p)`, r.d))
     }
 }
 

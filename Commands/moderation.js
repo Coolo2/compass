@@ -4,6 +4,8 @@ const math = require('mathjs');
 const { json } = require('body-parser');
 const functions = require('../functions')
 
+const r = require('../Resources/rs')
+
 function ban(message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
@@ -18,7 +20,7 @@ function ban(message) {
             if (message.member.hasPermission("BAN_MEMBERS")) {
                 try {
                     member.ban();
-                    return message.channel.send(functions.embed(`Successfully banned`, "Banned " + user.username + " successfully", `#990099`))
+                    return message.channel.send(functions.embed(`Successfully banned`, "Banned " + user.username + " successfully", r.s))
                 } 
                 catch {
                     return message.channel.send(functions.error(`I do not have permissions to ban ${user.username}`));
@@ -47,7 +49,7 @@ function kick(message) {
             if (message.member.hasPermission("KICK_MEMBERS")) {
                 try {
                     member.kick();
-                    return message.channel.send(functions.embed(`Successfully kicked`, "Kicked " + user.username + " successfully", `#990099`))
+                    return message.channel.send(functions.embed(`Successfully kicked`, "Kicked " + user.username + " successfully", r.s))
                 } 
                 catch {
                     return message.channel.send(functions.error(`I do not have permissions to kick ${user.username}`));

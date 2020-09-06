@@ -3,6 +3,7 @@ const SQLite = require("better-sqlite3");
 const path = require('path')
 const fs = require('fs')
 const sql = new SQLite('./Databases/balances.sqlite');
+const sqlc = new SQLite('./Databases/cooldowns.sqlite');
 const functions = require('../functions')
 var express = require('express'),
   router = express.Router();
@@ -10,10 +11,11 @@ const app = express()
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+const cooldowns = require('../Commands/cooldowns')
+
 var automatedRoutes = require('./automated');
 const bodyParser = require('body-parser');
 const e = require("express");
-const { from } = require("form-data");
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -23,33 +25,12 @@ function contents() {
   return fs.readFileSync('.//Resources/workreplies.json')
 }
 
-function startup(server, member) {
-  // Check if the table "points" exists.
-  const table = sql.prepare(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'balances${server.id}${member.id}';`).get();
-  if (!table['count(*)']) {
-    // If the table isn't there, create it and setup the database correctly.
-    sql.prepare(`CREATE TABLE balances${server.id}${member.id} (user TEXT, balance INTEGER)`).run();
-    // Ensure tat the "id" row is always unique and indexed.
-    try {
-      sql.prepare(`CREATE UNIQUE INDEX idx_balances_user ON balances${server.id}${member.id} (user);`).run();
-    } catch {}
-    sql.pragma("synchronous = 1");
-    sql.pragma("journal_mode = wal");
-  }
-  const table2 = sql.prepare(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'workreplies';`).get();
-  if (!table2['count(*)']) {
-    // If the table isn't there, create it and setup the database correctly.
-    sql.prepare(`CREATE TABLE workreplies (server TEXT, data TEXT)`).run();
-    // Ensure tat the "id" row is always unique and indexed.
-    try {
-      sql.prepare(`CREATE UNIQUE INDEX idx_servers_user ON workreplies (server);`).run();
-    } catch {}
-    sql.pragma("synchronous = 1");
-    sql.pragma("journal_mode = wal");
-    sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(server.id, contents());
+const databasesetup = require('../Commands/databasesetup')
 
-  }
+function startup(server, member) {
+  databasesetup.startup(server, member)
 };
+
 const getAppCookies = (req, res) => {
   try {
     const rawCookies = req.headers.cookie.split('; ');
@@ -67,6 +48,57 @@ const getAppCookies = (req, res) => {
 const domain = JSON.parse(fs.readFileSync('.//Resources/website.json')).domain
 const address = JSON.parse(fs.readFileSync('.//Resources/website.json')).address
 const domainall = JSON.parse(fs.readFileSync('.//Resources/website.json')).domainall
+
+router.get('/app/:guildid', (req, res, next) => {
+  guild = bot.guilds.cache.get(req.params.guildid)
+  replyid = req.params.replyid
+  id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+  member = functions.memberfromarg(guild, id)
+  data = `<h3 style="color:white;text-align:center;">Replies for ${guild.name} </h3>`
+  if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+    data = data.concat(`<center>
+    <p style="color:white;margin-left:100px;margin-right:100px;text-align:center">Your reply share ID is <b>${functions.encode(guild.id)}</b> - Giving this lets others use/load your work and crime replies! (only people with manage guild permissions can see this)</p>
+    <form action="${guild.id}/load" method="get"><input type="text" class="forminput" name="replydata"/><input type="submit" class="formbutton" value="Load work and crime replies from ShareID (clears current work and crime replies!)"/></form></center> 
+    <div style="text-align:center">
+    </div>`)
+  } 
+
+  data = data.concat(`<div class="replyoption" style="left:18%;cursor:pointer;" onclick="window.open('/app/${guild.id}/work', '_self')">
+  <p style="color:white;text-align:center;">Work replies</p>
+  <img width="260px;" height="350px;" style="border-radius:10px;" src="https://i.ibb.co/Sr53YYx/work.png">
+  
+</div><div class="replyoption" style="float:right;right:18%;cursor:pointer;" onclick="window.open('/app/${guild.id}/crime', '_self')">
+<p style="color:white;text-align:center;">Crime replies</p>
+  <img width="260px;" height="350px;" style="border-radius:10px;" src="https://i.ibb.co/bNH97Wp/crime.png">
+  </div><div style="padding-top:1000px;"></div>`)
+  li = ""
+  bot.guilds.cache.forEach((guild) => {
+    try {
+      if (guild.member(user.id)) {
+        if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
+        li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
+        in1 = 1
+      }
+    } catch {}
+  })
+  li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot')" id="dasb" src='https://i.ibb.co/dG0x5Ch/plus2.png'>`)
+  avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
+  return res.render(__dirname + '/HTML/dashboardguild.html', {
+    servers: li,
+    name: decodeURIComponent(getAppCookies(req, res)['name']),
+    id: id,
+    avatar: `<img class="avatar" id="output" src="${avatar}">`,
+    address: address,
+    status: `${address}/status`,
+    data: data,
+    membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
+    worksection:`<a class="sectionactive" href="${address}/app/${guild.id}">Replies</a>`,
+    optionsection:`<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
+    channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
+    prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
+    editor:`<a class="section" href="${address}/app/${guild.id}/editor/join">JM Editor</a>`
+  })
+})
 
 router.get('/api/workreplies/:guildid', (req, res, next) => {
     guild = bot.guilds.cache.get(req.params.guildid)
@@ -91,17 +123,35 @@ router.get('/app/:guildid/add', (req, res, next) => {
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
   reply = req.query.replydata
-  if (reply=="") {return res.redirect(`${address}/app/${guild.id}`)}
+  if (reply=="") {return res.redirect(`${address}/app/${guild.id}/work`)}
   if (guild.member(member).hasPermission("MANAGE_GUILD")) {
     replyid = functions.int(1, 99999)
     replies = JSON.parse(sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(guild.id).data)
     replies[String(replyid)] = reply
     sql.prepare(`UPDATE workreplies SET data = ? WHERE server = '${guild.id}' `).run(JSON.stringify(replies));
-    res.redirect(`${address}/app/${guild.id}`)
+    res.redirect(`${address}/app/${guild.id}/work`)
   } else {
-    res.redirect(`${address}/app/${guild.id}`)
+    res.redirect(`${address}/app/${guild.id}/work`)
   }
 
+});
+
+router.get('/app/:guildid/set', (req, res, next) => {
+  guild = bot.guilds.cache.get(req.params.guildid)
+  id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+  member = functions.memberfromarg(guild, id)
+  thecooldown = req.query.replydata
+  if (thecooldown=="") {return res.redirect(`${address}/app/${guild.id}/work`)}
+  if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+    databasesetup.cooldowns(guild)
+    try {
+        sqlc.prepare(`INSERT OR REPLACE INTO cooldowns${guild.id} (type, value) VALUES (?, ?);`).run("work", cooldowns.get_time(thecooldown));
+    }
+    catch (err) {console.log(err.message)}
+    res.redirect(`${address}/app/${guild.id}/work`)
+  } else {
+    res.redirect(`${address}/app/${guild.id}/work`)
+  }
 });
 
 router.get('/app/:guildid/help', (req, res, next) => {
@@ -125,7 +175,7 @@ router.get('/app/:guildid/load', (req, res, next) => {
   to = bot.guilds.cache.get(req.params.guildid)
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(to, id)
-  if (req.query.replydata=="") {return res.redirect(`${address}/app/${to.id}`)}
+  if (req.query.replydata=="") {return res.redirect(`${address}/app/${to.id}/work`)}
   from1 = functions.decode(req.query.replydata.split(" ")[0])
   if (to.member(member).hasPermission("MANAGE_GUILD")) {
     if (from1==undefined) {return res.redirect(`${address}/app/${to.id}`)}
@@ -141,6 +191,15 @@ router.get('/app/:guildid/load', (req, res, next) => {
     }
     replies = JSON.parse(sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(from1.id).data)
     sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(to.id, JSON.stringify(replies));
+
+    try {
+        replies = sql.prepare(`SELECT * FROM crimereplies WHERE server = ?`).get(from1.id).data
+    }
+    catch {
+        sql.prepare(`INSERT OR REPLACE INTO crimereplies (server, data) VALUES (?, ?);`).run(from1.id, crimecontents());
+    }
+    replies = JSON.parse(sql.prepare(`SELECT * FROM crimereplies WHERE server = ?`).get(from1.id).data)
+    sql.prepare(`INSERT OR REPLACE INTO crimereplies (server, data) VALUES (?, ?);`).run(to.id, JSON.stringify(replies));
     res.redirect(`${address}/app/${to.id}`)
   } else {
     res.redirect(`${address}/app/${to.id}`)
@@ -154,9 +213,9 @@ router.get('/app/:guildid/reset', (req, res, next) => {
   if (guild.member(member).hasPermission("MANAGE_GUILD")) {
     startup(guild, member)
     sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(guild.id, JSON.stringify(JSON.parse(fs.readFileSync('.//Resources/workreplies.json'))));
-    res.redirect(`${address}/app/${guild.id}`)
+    res.redirect(`${address}/app/${guild.id}/work`)
   } else {
-    res.redirect(`${address}/app/${guild.id}`)
+    res.redirect(`${address}/app/${guild.id}/work`)
   }
 });
 
@@ -167,9 +226,9 @@ router.get('/app/:guildid/clear', (req, res, next) => {
   if (guild.member(member).hasPermission("MANAGE_GUILD")) {
     startup(guild, member)
     sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(guild.id, '{}');
-    res.redirect(`${address}/app/${guild.id}`)
+    res.redirect(`${address}/app/${guild.id}/work`)
   } else {
-    res.redirect(`${address}/app/${guild.id}`)
+    res.redirect(`${address}/app/${guild.id}/work`)
   }
 });
 
@@ -183,16 +242,16 @@ router.get('/app/:guildid/delete/:replyid', (req, res, next) => {
     if (replies.hasOwnProperty(String(replyid))) {
       delete replies[String(replyid)]
       sql.prepare(`UPDATE workreplies SET data = ? WHERE server = '${guild.id}' `).run(JSON.stringify(replies));
-      res.redirect(`${address}/app/${guild.id}`)
+      res.redirect(`${address}/app/${guild.id}/work`)
     } else {
-      res.redirect(`${address}/app/${guild.id}`)
+      res.redirect(`${address}/app/${guild.id}/work`)
     }
   } else {
-    res.redirect(`${address}/app/${guild.id}`)
+    res.redirect(`${address}/app/${guild.id}/work`)
   }
 });
 
-router.get('/app/:guildid', (req, res) => {
+router.get('/app/:guildid/work', (req, res) => {
   if (req.params.guildid) {
     id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
     guild = bot.guilds.cache.get(req.params.guildid)
@@ -229,9 +288,10 @@ router.get('/app/:guildid', (req, res) => {
     avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
     if (guild.member(member).hasPermission("MANAGE_GUILD")) {
       data = `<h3 style="color:white;text-align:center;">Work replies for ${guild.name} <i class="fa fa-info-circle" onclick="window.open('${address}/app/${guild.id}/help', '_self')" style="cursor:pointer"></i></h3><center>
-      <p style="color:white;margin-left:100px;margin-right:100px;text-align:center">Your work reply share ID is <b>${functions.encode(guild.id)}</b> - Giving this lets others use/load your work replies! (only people with manage guild permissions can see this)</p>
-      <form action="${guild.id}/add" method="get"><input type="text" class="forminput" name="replydata"/><input type="submit" class="formbutton" value="Add work reply" /></form>
-      <form action="${guild.id}/load" method="get"><input type="text" class="forminput" name="replydata"/><input type="submit" class="formbutton" value="Load work replies from ShareID (clears current)"/></form></center> 
+      <form action="/app/${guild.id}/add" method="get"><input type="text" class="forminput" name="replydata"/><input type="submit" class="formbutton" value="Add work reply" /></form>
+      <div>
+      <form action="/app/${guild.id}/set" method="get"><input type="text" class="forminput" placeholder="${cooldowns.readable(cooldowns.get(guild, 'work'))}" name="replydata"/><input type="submit" class="formbutton" value="Set work cooldown" /></form>
+      </div>
       <div style="text-align:center">
       <button class="formbutton" style="background-color:red" onclick="window.open('/app/${guild.id}/reset', '_self')">Reset work replies to default</button>
       <button class="formbutton" style="background-color:red" onclick="window.open('/app/${guild.id}/clear', '_self')">Clear work replies</button>
@@ -240,7 +300,9 @@ router.get('/app/:guildid', (req, res) => {
       ${returnvalue}`
     } else {
       data = `<h3 style="color:white;text-align:center;">Work replies for ${guild.name}</h3><center><form action="${guild.id}/add" method="get"><input type="text" class="forminputdisabled" name="replydata" disabled/><input type="submit" class="formbuttondisabled" value="Add work reply (missing perms)" disabled/></form>
-      <form action="${guild.id}/load" method="get"><input type="text" class="forminputdisabled" name="replydata" disabled/><input type="submit" class="formbuttondisabled" value="Load work replies from ShareID (missing perms)" disabled/></form></center> 
+      <div>
+      <form action="/app/${guild.id}/set" method="get"><input type="text" class="forminputdisabled" placeholder="${cooldowns.readable(cooldowns.get(guild, 'work'))}" name="replydata" disabled/><input type="submit" class="formbuttondisabled" value="Set work cooldown (missing perms)" disabled/></form>
+      </div>
       <div style="text-align:center">
       <button class="formbuttondisabled">Reset work replies to default (missing permissions)</button>
       <button class="formbuttondisabled">Clear work replies (missing permissions)</button>
@@ -256,14 +318,13 @@ router.get('/app/:guildid', (req, res) => {
       status: `${address}/status`,
       data: data,
       membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
-      worksection:`<a class="sectionactive" href="${address}/app/${guild.id}">Work replies</a>`,
+      worksection:`<a class="sectionactive" href="${address}/app/${guild.id}">Replies</a>`,
+      optionsection:`<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
       channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
       prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
       editor:`<a class="section" href="${address}/app/${guild.id}/editor/join">JM Editor</a>`
     })
   }
 });
-
-
 
 module.exports = router;
