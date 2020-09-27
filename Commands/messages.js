@@ -12,7 +12,7 @@ var dir = './Website/HTML/Editor/Guilds';
 function welcome(message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
-    if (command=="welcome") {
+    if (["welcome", "welcome-image", "welcome-message"].includes(command)) {
         guild = message.guild
         member = guild.member(message.author)
         f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
@@ -31,4 +31,30 @@ function welcome(message) {
         
     }
 }
+
+function leave(message) {
+    const args = message.content.slice(prefix.length).split(' ');
+    const command = args.shift().toLowerCase();
+    if (["leave-message", "leave-image", "leave"].includes(command)) {
+        guild = message.guild
+        member = guild.member(message.author)
+        f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
+        if (!f[message.guild.id] || !f[message.guild.id]["leave"] || f[message.guild.id]["leave"] == "false") {return message.channel.send("This server has no leave message/image")}
+        else {channel = bot.channels.cache.get(f[message.guild.id]["leave"])}
+        if (f[guild.id]["leavemessage"] && f[guild.id]["leavemessage"].replace("noimg", "") != "false" && f[guild.id]["leavemessage"].startsWith("noimg")) {return channel.send(f[guild.id]["leavemessage"].split("{user}").join(member.user.username).replace("noimg", ""))}
+        if (f[guild.id]["leavemessage"] && f[guild.id]["leavemessage"].replace("noimg", "") != "false") {channel.send(f[guild.id]["leavemessage"].split("{user}").join(member.user.username))}
+        if (fs.existsSync(dir + "/" + message.guild.id + '/leave.html')) {
+            html = `<body style="height:300px;width:500px;">` + fs.readFileSync(dir + "/" + message.guild.id + '/leave.html', 'utf8').split("{server}").join(message.guild.name).split("{user}").join(message.author.username).split("{avatar}").join(message.author.displayAvatarURL())  + "</body>"
+            message.channel.send("Fetching server leave image! Please wait, this can take a while...")
+            nodeHtmlToImage({html: html,transparent:true})
+                .then(buffer => {
+                    channel.send(new Discord.MessageAttachment(buffer, 'leave-image.png'))
+                })
+        }
+        
+    }
+}
+
+
 module.exports.welcome = welcome
+module.exports.leave = leave

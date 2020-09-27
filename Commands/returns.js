@@ -24,7 +24,7 @@ function returns(message) {
         lower = allAmounts[0]
         upper = allAmounts[1]
         if (!message.member.hasPermission("MANAGE_GUILD")) {
-            return message.channel.send(functions.embed(`Return amounts for ${message.guild.name}`, `Work return: ${getraw(message.guild, 'work')[0]}\nCrime return: ${getraw(message.guild, 'crime')}\nDaily return: ${getraw(message.guild, 'daily')}`, r.d))
+            return message.channel.send(functions.embed(`Return amounts for ${message.guild.name}`, `Work return: ${getraw(message.guild, 'work')}\nCrime return: ${getraw(message.guild, 'crime')}\nDaily return: ${getraw(message.guild, 'daily')}`, r.d))
         }
         if (!lower || !upper || !choice || !['work', 'crime', 'daily'].includes(choice)) {
             return message.channel.send(functions.embed(`Return amounts for ${message.guild.name}`, `Work return: ${getraw(message.guild, 'work')}\nCrime return: ${getraw(message.guild, 'crime')}\nDaily return: ${getraw(message.guild, 'daily')}\n\n**Change one with ${getprefix.get(message.guild)}set-return [command] [amount(lower) [amount(upper)]**`, r.d))

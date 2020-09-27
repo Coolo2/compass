@@ -96,7 +96,7 @@ router.get('/app/:guildid', (req, res, next) => {
     optionsection:`<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
     channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
     prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
-    editor:`<a class="section" href="${address}/app/${guild.id}/editor/join">JM Editor</a>`
+    editor:`<a class="section" href="${address}/app/${guild.id}/editor">Editor</a>`
   })
 })
 
@@ -322,7 +322,7 @@ router.get('/app/:guildid/work', (req, res) => {
       optionsection:`<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
       channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
       prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
-      editor:`<a class="section" href="${address}/app/${guild.id}/editor/join">JM Editor</a>`
+      editor:`<a class="section" href="${address}/app/${guild.id}/editor">Editor</a>`
     })
   }
 });

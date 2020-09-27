@@ -64,7 +64,7 @@
             "aliases":["prefix", "setprefix", "serverprefix"]
         }
     },
-    "Economy": {
+    "EconomyGames": {
         "work": {
             "name":"work",
             "description":"Work and get money",
@@ -121,12 +121,19 @@
             "permissions":"none",
             "aliases":["deposit", "dep", "d"]
         },
-        "withdraw": {
-            "name":"withdraw",
-            "description":"Withdraw to cash",
-            "usage":"[prefix]withdraw [amount/all]",
+        "withdrawl": {
+            "name":"withdrawl",
+            "description":"Withdrawl to cash",
+            "usage":"[prefix]withdrawl [amount/all]",
             "permissions":"none",
-            "aliases":["withdraw", "with", "w"]
+            "aliases":["withdrawl", "with", "w"]
+        },
+        "redeem-code": {
+            "name":"redeem-code",
+            "description":"Redeem a server-wide or global code",
+            "usage":"[prefix]redeem-code [code]",
+            "permissions":"none",
+            "aliases":["redeem", "redeem-code", "redeemcode"]
         },
         "leaderboard": {
             "name":"leaderboard",
@@ -134,6 +141,22 @@
             "usage":"[prefix]leaderboard",
             "permissions":"none",
             "aliases":["lb", "leaders", "leaderboard"]
+        }
+    },
+    "EconomyOpts":{
+        "generate-code": {
+            "name":"generate-code",
+            "description":"Generate a code to get credits (useful for giveways etc)",
+            "usage":"[prefix]generate-code [code credit amount]",
+            "permissions":"Manage server",
+            "aliases":["generate", "generate-code", "generatecode"]
+        },
+        "delete-code": {
+            "name":"delete-code",
+            "description":"Delete a server-wide code",
+            "usage":"[prefix]delete-code [code]",
+            "permissions":"Manage server",
+            "aliases":["delete", "delete-code", "deletecode"]
         },
         "set-cooldown": {
             "name":"set-cooldown",
@@ -237,6 +260,13 @@
             "permissions":"none",
             "aliases":["botinfo"]
         },
+        "uptime": {
+            "name":"uptime",
+            "description":"Get the bots uptime",
+            "usage":"[prefix]uptime",
+            "permissions":"none",
+            "aliases":["uptime"]
+        },
         "links": {
             "name":"links",
             "description":"Get bot links",
@@ -270,12 +300,16 @@
         "1":1,
         "2":2,
         "economy":2,
-        "money":2,
+        "economygames":2,
+        "games":2,
+        "economyopts":3,
+        "money":3,
         "3":3,
-        "fun":3,
-        "funcommands":3,
-        "misc":4,
-        "miscellaneous":4,
-        "4":4
+        "4":4,
+        "fun":4,
+        "funcommands":4,
+        "misc":5,
+        "miscellaneous":5,
+        "5":5
     }
 }

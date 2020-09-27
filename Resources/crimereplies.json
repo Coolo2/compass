@@ -2,7 +2,7 @@
     "pay":{
         "1":"You pick up cash of the floor and get {amount}",
         "2":"You help a kid download an antivirus and are paid {amount}",
-        "3":"You avoid a tech support scam and are donated {amoumnt}",
+        "3":"You avoid a tech support scam and are donated {amount}",
         "4":"You create a clickbait stream and are donated {amount} thinking it's real",
         "5":"You find a penny on the floor and it turns out to be an ancient coin. You are paid {amount}",
         "6":"You get tripped up and are paid {amount} for literally no reason",

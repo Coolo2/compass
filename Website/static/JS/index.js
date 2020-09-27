@@ -1,4 +1,56 @@
 console.log("Stop spying on the cosnole bro ")
+
+if (!getCookieValue("notVersion") ) {}
+else if (document.getElementById("version").innerHTML == getCookieValue("notVersion")) {document.getElementById("versionButton").setAttribute("hidden", "hidden")}
+else {
+    document.getElementById("versionButton").setAttribute("hidden", "hidden")
+    document.cookie = `notVersion=${document.getElementById("version").innerHTML}; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`
+    var notification = new Notification(`New version (${document.getElementById("version").innerHTML})`, {
+        icon: 'https://cdn.discordapp.com/avatars/732208102652379187/07cdc23792f9c6ecf7dd2c976f1e8111.webp?size=1024',
+        body: `Version ${document.getElementById("version").innerHTML} was released! Click the notification for more info`,
+    });
+    notification.onclick = function() {
+        window.open('/changelogs');
+    };
+}
+
+if (Notification.permission !== 'granted') {
+    document.getElementById("versionButton").removeAttribute("hidden")
+    document.cookie = `notVersion=${document.getElementById("version").innerHTML}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+}
+
+function getCookieValue(a) {
+    var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+    return b ? b.pop() : '';
+}
+
+   function notifyMe() {
+        if (!Notification) {
+            alert('Desktop notifications not available in your browser.');
+            return;
+        }
+        
+        if (Notification.permission !== 'granted') {
+            console.log("h")
+            Notification.requestPermission()
+               .then(permission => {
+                    if (permission === 'granted') {
+                        document.cookie = `notVersion=${document.getElementById("version").innerHTML}; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`
+                        document.getElementById("versionButton").setAttribute("hidden", "hidden")
+                        var notification = new Notification('UnNamed releases', {
+                            icon: 'https://cdn.discordapp.com/avatars/732208102652379187/07cdc23792f9c6ecf7dd2c976f1e8111.webp?size=1024',
+                            body: 'You will now be notified for new versions!',
+                        });
+                    }
+                    
+               }) 
+
+            
+        }    
+};
+
+
+
 function sizeimage() {
     document.getElementById('image2').classList.remove("modal");
     document.getElementById('image2').classList.add("imgs2");
@@ -95,5 +147,5 @@ function clickfunction() {
 document.getElementById('myImage').setAttribute('draggable', false);
 
 function movedown() {
-    window.open('#botlinks',"_self");
+    window.open('/stats',"_self");
 }

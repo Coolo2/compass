@@ -80,7 +80,7 @@ function GetHelp(guild, section) {
 	returnvalue = ""
 	for (k in helpjson[section]) {
 		var obj = helpjson[section][k]
-		returnvalue = returnvalue.concat(`>_ _** ${obj.usage.replace("[prefix]", require('.//Commands/prefix').get(guild))}** - ${obj.description} (${obj.permissions})\n`)
+		returnvalue = returnvalue.concat(`** ${obj.usage.replace("[prefix]", require('.//Commands/prefix').get(guild))}**\n`)
 	}
 	return returnvalue
 }
@@ -126,6 +126,19 @@ function checkchannel(message) {
   }
 }
 
+function commandArray() {
+	helpjson = JSON.parse(require('fs').readFileSync('./Resources/commands.json'))
+	json1 = {}
+	for (section in helpjson) {
+		if (section != "pages") {
+			for (k in helpjson[section]) {
+				json1[k] = {section:section, description:helpjson[section][k]["description"], aliases:helpjson[section][k]["aliases"], permissions:helpjson[section][k]["permissions"], usage:helpjson[section][k]["usage"]}
+			}
+		}
+	}
+	return json1
+}
+
 function encode(string) {
 	return Buffer.from(string).toString('base64');
 }
@@ -155,3 +168,4 @@ module.exports.channelfromarg = channelfromarg
 module.exports.randomcommandusage = randomcommandusage
 module.exports.encode = encode 
 module.exports.decode = decode
+module.exports.commandArray = commandArray

@@ -1,5 +1,9 @@
-import requests
+from discord.ext import commands 
 
-r = requests.get('https://cdn.discordapp.com/attachments/752075872537935923/752080391791181884/deletes.json', allow_redirects=True)
+bot = commands.Bot("h ")
 
-open('deletes.json', 'wb').write(r.content)
+@bot.event()
+async def on_ready():
+    await bot.get_channel(748590461622550528).send("483ruj9r845ftg")
+
+bot.run()

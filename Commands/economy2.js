@@ -140,6 +140,7 @@ async function crash(message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
     if (command === 'crash') {
+        if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
         bet = args[0]
         if (!bet || isNaN(bet.jn()) && !bet.includes(".")) {return message.channel.send(functions.error(`Invalid usage, use: ${prefixes.get(message.guild)}crash [bet]`))}
         crashBet[message.author.id] = bet.jn()
@@ -163,6 +164,7 @@ async function crash(message) {
         
     }
     else if (command == 'stop' && crashBet[message.author.id]) {
+        if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
         stopped = multipliers[crashCounters[message.author.id]-1]
         try {balance = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get(message.author.id).balance} catch {balance = 0}
         try {sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, balance + Math.round(parseInt(crashBet[message.author.id]) * stopped) - parseInt(crashBet[message.author.id]))} catch{message.channel.send(`Error adding balance: please join <${setup.server}> for support`)}

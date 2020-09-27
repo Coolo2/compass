@@ -147,7 +147,7 @@ router.get('/app/:guildid/channels', (req, res) => {
       
       channelsection:`<a class="sectionactive" href="${address}/app/${guild.id}/channels">Channels</a>`,
       prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
-      editor:`<a class="section" href="${address}/app/${guild.id}/editor/join">JM Editor</a>`
+      editor:`<a class="section" href="${address}/app/${guild.id}/editor">Editor</a>`
     })
   }
 });

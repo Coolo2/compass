@@ -17,7 +17,7 @@ function maths(command, args, message) {
         catch {
             message.channel.send(functions.error("Invalid calculation"))
         }
-        
     }
 }
+
 module.exports.math = maths;

@@ -4,9 +4,6 @@ const fs = require('fs')
 const setup = JSON.parse(fs.readFileSync('.//Resources/test.json'))
 const functions = require('./functions')
 
-const DBL = require('dblapi.js');
-const dbl = new DBL(setup.dbl, { webhookPort: 3000, webhookAuth: 'password' });
-
 const maths = require('./Commands/math');
 const database = require('./Commands/economy')
 const economy2 = require('./Commands/economy2')
@@ -24,7 +21,9 @@ const timely = require('.//Commands/timely')
 const messages = require('.//Commands/messages')
 const cooldown = require('.//Commands/cooldowns')
 const returns = require('.//Commands/returns')
+const codes = require('.//Commands/codes')
 
+const r = require('./Resources/rs');
 
 module.exports.bot = bot
 
@@ -32,8 +31,6 @@ bot.on('ready', () => {
   bot.user.setActivity(`^help | ${JSON.parse(fs.readFileSync('.//Resources/website.json')).domainall} | ${bot.guilds.cache.size} servers`);
   console.log(`Logged in as ${bot.user.tag}!`);
 });
-
-//const prefix = setup.prefix;
 
 var nodeHtmlToImage = require('node-html-to-image');
 
@@ -54,6 +51,24 @@ bot.on('guildMemberAdd', member => {
       })
   }
 });
+
+bot.on('guildMemberRemove', member => {
+  guild = member.guild
+  f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
+  if (!f[guild.id] || !f[guild.id]["leave"] || f[guild.id]["leave"] == "false") {return}
+  else {channel = bot.channels.cache.get(f[guild.id]["leave"])}
+  if (f[guild.id]["leavemessage"] && f[guild.id]["leavemessage"].replace("noimg", "") != "false" && f[guild.id]["leavemessage"].startsWith("noimg")) {return channel.send(f[guild.id]["leavemessage"].split("{user}").join(member.user.username).replace("noimg", ""))}
+  if (f[guild.id]["leavemessage"] && f[guild.id]["leavemessage"].replace("noimg", "") != "false") {channel.send(f[guild.id]["leavemessage"].split("{user}").join(member.user.username))}
+  if (fs.existsSync(dir + "/" + guild.id + '/leave.html')) {
+    html = `<body style="height:300px;width:500px;">` + fs.readFileSync(dir + "/" + guild.id + '/leave.html', 'utf8').split("{server}").join(guild.name).split("{user}").join(member.user.username).split("{avatar}").join(member.user.displayAvatarURL())  + "</body>"
+    nodeHtmlToImage({html: html,transparent:true})
+      .then(buffer => {
+        channel.send(new Discord.MessageAttachment(buffer, 'leave-image.png'))
+      })
+  }
+});
+
+module.exports.launchedAt = new Date()
 
 bot.on('message', message => {
   if (message.author.bot) return
@@ -90,6 +105,7 @@ bot.on('message', message => {
   apis.ascii(message)
   timely.daily(message)
   messages.welcome(message)
+  messages.leave(message)
   cooldown.cooldown(message)
   database.crime(message)
   returns.returns(message)
@@ -99,6 +115,12 @@ bot.on('message', message => {
   economy3.balance(message)
   economy2.vote(message)
   economy2.crash(message)
+  info.uptime(message)
+  codes.generate(message)
+  codes.redeem(message)
+  codes.generateGlobal(message)
+  codes.deleteCodeCommand(message)
+  codes.deleteCodeGlobalCommand(message)
 });
 
 bot.on("error", error => console.log(error.message));
@@ -138,6 +160,7 @@ app.use('/', require('./Website/Modules/currency'));
 app.use('/', require('./Website/Modules/prefixes'));
 app.use('/', require('./Website/backend'));
 app.use('/', require('./Website/HTML/Editor/editor').router);
+app.use('/', require('./Website/HTML/Editor/editorleave').router);
 
 
 const getAppCookies = (req, res) => {
@@ -168,25 +191,54 @@ router.get('/api/*', function (req, res) {
   res.send({"ERROR":"Invalid URL"})
 });
 
+votes = {}
+
+router.post('/dblwebhook', function (req, res) {
+  vote = req.body
+  try {
+    user = bot.users.cache.get(req.body.user)
+    user.send(functions.embed(`Thanks for voting!`, `Thank you so much for voting for me! It helps support the bot! As a thanks, you can redeem a reward every time you vote with **^vote**`, r.s))
+  } catch{}
+  votes[String(vote.user)] = true
+  console.log(`User with ID ${vote.user} just voted!`);
+})
+
 router.get('*', function (req, res) {
   res.sendFile(path.join(__dirname + '/Website/HTML/404.html'));
 });
 
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
 app.use('/', router);
 app.listen(process.env.port || 5000);
 
-//DBL
-
-votes = {}
-
-dbl.webhook.on('ready', hook => {
-  console.log(`Webhook running at http://${hook.hostname}:${hook.port}${hook.path}`);
-});
-
-dbl.webhook.on('vote', vote => {
-  votes[String(vote.user)] = true
-  console.log(`User with ID ${vote.user} just voted!`);
-});
-
 module.exports.votes = votes
 module.exports.getAppCookies = getAppCookies
+
+var os = require('os');
+
+setTimeout(function () {
+  loadData()
+}, 5000);
+
+function loadData() {
+  
+    f = JSON.parse(fs.readFileSync('minute.json'))
+    f2 = JSON.parse(fs.readFileSync('day.json'))
+    if (!f2[new Date().toDateString()]) {f2[new Date().toDateString()] = {"guilds":bot.guilds.cache.size, "users":bot.users.cache.size}}
+    d = new Date()
+    if (String(Math.ceil(d.toTimeString().split(":")[1]/5)*5).length != 2) {top = String(Math.ceil(d.toTimeString().split(":")[1]/5)*5) + "0"} else {top = String(Math.ceil(d.toTimeString().split(":")[1]/5)*5)}
+    datetext = d
+    f[String(datetext)] = {"users":bot.users.cache.size, "guilds":bot.guilds.cache.size, "channels":bot.channels.cache.size, "free_memory":Math.round(os.freemem()/1000000), "used_memory":Math.round((os.totalmem()-os.freemem())/1000000)}
+    if (Object.keys(f).length > 288) {delete f[Object.keys(f)[0]]}
+    fs.writeFileSync('minute.json', JSON.stringify(f))
+    fs.writeFileSync('day.json', JSON.stringify(f2))
+}
+
+
+setInterval(function() {
+    loadData()
+}, 300 * 1000); 

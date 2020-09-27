@@ -122,9 +122,9 @@
         return fetch(url, {method: "POST", body: JSON.stringify(data)});
     }
     function getCookieValue(a) {
-        var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
-        return b ? b.pop() : '';
-    }
+    var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+    return b ? b.pop() : '';
+}
     function buttonmoment() {
         e = document.getElementById("joinchannel_main");
         if (document.getElementById("enablewelcome").getAttribute("checked") || document.getElementById("enablewelcomemessage").getAttribute("checked")) {if (e.options[e.selectedIndex].value == "false") {return window.alert("You haven't chosen a channel!")}}
@@ -139,13 +139,13 @@
         joinmessage = document.getElementById("joinmessage").value;if (joinmessage == "") {joinmessage = "false"};joinmessage = encodeURIComponent(joinmessage)
         if (document.getElementById("enablewelcome").getAttribute("checked")) {truefalse = "true"} else {truefalse = "false"}
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", `<%- address %>/app/<%- guild %>/render/join`, true);
+        xhr.open("POST", `<%- address %>/app/<%- guild %>/render/leave`, true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         
         xhr.send(JSON.stringify({
             user:encodeURIComponent(getCookieValue('user')),
             html:encodeURIComponent(document.getElementById('capture').innerHTML),
-            opts:encodeURIComponent(options.replace(`Enable welcome image</label>`, `Enable welcome image</label><2- joinchannels 2>`.split("2").join("%"))),
+            opts:encodeURIComponent(options.replace(`Enable leave image</label>`, `Enable leave image</label><2- joinchannels 2>`.split("2").join("%"))),
             enabled:encodeURIComponent(truefalse),
             channel:encodeURIComponent(e.options[e.selectedIndex].value),
             joinmessage:joinmessage

@@ -361,6 +361,7 @@ function leaderboards(message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
     if (['leaderboards', 'leaders', 'lb'].includes(command)) {
+        if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
         final = []
         finalj = {}
         for (tables of sql.prepare("select name from sqlite_master where type='table'").iterate()) {
@@ -371,6 +372,7 @@ function leaderboards(message) {
                 } catch {}
                 if (score == 0) return
                 finalj[score] = user.username
+                final.push(score)
             }
         }
         final.sort(function(a, b) {
@@ -381,7 +383,7 @@ function leaderboards(message) {
         counter = 0
         final.forEach(item => {
             counter = counter + 1
-            lb = lb.concat(counter + ". **" + finalj[item] + "**: " + item.sep() + "\n")
+            lb = lb.concat(counter + ". **" + finalj[item] + "**: " + item.sep() + " " + emojis.get(message.guuk) + "\n")
         })
         if (lb == "") {return message.channel.send(functions.embed("Leaderboard for " + message.guild.name, "*Its feeling kinda empty in here! Check out economy commands with **" + prefixes.get(message.guild) + "help economy**!*", r.d))}
         message.channel.send(functions.embed("Leaderboard for " + message.guild.name, lb, r.d))

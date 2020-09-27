@@ -8,9 +8,6 @@ const cookie = require('cookie')
 const {
   catchAsync
 } = require('../utils');
-const {
-  bitAnd
-} = require('mathjs');
 
 const domain = JSON.parse(fs.readFileSync('.//Resources/website.json')).domain
 const address = JSON.parse(fs.readFileSync('.//Resources/website.json')).address
@@ -23,11 +20,6 @@ const redirect = encodeURIComponent(address + '/dashboard');
 const redirectSUPPORT = encodeURIComponent(address + '/joinsupport');
 const setup = JSON.parse(fs.readFileSync('.//Resources/test.json'))
 
-
-//app.engine('html', require('ejs').renderFile);
-
-
-
 router.get('/', function (req, res) {
   var allguilds = bot.guilds.cache.size;
   var users1 = bot.users.cache.size;
@@ -36,7 +28,8 @@ router.get('/', function (req, res) {
     servers: allguilds,
     users: users1,
     channels: channels1,
-    address:address, status:`${address}/status`
+    address:address, status:`${address}/status`,
+    version:setup.version
   })
 });
 
@@ -95,14 +88,18 @@ router.get('/join/error', (req, res, next) => {
 router.get('/commands', function (req, res) {
   commands = JSON.parse(fs.readFileSync(`.//Resources/commands.json`))
   moderation = `<button style="border-top-right-radius:10px;border-top-left-radius:10px;" class="collapsible">Moderation</button><div class="content"><table><tr><th style="border-left:1px solid rgb(168, 168, 168);color:">Command</th><th>Aliases</th><th style="border-right:1px solid rgb(168, 168, 168);">Description</th></tr>`
-  economy = `<button class="collapsible">Economy</button><div class="content"><table><tr><th style="border-left:1px solid rgb(168, 168, 168);color:">Command</th><th>Aliases</th><th style="border-right:1px solid rgb(168, 168, 168);">Description</th></tr>`
+  economy = `<button class="collapsible">Economy Games</button><div class="content"><table><tr><th style="border-left:1px solid rgb(168, 168, 168);color:">Command</th><th>Aliases</th><th style="border-right:1px solid rgb(168, 168, 168);">Description</th></tr>`
+  economyo = `<button class="collapsible">Economy Opts</button><div class="content"><table><tr><th style="border-left:1px solid rgb(168, 168, 168);color:">Command</th><th>Aliases</th><th style="border-right:1px solid rgb(168, 168, 168);">Description</th></tr>`
   fun = `<button class="collapsible">Fun</button><div class="content"><table><tr><th style="border-left:1px solid rgb(168, 168, 168);color:">Command</th><th>Aliases</th><th style="border-right:1px solid rgb(168, 168, 168);">Description</th></tr>`
   misc = `<button style="border-bottom-right-radius:10px;border-bottom-left-radius:10px;" class="collapsible">Misc</button><div class="content"><table><tr><th style="border-left:1px solid rgb(168, 168, 168);color:">Command</th><th>Aliases</th><th style="border-right:1px solid rgb(168, 168, 168);">Description</th></tr>`
   for (item in commands["Moderation"]) {
     moderation = moderation.concat(`<tr><td style="border-left:1px solid rgb(168, 168, 168);">${commands["Moderation"][item].name}</td><td>${commands["Moderation"][item].aliases.join(", ")}</td><td style="border-right:1px solid rgb(168, 168, 168);">${commands["Moderation"][item].description}</td></tr>`)
   }
-  for (item in commands["Economy"]) {
-    economy = economy.concat(`<tr><td style="border-left:1px solid rgb(168, 168, 168);">${commands["Economy"][item].name}</td><td>${commands["Economy"][item].aliases.join(", ")}</td><td style="border-right:1px solid rgb(168, 168, 168);">${commands["Economy"][item].description}</td></tr>`)
+  for (item in commands["EconomyGames"]) {
+    economy = economy.concat(`<tr><td style="border-left:1px solid rgb(168, 168, 168);">${commands["EconomyGames"][item].name}</td><td>${commands["EconomyGames"][item].aliases.join(", ")}</td><td style="border-right:1px solid rgb(168, 168, 168);">${commands["EconomyGames"][item].description}</td></tr>`)
+  }
+  for (item in commands["EconomyOpts"]) {
+    economyo = economyo.concat(`<tr><td style="border-left:1px solid rgb(168, 168, 168);">${commands["EconomyOpts"][item].name}</td><td>${commands["EconomyOpts"][item].aliases.join(", ")}</td><td style="border-right:1px solid rgb(168, 168, 168);">${commands["EconomyOpts"][item].description}</td></tr>`)
   }
   for (item in commands["Fun"]) {
     fun = fun.concat(`<tr><td style="border-left:1px solid rgb(168, 168, 168);">${commands["Fun"][item].name}</td><td>${commands["Fun"][item].aliases.join(", ")}</td><td style="border-right:1px solid rgb(168, 168, 168);">${commands["Fun"][item].description}</td></tr>`)
@@ -112,12 +109,13 @@ router.get('/commands', function (req, res) {
   }
   moderation = moderation.concat(`</table></div>`)
   economy = economy.concat(`</table></div>`)
+  economyo = economyo.concat(`</table></div>`)
   fun = fun.concat(`</table></div>`)
   misc = misc.concat(`</table></div>`)
   res.render(path.join(__dirname + '/HTML/commands.html'), {
       address:address, 
       status:`${address}/status`,
-      data:moderation + economy + fun + misc
+      data:moderation + economy + economyo + fun + misc
   });
 });
 
@@ -135,6 +133,19 @@ router.get('/supportserver', function (req, res) {
 
 router.get('/supportserverswitch', function (req, res) {
   res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&scope=guilds.join&redirect_uri=${redirectSUPPORT}`)
+})
+const os = require('os')
+router.get('/stats', function(req, res) {
+  res.render(path.join(__dirname + '/HTML/stats.html'), {
+    address:address, 
+    status:`${address}/status`,
+    servers:fs.readFileSync('minute.json'),
+    serversday:fs.readFileSync('day.json'),
+    stats_guilds:bot.guilds.cache.size,
+    stats_users:bot.users.cache.size,
+    title:"Stats",
+    allmem:Math.round(os.totalmem()/1000)
+});
 })
 
 oauth = require('./oauth2/oauth')
@@ -176,6 +187,7 @@ router.get('/joinsupport', async function (req, res) {
 });
 
 var testRoutes = require('./database');
+const { bot } = require('../unnamed');
 
 router.get('/redirect', (req, res) => {
   res.render(__dirname + '/HTML/redirect.html', {url:address})
