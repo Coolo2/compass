@@ -12,8 +12,9 @@
 <body id="thebody" style="background:#1C1F26">
     <div class="navbar">
         <a class="h" href="<%= address %>/">Home</a>
-        <a class="h" href="<%= status %>">Status</a>
+        
         <a class="h" href="<%= address %>/app">Dashboard</a></li>
+<a class="h" href="<%= address %>/options">Options</a></li>
         <div class="dropdown">
             <button class="dropbtn" style="background-color:gray">More
                 <i class="fa fa-caret-down"></i>
@@ -24,6 +25,7 @@
                 <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
             </div>
         </div>
         <a style="float:right" class="h" target="_blank" href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot" >Invite me</a>
@@ -35,7 +37,7 @@
             src="https://i.ibb.co/V9ZZ4r5/cubes.png">
         <div class="centered" onselectstart="return false" style="cursor: pointer;">Unnamed bot - Documentation</div>
     </div>
-    <ul>
+    <ul class="readability" >
         <li style="padding-bottom:50px;"></li>
         <li><a href="#intro">Intro</a></li>
         <li><a href="#questions">Questions</a></li>
@@ -46,13 +48,13 @@
         <h3 style="color:white;text-align:center;">Documentation and help on bot functions and use. More detailed descriptions and help. 
             <br>
         For a simple command list, see the <a href="<%- address %>/commands" style="color:blue">command page</a>.</h3>
-      <div style="background-color:#272b33;padding: 70px 0;text-align: center;margin-top:100px;box-shadow: 0px 0px 20px 5px #00000030;">
+      <div class="readability" style="background-color:#272b33;padding: 70px 0;text-align: center;margin-top:100px;box-shadow: 0px 0px 20px 5px #00000030;">
         
         <div style="color:white;margin-left:50px;text-align:left;margin-right:50%">
             
 
 
-            <div style="border:3px red solid;padding:30px;border-style:dashed;background-color:#24272e"><b>BEWARE:</b> All commands shown on this webpage will use the default prefix (?), however servers may have custom prefixes setup. To see the prefix, type:
+            <div class="readability" style="border:3px red solid;padding:30px;border-style:dashed;background-color:#24272e"><b>BEWARE:</b> All commands shown on this webpage will use the default prefix (?), however servers may have custom prefixes setup. To see the prefix, type:
 <pre><code>      @UnNamed prefix</code></pre>
             </div>
             <br>

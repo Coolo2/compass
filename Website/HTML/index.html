@@ -10,8 +10,9 @@
 <body id="thebody" style="background:#1C1F26">
     <div class="navbar" id="topper">
         <a class="h active" href="<%= address %>/">Home</a>
-        <a class="h" href="<%= status %>">Status</a>
+        
         <a class="h" href="<%= address %>/app">Dashboard</a></li>
+<a class="h" href="<%= address %>/options">Options</a></li>
         <div class="dropdown">
             <button class="dropbtn">More
                 <i class="fa fa-caret-down"></i>
@@ -22,6 +23,7 @@
                 <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
             </div>
         </div>
         <a style="float:right" class="h" target="_blank" href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot" >Invite me</a>
@@ -62,10 +64,9 @@
         </div>
         <div id="versionButton" style="color:white;position:absolute;bottom:50px;left:50px;"><a onclick="notifyMe()" onselectstart="return false" style="cursor:pointer" class="button selectDisable link">Notify me!</a> Get notified on new version releases</div>
     </div>
-    
     <div id="version" hidden><%- version %></div>
     <div class="container">
-        <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage"
+        <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage2"
             src="https://i.ibb.co/V9ZZ4r5/cubes.png">
         <div id="botlinks" style="left:30%;top:50%;position: absolute;transform: translate(-50%, -50%);" onselectstart="return false">Unnamed bot : links</div>
         <div style="left:50%;top:50%;position: absolute;transform: translate(-50%, -50%);z-index:10;"><a onselectstart="return false" class="button link" target="_blank" href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot">Invite me<span id="invitetext" class="invarrow"></span></a></div>
@@ -75,5 +76,6 @@
         <div style="left:50%;top:80%;position: absolute;transform: translate(-50%, -50%);z-index:10;border-radius:50px;"><a onselectstart="return false" class="button selectDisable link" style="background-color:gray;background: linear-gradient(145deg, gray 50%, rgb(114, 114, 114) 50%);" href="#">↑<span id="invitetext" class="invarrow"></span></a></div>
     </div>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="/JS/index.js"></script>
 </html>

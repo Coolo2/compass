@@ -27,17 +27,19 @@
 <body>
     <div class="navbar">
         <a class="h" href="<%= address %>/">Home</a>
-        <a class="h active" href="<%= status %>">Status</a>
         <a class="h" href="<%= address %>/app">Dashboard</a></li>
+<a class="h" href="<%= address %>/options">Options</a></li>
         <div class="dropdown">
-            <button class="dropbtn">More
+            <button class="dropbtn" style="background-color:gray">More
                 <i class="fa fa-caret-down"></i>
             </button>
             <div class="dropdown-content">
+                <a class="h" href="<%= address %>/stats">Stats <i class="fa fa-line-chart" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i> </a>
                 <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+<a class="h active" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
             </div>
         </div>
         <a style="float:right" class="h" target="_blank" href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot" >Invite me</a>
@@ -45,3 +47,31 @@
     </div>
     <iframe style="position:fixed; top:60px; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:10;" src="https://stats.uptimerobot.com/zqZppFRwVj"></iframe>
 </body>
+<script>
+    function getCookieValue(a) {
+    var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+    return b ? b.pop() : '';
+}
+
+if (!getCookieValue("theme")) {
+    document.cookie = `theme=dark; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`
+}
+
+if (getCookieValue("theme") == "light") {
+    lighttheme()
+}
+
+function lighttheme() {
+    try{Array.from(document.getElementsByTagName("*")).forEach(element => element.classList.add('notransition'))}catch{}
+
+
+    try{Array.from(document.getElementsByClassName("navbar")).forEach(element => {element.style.backgroundColor = '#D4D7DC';element.style.color = 'black'})}catch{}
+    try{Array.from(document.getElementsByTagName('div')).forEach(element => element.style.color = 'black')}catch{}
+    try{Array.from(document.getElementsByTagName('p')).forEach(element => element.style.color = 'black')}catch{}
+    try{Array.from(document.getElementsByTagName('a')).forEach(element => element.style.color = 'black')}catch{}
+    try{Array.from(document.getElementsByTagName('h3')).forEach(element => element.style.color = 'black')}catch{}
+    try{Array.from(document.getElementsByTagName('button')).forEach(element => element.style.color = 'black')}catch{}
+
+    setTimeout(function() {try{Array.from(document.getElementsByTagName("*")).forEach(element => element.classList.remove('notransition'))}catch{}}, 10)
+}
+</script>

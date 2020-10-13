@@ -61,7 +61,7 @@ router.get('/app/:guildid', (req, res, next) => {
     <form action="${guild.id}/load" method="get"><input type="text" class="forminput" name="replydata"/><input type="submit" class="formbutton" value="Load work and crime replies from ShareID (clears current work and crime replies!)"/></form></center> 
     <div style="text-align:center">
     </div>`)
-  } 
+  }
 
   data = data.concat(`<div class="replyoption" style="left:18%;cursor:pointer;" onclick="window.open('/app/${guild.id}/work', '_self')">
   <p style="color:white;text-align:center;">Work replies</p>
@@ -75,7 +75,11 @@ router.get('/app/:guildid', (req, res, next) => {
   bot.guilds.cache.forEach((guild) => {
     try {
       if (guild.member(user.id)) {
-        if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
+        if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {
+          style = "style='border-radius:10px'"
+        } else {
+          style = ""
+        }
         li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
         in1 = 1
       }
@@ -91,31 +95,40 @@ router.get('/app/:guildid', (req, res, next) => {
     address: address,
     status: `${address}/status`,
     data: data,
-    membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
-    worksection:`<a class="sectionactive" href="${address}/app/${guild.id}">Replies</a>`,
-    optionsection:`<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
-    channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
-    prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
-    editor:`<a class="section" href="${address}/app/${guild.id}/editor">Editor</a>`
+    membersection: `<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
+    worksection: `<a class="sectionactive" href="${address}/app/${guild.id}">Replies</a>`,
+    optionsection: `<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
+    channelsection: `<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
+    prefixsection: `<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
+    editor: `<a class="section" href="${address}/app/${guild.id}/editor">Editor</a>`
   })
 })
 
 router.get('/api/workreplies/:guildid', (req, res, next) => {
-    guild = bot.guilds.cache.get(req.params.guildid)
-    member = bot.users.cache.get("368071242189897728")
-    try {guild.name} catch {return res.send({"ERROR":"Invalid guild"})}
-    try {
-      replies = sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(guild.id).data
-    } catch {
-      sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(guild.id, contents());
-    }
+  guild = bot.guilds.cache.get(req.params.guildid)
+  member = bot.users.cache.get("368071242189897728")
+  try {
+    guild.name
+  } catch {
+    return res.send({
+      "ERROR": "Invalid guild"
+    })
+  }
+  try {
     replies = sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(guild.id).data
-    returnarray = []
-    for (k in JSON.parse(replies)) {
-      var obj = JSON.parse(replies)[k]
-      returnarray.push({"id":k, "reply":obj})
-    }
-    return res.send(returnarray)
+  } catch {
+    sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(guild.id, contents());
+  }
+  replies = sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(guild.id).data
+  returnarray = []
+  for (k in JSON.parse(replies)) {
+    var obj = JSON.parse(replies)[k]
+    returnarray.push({
+      "id": k,
+      "reply": obj
+    })
+  }
+  return res.send(returnarray)
 })
 
 router.get('/app/:guildid/add', (req, res, next) => {
@@ -123,7 +136,9 @@ router.get('/app/:guildid/add', (req, res, next) => {
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
   reply = req.query.replydata
-  if (reply=="") {return res.redirect(`${address}/app/${guild.id}/work`)}
+  if (reply == "") {
+    return res.redirect(`${address}/app/${guild.id}/work`)
+  }
   if (guild.member(member).hasPermission("MANAGE_GUILD")) {
     replyid = functions.int(1, 99999)
     replies = JSON.parse(sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(guild.id).data)
@@ -141,13 +156,16 @@ router.get('/app/:guildid/set', (req, res, next) => {
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
   thecooldown = req.query.replydata
-  if (thecooldown=="") {return res.redirect(`${address}/app/${guild.id}/work`)}
+  if (thecooldown == "") {
+    return res.redirect(`${address}/app/${guild.id}/work`)
+  }
   if (guild.member(member).hasPermission("MANAGE_GUILD")) {
     databasesetup.cooldowns(guild)
     try {
-        sqlc.prepare(`INSERT OR REPLACE INTO cooldowns${guild.id} (type, value) VALUES (?, ?);`).run("work", cooldowns.get_time(thecooldown));
+      sqlc.prepare(`INSERT OR REPLACE INTO cooldowns${guild.id} (type, value) VALUES (?, ?);`).run("work", cooldowns.get_time(thecooldown));
+    } catch (err) {
+      console.log(err.message)
     }
-    catch (err) {console.log(err.message)}
     res.redirect(`${address}/app/${guild.id}/work`)
   } else {
     res.redirect(`${address}/app/${guild.id}/work`)
@@ -159,14 +177,14 @@ router.get('/app/:guildid/help', (req, res, next) => {
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
   if (guild.member(member).hasPermission("MANAGE_GUILD")) {
-      data = `<span><img src="https://i.ibb.co/w0cmcqY/help.png">
+    data = `<span><img src="https://i.ibb.co/w0cmcqY/help.png">
       <div style="position:absolute;left:1100px;top:350px;transform: translate(-50%, -50%);z-index:10;"><a onselectstart="return false" class="button link" href="${address}/app/${guild.id}">Back</a></span>`
-      res.render(path.join(__dirname + '/HTML/custom.html'), {
-          address:address, 
-          status:`${address}/status`,
-          data:data,
-          title:"Dashboard help"
-      });
+    res.render(path.join(__dirname + '/HTML/custom.html'), {
+      address: address,
+      status: `${address}/status`,
+      data: data,
+      title: "Dashboard help"
+    });
   } else {}
 
 });
@@ -175,28 +193,34 @@ router.get('/app/:guildid/load', (req, res, next) => {
   to = bot.guilds.cache.get(req.params.guildid)
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(to, id)
-  if (req.query.replydata=="") {return res.redirect(`${address}/app/${to.id}/work`)}
+  if (req.query.replydata == "") {
+    return res.redirect(`${address}/app/${to.id}/work`)
+  }
   from1 = functions.decode(req.query.replydata.split(" ")[0])
   if (to.member(member).hasPermission("MANAGE_GUILD")) {
-    if (from1==undefined) {return res.redirect(`${address}/app/${to.id}`)}
+    if (from1 == undefined) {
+      return res.redirect(`${address}/app/${to.id}`)
+    }
     from1 = bot.guilds.cache.get(from1)
-    try {from1.name} catch {return res.redirect(`${address}/app/${to.id}`)}
+    try {
+      from1.name
+    } catch {
+      return res.redirect(`${address}/app/${to.id}`)
+    }
     startup(to, member)
     startup(from1, member)
     try {
-        replies = sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(from1.id).data
-    }
-    catch {
-        sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(from1.id, contents());
+      replies = sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(from1.id).data
+    } catch {
+      sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(from1.id, contents());
     }
     replies = JSON.parse(sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(from1.id).data)
     sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(to.id, JSON.stringify(replies));
 
     try {
-        replies = sql.prepare(`SELECT * FROM crimereplies WHERE server = ?`).get(from1.id).data
-    }
-    catch {
-        sql.prepare(`INSERT OR REPLACE INTO crimereplies (server, data) VALUES (?, ?);`).run(from1.id, crimecontents());
+      replies = sql.prepare(`SELECT * FROM crimereplies WHERE server = ?`).get(from1.id).data
+    } catch {
+      sql.prepare(`INSERT OR REPLACE INTO crimereplies (server, data) VALUES (?, ?);`).run(from1.id, crimecontents());
     }
     replies = JSON.parse(sql.prepare(`SELECT * FROM crimereplies WHERE server = ?`).get(from1.id).data)
     sql.prepare(`INSERT OR REPLACE INTO crimereplies (server, data) VALUES (?, ?);`).run(to.id, JSON.stringify(replies));
@@ -257,7 +281,9 @@ router.get('/app/:guildid/work', (req, res) => {
     guild = bot.guilds.cache.get(req.params.guildid)
     member = functions.memberfromarg(guild, id)
     user = bot.users.cache.get(String(id))
-    try {startup(guild, user)} catch {}
+    try {
+      startup(guild, user)
+    } catch {}
     try {
       replies = sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(guild.id).data
     } catch {
@@ -278,7 +304,11 @@ router.get('/app/:guildid/work', (req, res) => {
     bot.guilds.cache.forEach((guild) => {
       try {
         if (guild.member(user.id)) {
-          if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
+          if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {
+            style = "style='border-radius:10px'"
+          } else {
+            style = ""
+          }
           li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
           in1 = 1
         }
@@ -317,12 +347,12 @@ router.get('/app/:guildid/work', (req, res) => {
       address: address,
       status: `${address}/status`,
       data: data,
-      membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
-      worksection:`<a class="sectionactive" href="${address}/app/${guild.id}">Replies</a>`,
-      optionsection:`<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
-      channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
-      prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
-      editor:`<a class="section" href="${address}/app/${guild.id}/editor">Editor</a>`
+      membersection: `<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
+      worksection: `<a class="sectionactive" href="${address}/app/${guild.id}">Replies</a>`,
+      optionsection: `<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
+      channelsection: `<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
+      prefixsection: `<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
+      editor: `<a class="section" href="${address}/app/${guild.id}/editor">Editor</a>`
     })
   }
 });

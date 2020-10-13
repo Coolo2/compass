@@ -1,0 +1,49 @@
+
+        
+        
+                    <div style="padding-bottom:50px;"></div>
+            <div style="color:white">
+                <div style="background-color:#15181a;float: left;height:200px;width:33.33%">
+                    <div style="float:top;float:right;padding-right:5px;">Background <i class="fa fa-picture-o" aria-hidden="true"></i> </div>
+                    <span>BG color: <input class="forminput" oninput="load_inp()" id="bgcolor" value="red"></span>
+                    <br>
+                    <span>BG (image) URL: <input class="forminput" oninput="load_inp()" id="bgimg" value=""></span>
+                    <br>
+                    <span>BG border radius:<input class="forminput" oninput="load_inp()" id="borderradius" value="60">px</span>
+                    <br>
+                </div>
+                <div style="background-color:#1d2022;display: inline-block;float: left;height:200px;width:33.33%">
+                    <div style="float:top;float:right;padding-right:5px;">Text <i class="fa fa-font" aria-hidden="true"></i> </div>
+                    <span>Text color: <input class="forminput" oninput="load_inp()" id="textcolor" value="white"></span>
+                    <br>
+                    <span>Title: <input class="forminput" oninput="load_inp()" id="titlesize" value="40">px</span>
+                    <br>
+                    <span>Text: <input class="forminput" oninput="load_inp()" id="textsize" value="16">px</span>
+                    <br>
+                    <input type="checkbox" onclick="bold('title')" id="titlecheck" checked="checked">
+                    <label for="titlecheck"> Bold title</label>
+                    <br>
+                    <input type="checkbox" onclick="bold('textbox')" id="textcheck">
+                    <label for="textcheck"> Bold text</label>
+                </div>
+                <div style="background-color:#15181a;float: left;height:200px;width:33.33%">
+                    <div style="float:top;float:right;padding-right:5px;">Images <i class="fa fa-file-image-o" aria-hidden="true"></i> </div>
+                    <span>Border radius: <input class="forminput" oninput="load_inp()" id="imageradius" value="50">px</span>
+                    <br>
+                    <span>Size: <input class="forminput" oninput="load_inp()" id="imagesize" value="100">px</span>
+                </div>
+                <div style="padding-bottom:200px"></div>
+                <div style="background-color:#111314;height:150px;width:100%">
+                    <span><input type="checkbox" onclick="enablewelcome()" id="enablewelcome" checked="checked">
+                    <label for="enablewelcome"> Enable welcome image</label><%- joinchannels %></span>
+                    <div></div>
+                    <span><input type="checkbox" onclick="enablewelcomemessage()" id="enablewelcomemessage" checked="checked"><input oninput="welcometype()" id="joinmessage" class="forminput" value="Lol hi {user}"><span id="joinmessagelabel" style="color: white;">Welcome message</span></span>
+                    <br>
+                    <button class="formbutton" onclick="buttonmoment()">Render (save)</button>
+                    <br>
+                    <button class="formbutton" style="background-color:red" onclick="window.open('/app/732554558773133333/reset/join', '_self')">Reset</button>
+                </div>
+            </div>
+                
+                
+                

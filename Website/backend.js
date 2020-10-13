@@ -58,6 +58,13 @@ router.get('/documentation', function (req, res) {
   });
 });
 
+router.get('/options', function (req, res) {
+  res.render(path.join(__dirname + '/HTML/options.html'), {
+      address:address, 
+      status:`${address}/status`
+  });
+});
+
 router.get('/documentation/api', function (req, res) {
   res.render(path.join(__dirname + '/HTML/Docs/api.html'), {
       address:address, 

@@ -1,6 +1,7 @@
 console.log("Stop spying on the cosnole bro ")
 
-if (!getCookieValue("notVersion") ) {}
+try {
+    if (!getCookieValue("notVersion") ) {}
 else if (document.getElementById("version").innerHTML == getCookieValue("notVersion")) {document.getElementById("versionButton").setAttribute("hidden", "hidden")}
 else {
     document.getElementById("versionButton").setAttribute("hidden", "hidden")
@@ -18,35 +19,61 @@ if (Notification.permission !== 'granted') {
     document.getElementById("versionButton").removeAttribute("hidden")
     document.cookie = `notVersion=${document.getElementById("version").innerHTML}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
 }
+} catch{}
+
 
 function getCookieValue(a) {
     var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
     return b ? b.pop() : '';
 }
 
-   function notifyMe() {
-        if (!Notification) {
-            alert('Desktop notifications not available in your browser.');
-            return;
-        }
-        
-        if (Notification.permission !== 'granted') {
-            console.log("h")
-            Notification.requestPermission()
-               .then(permission => {
-                    if (permission === 'granted') {
-                        document.cookie = `notVersion=${document.getElementById("version").innerHTML}; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`
-                        document.getElementById("versionButton").setAttribute("hidden", "hidden")
-                        var notification = new Notification('UnNamed releases', {
-                            icon: 'https://cdn.discordapp.com/avatars/732208102652379187/07cdc23792f9c6ecf7dd2c976f1e8111.webp?size=1024',
-                            body: 'You will now be notified for new versions!',
-                        });
-                    }
-                    
-               }) 
+if (!getCookieValue("theme")) {
+    document.cookie = `theme=dark; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`
+}
 
-            
-        }    
+if (getCookieValue("theme") == "light") {
+    lighttheme()
+}
+
+function lighttheme() {
+    try{Array.from(document.getElementsByTagName("*")).forEach(element => element.classList.add('notransition'))}catch{}
+
+    document.body.style.backgroundColor = 'white'
+    document.getElementById('myImage').style.opacity = '20%'
+    document.getElementById('myImage2').style.opacity = '20%'
+    Array.from(document.getElementsByClassName("text")).forEach(element => element.style.backgroundColor = '#D4D7DC')
+    Array.from(document.getElementsByClassName("navbar")).forEach(element => {element.style.backgroundColor = '#D4D7DC';element.style.color = 'black'})
+    Array.from(document.getElementsByClassName("grid-container")).forEach(element => {element.style.backgroundColor = '#c4c7cc';element.style.color = 'black'})
+    Array.from(document.getElementsByTagName('div')).forEach(element => element.style.color = 'black')
+    Array.from(document.getElementsByTagName('p')).forEach(element => element.style.color = 'black')
+    Array.from(document.getElementsByTagName('a')).forEach(element => element.style.color = 'black')
+    Array.from(document.getElementsByTagName('button')).forEach(element => element.style.color = 'black')
+
+    setTimeout(function() {try{Array.from(document.getElementsByTagName("*")).forEach(element => element.classList.remove('notransition'))}catch{}}, 10)
+}
+
+
+
+
+function notifyMe() {
+    if (!Notification) {
+        alert('Desktop notifications not available in your browser.');
+        return;
+    }
+    if (Notification.permission !== 'granted') {
+        Notification.requestPermission()
+            .then(permission => {
+                if (permission === 'granted') {
+                    document.cookie = `notVersion=${document.getElementById("version").innerHTML}; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`
+                    document.getElementById("versionButton").setAttribute("hidden", "hidden")
+                    var notification = new Notification('UnNamed releases', {
+                        icon: 'https://cdn.discordapp.com/avatars/732208102652379187/07cdc23792f9c6ecf7dd2c976f1e8111.webp?size=1024',
+                        body: 'You will now be notified for new versions!',
+                    });
+                }
+                
+            }) 
+    }    
 };
 
 
@@ -108,15 +135,21 @@ if (window.innerWidth < 960) {
     }, 500);
     
 } else {
-    //On pc, on hover animation
     document.getElementsByClassName("grid-container")[0].addEventListener("mouseover", function (e) {
-        document.getElementById("stats").classList.add("grid-hover");
+        if (getCookieValue("theme") == "light") {
+            document.getElementById("stats").classList.add("grid-hover-light");
+        } else {
+            document.getElementById("stats").classList.add("grid-hover");
+        }
     });
-
-
     document.getElementsByClassName("grid-container")[0].addEventListener("mouseout", function (e) {
-        document.getElementById("stats").classList.remove("grid-hover");
+        if (getCookieValue("theme") == "light") {
+            document.getElementById("stats").classList.remove("grid-hover-light");
+        } else {
+            document.getElementById("stats").classList.remove("grid-hover");
+        }
     });
+
     document.getElementsByClassName("centered")[0].addEventListener("mouseover", function (e) {
         
         e.target.classList.add("hover");

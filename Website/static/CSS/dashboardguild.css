@@ -323,3 +323,14 @@ a.sectionactive:visited, a.sectionactive:link, a.sectionactive:active {
     background-color:#616675;
     border-radius:5px;
 }
+.notransition {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+  }
+  /*Custom scrollbar*/
+  ::-webkit-scrollbar {width: 15px;}
+  ::-webkit-scrollbar-track {background-color:#00000080;border-radius: 10px;}
+::-webkit-scrollbar-thumb {background: #FFFFFF50;border-radius: 10px;}
+::-webkit-scrollbar-thumb:hover {background: #FFFFFF70;}

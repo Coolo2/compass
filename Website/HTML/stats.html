@@ -12,8 +12,9 @@
 <body id="thebody" style="background:#1C1F26">
     <div class="navbar">
         <a class="h" href="<%= address %>/">Home</a>
-        <a class="h" href="<%= status %>">Status</a>
+        
         <a class="h" href="<%= address %>/app">Dashboard</a></li>
+<a class="h" href="<%= address %>/options">Options</a></li>
         <div class="dropdown">
             <button class="dropbtn" style="background-color:gray">More
                 <i class="fa fa-caret-down"></i>
@@ -24,6 +25,7 @@
                 <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
             </div>
         </div>
         <a style="float:right" class="h" target="_blank" href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot" >Invite me</a>
@@ -36,7 +38,7 @@
         <div class="centered" onselectstart="return false" style="cursor: pointer;">Unnamed bot - <%- title %></div>
     </div>
     <div class="text">
-        <div style="position:absolute;right:25px;width:18%;height:25%">
+        <div class="readability" style="position:absolute;right:25px;width:18%;height:25%">
             <div style="width:100%;padding-top:25%;padding-bottom:25%;border-radius:20px;color:white;background-color:#1C1F26;">
                 <center>Total Current Guilds:</center>
                 <div style="background-color:#20B8FF;width:100%;height:100px;border-top:2px solid lightgray;border-bottom:2px solid lightgray">
@@ -51,24 +53,24 @@
                 </div>
             </div>
         </div>
-        <div style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
+        <div class="readability" style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
             Servers over time:
             <div id="chart_div_guilds" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
             <div id="chart_div_guilds_day" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
         </div>
         <div style="padding:10px;"></div>
-        <div style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
+        <div class="readability" style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
             Users over time:
             <div id="chart_div_users" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
             <div id="chart_div_users_day" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
         </div>
         <div style="padding:10px;"></div>
-        <div style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
+        <div class="readability" style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
             Channels over time:
             <div id="chart_div_channels" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
         </div>
         <div style="padding:10px;"></div>
-        <div style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
+        <div class="readability" style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
             Used memory over time
             <div id="chart_div_memory" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
         </div>
@@ -84,6 +86,8 @@
 <script src="/JS/dashboardexcept.js"></script>
 <script src="/JS/moment.js"></script>
 <script>
+    
+    
     info = JSON.parse(`<%- servers %>`)
     infoday = JSON.parse(`<%- serversday %>`)
     google.charts.load('current', {packages: ['corechart', 'line', 'timeline']});
@@ -100,11 +104,43 @@
     };function drawBasicUsers() {return drawBasic('users')};function drawBasicChannels() {return drawBasic('channels')};function drawBasicUsedMem() {return drawBasic('memory')}
     function drawBasicGuildsDay() {return drawBasicDay('guilds')};function drawBasicUsersDay() {return drawBasicDay('users')}
 
+    if (!getCookieValue("theme") == "light") {
+        backgroundColor = {fill:"#28272A",stroke:"#636363"}
+        legend = {textStyle:{color:"#808080"}}
+        tooltip = {textStyle:{color:"#808080"}}
+    } else {
+        backgroundColor = ""
+        legend = ""
+        tooltip = ""
+    }
+
     function drawBasic(choice) {
+        if (!getCookieValue("theme") == "light") {
+        haxisshibe = {
+                title: 'Time',
+                titleTextStyle:{color:"808080"},
+                textStyle:{color:"#808080"},
+                gridlines:{"color":"#808080"}
+        }
+        vaxisshibe = {
+                title: choice.charAt(0).toUpperCase() + choice.slice(1),
+                textStyle:{color:"#808080"},
+                titleTextStyle:{color:"808080"},
+                gridlines:{"color":"#808080"},
+                format: '0'
+        }
+    } else {
+        haxisshibe = {
+            title: 'Time'
+        }
+        vaxisshibe = {
+                title: choice.charAt(0).toUpperCase() + choice.slice(1),
+        }
+    }
         var options = { 
-            backgroundColor:{fill:"#28272A",stroke:"#636363"},
-            legend:{textStyle:{color:"#808080"}},
-            tooltip:{textStyle:{color:"#808080"}},
+            backgroundColor:backgroundColor,
+            legend:legend,
+            tooltip:tooltip,
             trendlines: {
                 0: {
                     type: 'exponential',
@@ -117,20 +153,8 @@
                     tooltip: false
                 }
             },
-            hAxis: {
-                //ticks: times,
-                title: 'Time',
-                titleTextStyle:{color:"808080"},
-                textStyle:{color:"#808080"},
-                gridlines:{"color":"#808080"}
-            },
-            vAxis: {
-                title: choice.charAt(0).toUpperCase() + choice.slice(1),
-                textStyle:{color:"#808080"},
-                titleTextStyle:{color:"808080"},
-                gridlines:{"color":"#808080"},
-                format: '0'
-            },
+            hAxis: haxisshibe,
+            vAxis: vaxisshibe,
             explorer: {
                 actions:['dragToPan', 'rightClickToReset', 'scrollToZoom']
             },
@@ -168,10 +192,32 @@
         chart.draw(data, options);
     }
     function drawBasicDay(choice) {
+        if (!getCookieValue("theme") == "light") {
+        haxisshibe = {
+                title: 'Time',
+                titleTextStyle:{color:"808080"},
+                textStyle:{color:"#808080"},
+                gridlines:{"color":"#808080"}
+        }
+        vaxisshibe = {
+                title: choice.charAt(0).toUpperCase() + choice.slice(1),
+                textStyle:{color:"#808080"},
+                titleTextStyle:{color:"808080"},
+                gridlines:{"color":"#808080"},
+                format: '0'
+        }
+    } else {
+        haxisshibe = {
+            title: 'Time'
+        }
+        vaxisshibe = {
+                title: choice.charAt(0).toUpperCase() + choice.slice(1),
+        }
+    }
         var options = { 
-            backgroundColor:{fill:"#28272A",stroke:"#636363"},
-            legend:{textStyle:{color:"#808080"}},
-            tooltip:{textStyle:{color:"#808080"}},
+            backgroundColor:backgroundColor,
+            legend:legend,
+            tooltip:tooltip,
             trendlines: {
                 0: {
                     type: 'exponential',
@@ -184,13 +230,7 @@
                     tooltip: false
                 }
             },
-            hAxis: {
-                //ticks: times,
-                title: 'Day',
-                titleTextStyle:{color:"808080"},
-                textStyle:{color:"#808080"},
-                gridlines:{"color":"#808080"}
-            },
+            hAxis: haxisshibe,
             vAxis: {
                 title: choice.charAt(0).toUpperCase() + choice.slice(1) + " (daily)",
                 textStyle:{color:"#808080"},

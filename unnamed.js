@@ -28,7 +28,7 @@ const r = require('./Resources/rs');
 module.exports.bot = bot
 
 bot.on('ready', () => {
-  bot.user.setActivity(`^help | ${JSON.parse(fs.readFileSync('.//Resources/website.json')).domainall} | ${bot.guilds.cache.size} servers`);
+  bot.user.setActivity(`^help | ${JSON.parse(fs.readFileSync('.//Resources/website.json')).shown} | ${bot.guilds.cache.size} servers`);
   console.log(`Logged in as ${bot.user.tag}!`);
 });
 
@@ -41,8 +41,8 @@ bot.on('guildMemberAdd', member => {
   f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
   if (!f[guild.id] || !f[guild.id]["join"] || f[guild.id]["join"] == "false") {return}
   else {channel = bot.channels.cache.get(f[guild.id]["join"])}
-  if (f[guild.id]["joinmessage"] && f[guild.id]["joinmessage"].replace("noimg", "") != "false" && f[guild.id]["joinmessage"].startsWith("noimg")) {return channel.send(f[guild.id]["joinmessage"].split("{user}").join("<@" + member.user.id + ">").replace("noimg", ""))}
-  if (f[guild.id]["joinmessage"] && f[guild.id]["joinmessage"].replace("noimg", "") != "false") {channel.send(f[guild.id]["joinmessage"].split("{user}").join("<@" + member.user.id + ">"))}
+  if (f[guild.id]["joinmessage"] && f[guild.id]["joinmessage"].replace("noimg", "") != "false" && f[guild.id]["joinmessage"].startsWith("noimg")) {return channel.send(f[guild.id]["joinmessage"].split("{user}").join("<@" + member.user.id + ">").replace("noimg", "").split("{server}").join(guild.name))}
+  if (f[guild.id]["joinmessage"] && f[guild.id]["joinmessage"].replace("noimg", "") != "false") {channel.send(f[guild.id]["joinmessage"].split("{user}").join("<@" + member.user.id + ">").split("{server}").join(guild.name))}
   if (fs.existsSync(dir + "/" + guild.id + '/welcome.html')) {
     html = `<body style="height:300px;width:500px;">` + fs.readFileSync(dir + "/" + guild.id + '/welcome.html', 'utf8').split("{server}").join(guild.name).split("{user}").join(member.user.username).split("{avatar}").join(member.user.displayAvatarURL())  + "</body>"
     nodeHtmlToImage({html: html,transparent:true})
@@ -57,8 +57,8 @@ bot.on('guildMemberRemove', member => {
   f = JSON.parse(fs.readFileSync('.//Databases/messages.json'))
   if (!f[guild.id] || !f[guild.id]["leave"] || f[guild.id]["leave"] == "false") {return}
   else {channel = bot.channels.cache.get(f[guild.id]["leave"])}
-  if (f[guild.id]["leavemessage"] && f[guild.id]["leavemessage"].replace("noimg", "") != "false" && f[guild.id]["leavemessage"].startsWith("noimg")) {return channel.send(f[guild.id]["leavemessage"].split("{user}").join(member.user.username).replace("noimg", ""))}
-  if (f[guild.id]["leavemessage"] && f[guild.id]["leavemessage"].replace("noimg", "") != "false") {channel.send(f[guild.id]["leavemessage"].split("{user}").join(member.user.username))}
+  if (f[guild.id]["leavemessage"] && f[guild.id]["leavemessage"].replace("noimg", "") != "false" && f[guild.id]["leavemessage"].startsWith("noimg")) {return channel.send(f[guild.id]["leavemessage"].split("{user}").join(member.user.username).replace("noimg", "").split("{server}").join(guild.name))}
+  if (f[guild.id]["leavemessage"] && f[guild.id]["leavemessage"].replace("noimg", "") != "false") {channel.send(f[guild.id]["leavemessage"].split("{user}").join(member.user.username).split("{server}").join(guild.name))}
   if (fs.existsSync(dir + "/" + guild.id + '/leave.html')) {
     html = `<body style="height:300px;width:500px;">` + fs.readFileSync(dir + "/" + guild.id + '/leave.html', 'utf8').split("{server}").join(guild.name).split("{user}").join(member.user.username).split("{avatar}").join(member.user.displayAvatarURL())  + "</body>"
     nodeHtmlToImage({html: html,transparent:true})

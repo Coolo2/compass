@@ -58,6 +58,7 @@ async function response(params) {
 
 async function join(json) {
     userINFO = await get_user_info(json)
+    console.log(userINFO)
     const fetchDiscordUserInfo = await fetch('http://discord.com/api/guilds/732554558773133333/members/' + await userINFO.id, {
         method: 'PUT',
         headers: {

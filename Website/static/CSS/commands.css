@@ -254,3 +254,14 @@ border-radius:128px;
   .dropdown-content a {float: none;color:white;padding: 12px 16px;text-decoration: none;display: block;text-align: left;}
   .dropdown-content a:hover {background-color: #111}
   .dropdown:hover .dropdown-content {display: block;}
+  .notransition {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+  }
+  /*Custom scrollbar*/
+  ::-webkit-scrollbar {width: 15px;}
+  ::-webkit-scrollbar-track {background-color:#00000080;border-radius: 10px;}
+::-webkit-scrollbar-thumb {background: #FFFFFF50;border-radius: 10px;}
+::-webkit-scrollbar-thumb:hover {background: #FFFFFF70;}
