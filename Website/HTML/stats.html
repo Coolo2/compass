@@ -3,8 +3,9 @@
 
 <head>
     <link href='https://fonts.googleapis.com/css?family=Alatsi' rel='stylesheet'>
-    <title>Unnamed Bot</title>
-<link rel="icon" href="https://cdn.discordapp.com/avatars/732208102652379187/07cdc23792f9c6ecf7dd2c976f1e8111.webp?size=1024">
+    <title>Compass Bot</title>
+    <link rel="icon"
+        href="https://cdn.discordapp.com/attachments/769464671731449876/769464697359302676/compass.png">
     <link href="/CSS/stats.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -12,85 +13,101 @@
 <body id="thebody" style="background:#1C1F26">
     <div class="navbar">
         <a class="h" href="<%= address %>/">Home</a>
-        
+
         <a class="h" href="<%= address %>/app">Dashboard</a></li>
-<a class="h" href="<%= address %>/options">Options</a></li>
+        <a class="h" href="<%= address %>/options">Options</a></li>
         <div class="dropdown">
             <button class="dropbtn" style="background-color:gray">More
                 <i class="fa fa-caret-down"></i>
             </button>
-            <div class="dropdown-content" >
-                <a class="h active" href="<%= address %>/stats">Stats <i class="fa fa-line-chart" aria-hidden="true"></i></a>
-<a class="h" href="<%= address %>/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i></a>
-                <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
+            <div class="dropdown-content">
+                <a class="h active" href="<%= address %>/stats">Stats <i class="fa fa-line-chart"
+                        aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/documentation">Documentation <i class="fa fa-book"
+                        aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle"
+                        aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
-                <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
-<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o"
+                        aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
             </div>
         </div>
-        <a style="float:right" class="h" target="_blank" href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot" >Invite me</a>
-        <a style="float:right"class="h" href="<%= address %>/supportserver" target="_blank">Join Support Server</a>
+        <a style="float:right" class="h" target="_blank"
+            href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot">Invite
+            me</a>
+        <a style="float:right" class="h" href="<%= address %>/supportserver" target="_blank">Join Support Server</a>
     </div>
     <div style="padding:21px"></div>
     <div class="container">
         <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage"
             src="https://i.ibb.co/V9ZZ4r5/cubes.png">
-        <div class="centered" onselectstart="return false" style="cursor: pointer;">Unnamed bot - <%- title %></div>
+        <div class="centered" onselectstart="return false" style="cursor: pointer;">Compass bot - <%- title %></div>
     </div>
     <div class="text">
         <div class="readability" style="position:absolute;right:25px;width:18%;height:25%">
-            <div style="width:100%;padding-top:25%;padding-bottom:25%;border-radius:20px;color:white;background-color:#1C1F26;">
+            <div
+                style="width:100%;padding-top:25%;padding-bottom:25%;border-radius:20px;color:white;background-color:#1C1F26;">
                 <center>Total Current Guilds:</center>
-                <div style="background-color:#20B8FF;width:100%;height:100px;border-top:2px solid lightgray;border-bottom:2px solid lightgray">
+                <div
+                    style="background-color:#20B8FF;width:100%;height:100px;border-top:2px solid lightgray;border-bottom:2px solid lightgray">
                     <div style="margin-left:50%;font-size:40px"><%- stats_guilds %></div>
                 </div>
             </div>
             <div style="padding:10px;"></div>
-            <div style="width:100%;padding-top:25%;padding-bottom:25%;border-radius:20px;color:white;background-color:#1C1F26;">
+            <div
+                style="width:100%;padding-top:25%;padding-bottom:25%;border-radius:20px;color:white;background-color:#1C1F26;">
                 <center>Total Current Users:</center>
-                <div style="background-color:#20B8FF;width:100%;height:100px;border-top:2px solid lightgray;border-bottom:2px solid lightgray">
+                <div
+                    style="background-color:#20B8FF;width:100%;height:100px;border-top:2px solid lightgray;border-bottom:2px solid lightgray">
                     <div style="margin-left:50%;font-size:40px"><%- stats_users %></div>
                 </div>
             </div>
         </div>
         <div class="readability" style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
             Servers over time:
-            <div id="chart_div_guilds" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
-            <div id="chart_div_guilds_day" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
+            <div id="chart_div_guilds" class="loader"
+                style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
+            <div id="chart_div_guilds_day" class="loader"
+                style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
         </div>
         <div style="padding:10px;"></div>
         <div class="readability" style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
             Users over time:
-            <div id="chart_div_users" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
-            <div id="chart_div_users_day" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
+            <div id="chart_div_users" class="loader"
+                style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
+            <div id="chart_div_users_day" class="loader"
+                style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
         </div>
         <div style="padding:10px;"></div>
         <div class="readability" style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
             Channels over time:
-            <div id="chart_div_channels" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
+            <div id="chart_div_channels" class="loader"
+                style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
         </div>
         <div style="padding:10px;"></div>
         <div class="readability" style="background-color:#1C1F26;width:75%;padding:25px;border-radius:20px;color:white">
             Used memory over time
-            <div id="chart_div_memory" class="loader" style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
+            <div id="chart_div_memory" class="loader"
+                style="width:25px;height:25px;margin-left:50%;margin-top:50px;margin-bottom:50px;"></div>
         </div>
     </div>
-        
-</div>
-      
-</div>
-    
+
+    </div>
+
+    </div>
+
 </body>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="/JS/dashboardexcept.js"></script>
 <script src="/JS/moment.js"></script>
 <script>
-    
-    
     info = JSON.parse(`<%- servers %>`)
     infoday = JSON.parse(`<%- serversday %>`)
-    google.charts.load('current', {packages: ['corechart', 'line', 'timeline']});
+    google.charts.load('current', {
+        packages: ['corechart', 'line', 'timeline']
+    });
 
     google.charts.setOnLoadCallback(drawBasicGuilds);
     google.charts.setOnLoadCallback(drawBasicGuildsDay);
@@ -101,13 +118,43 @@
 
     function drawBasicGuilds() {
         return drawBasic('guilds')
-    };function drawBasicUsers() {return drawBasic('users')};function drawBasicChannels() {return drawBasic('channels')};function drawBasicUsedMem() {return drawBasic('memory')}
-    function drawBasicGuildsDay() {return drawBasicDay('guilds')};function drawBasicUsersDay() {return drawBasicDay('users')}
+    };
+
+    function drawBasicUsers() {
+        return drawBasic('users')
+    };
+
+    function drawBasicChannels() {
+        return drawBasic('channels')
+    };
+
+    function drawBasicUsedMem() {
+        return drawBasic('memory')
+    }
+
+    function drawBasicGuildsDay() {
+        return drawBasicDay('guilds')
+    };
+
+    function drawBasicUsersDay() {
+        return drawBasicDay('users')
+    }
 
     if (!getCookieValue("theme") == "light") {
-        backgroundColor = {fill:"#28272A",stroke:"#636363"}
-        legend = {textStyle:{color:"#808080"}}
-        tooltip = {textStyle:{color:"#808080"}}
+        backgroundColor = {
+            fill: "#28272A",
+            stroke: "#636363"
+        }
+        legend = {
+            textStyle: {
+                color: "#808080"
+            }
+        }
+        tooltip = {
+            textStyle: {
+                color: "#808080"
+            }
+        }
     } else {
         backgroundColor = ""
         legend = ""
@@ -116,31 +163,43 @@
 
     function drawBasic(choice) {
         if (!getCookieValue("theme") == "light") {
-        haxisshibe = {
+            haxisshibe = {
                 title: 'Time',
-                titleTextStyle:{color:"808080"},
-                textStyle:{color:"#808080"},
-                gridlines:{"color":"#808080"}
-        }
-        vaxisshibe = {
+                titleTextStyle: {
+                    color: "808080"
+                },
+                textStyle: {
+                    color: "#808080"
+                },
+                gridlines: {
+                    "color": "#808080"
+                }
+            }
+            vaxisshibe = {
                 title: choice.charAt(0).toUpperCase() + choice.slice(1),
-                textStyle:{color:"#808080"},
-                titleTextStyle:{color:"808080"},
-                gridlines:{"color":"#808080"},
+                textStyle: {
+                    color: "#808080"
+                },
+                titleTextStyle: {
+                    color: "808080"
+                },
+                gridlines: {
+                    "color": "#808080"
+                },
                 format: '0'
-        }
-    } else {
-        haxisshibe = {
-            title: 'Time'
-        }
-        vaxisshibe = {
+            }
+        } else {
+            haxisshibe = {
+                title: 'Time'
+            }
+            vaxisshibe = {
                 title: choice.charAt(0).toUpperCase() + choice.slice(1),
+            }
         }
-    }
-        var options = { 
-            backgroundColor:backgroundColor,
-            legend:legend,
-            tooltip:tooltip,
+        var options = {
+            backgroundColor: backgroundColor,
+            legend: legend,
+            tooltip: tooltip,
             trendlines: {
                 0: {
                     type: 'exponential',
@@ -149,16 +208,16 @@
                     opacity: 0.3,
                     showR2: false,
                     visibleInLegend: true,
-                    labelInLegend:"Trendline",
+                    labelInLegend: "Trendline",
                     tooltip: false
                 }
             },
             hAxis: haxisshibe,
             vAxis: vaxisshibe,
             explorer: {
-                actions:['dragToPan', 'rightClickToReset', 'scrollToZoom']
+                actions: ['dragToPan', 'rightClickToReset', 'scrollToZoom']
             },
-            colors:["red", "#910000"]
+            colors: ["red", "#910000"]
         };
 
         var data = new google.visualization.DataTable();
@@ -167,57 +226,81 @@
         if (choice == 'memory') {
             data.addColumn('number', 'Available memory');
         }
-        counter = 0;arr = [];times = []
+        counter = 0;
+        arr = [];
+        times = []
         first = parseInt(Object.keys(info)[0].split(".")[1])
         if (choice == 'memory') {
             for (check in info) {
                 counter = counter + 1
                 first = new Date(Date.parse(check))
-                arr.push([first, info[check]['used_memory'], info[check]['free_memory']+info[check]['used_memory']])
-                times.push({v: first, f: check})
-            }} else {for (check in info) {
+                arr.push([first, info[check]['used_memory'], info[check]['free_memory'] + info[check]['used_memory']])
+                times.push({
+                    v: first,
+                    f: check
+                })
+            }
+        } else {
+            for (check in info) {
                 counter = counter + 1
                 first = new Date(Date.parse(check))
                 console.log(typeof first)
                 console.log(moment(check))
                 arr.push([first, info[check][choice]])
-                times.push({v: first, f: check})
-        }}
+                times.push({
+                    v: first,
+                    f: check
+                })
+            }
+        }
         data.addRows(arr)
-        
+
         document.getElementById('chart_div_' + choice).style = "padding:15px;border-radius:50px;width:100%;"
         document.getElementById('chart_div_' + choice).removeAttribute('class')
         var chart = new google.visualization.LineChart(document.getElementById('chart_div_' + choice));
 
         chart.draw(data, options);
     }
+
     function drawBasicDay(choice) {
         if (!getCookieValue("theme") == "light") {
-        haxisshibe = {
+            haxisshibe = {
                 title: 'Time',
-                titleTextStyle:{color:"808080"},
-                textStyle:{color:"#808080"},
-                gridlines:{"color":"#808080"}
-        }
-        vaxisshibe = {
+                titleTextStyle: {
+                    color: "808080"
+                },
+                textStyle: {
+                    color: "#808080"
+                },
+                gridlines: {
+                    "color": "#808080"
+                }
+            }
+            vaxisshibe = {
                 title: choice.charAt(0).toUpperCase() + choice.slice(1),
-                textStyle:{color:"#808080"},
-                titleTextStyle:{color:"808080"},
-                gridlines:{"color":"#808080"},
+                textStyle: {
+                    color: "#808080"
+                },
+                titleTextStyle: {
+                    color: "808080"
+                },
+                gridlines: {
+                    "color": "#808080"
+                },
                 format: '0'
-        }
-    } else {
-        haxisshibe = {
-            title: 'Time'
-        }
-        vaxisshibe = {
+            }
+        } else {
+            haxisshibe = {
+                title: 'Time'
+            }
+            vaxisshibe = {
                 title: choice.charAt(0).toUpperCase() + choice.slice(1),
+            }
         }
-    }
-        var options = { 
-            backgroundColor:backgroundColor,
-            legend:legend,
-            tooltip:tooltip,
+        var options = {
+            backgroundColor: backgroundColor,
+            legend: legend,
+            tooltip: tooltip,
             trendlines: {
                 0: {
                     type: 'exponential',
@@ -226,42 +309,53 @@
                     opacity: 0.3,
                     showR2: false,
                     visibleInLegend: true,
-                    labelInLegend:"Trendline",
+                    labelInLegend: "Trendline",
                     tooltip: false
                 }
             },
             hAxis: haxisshibe,
             vAxis: {
                 title: choice.charAt(0).toUpperCase() + choice.slice(1) + " (daily)",
-                textStyle:{color:"#808080"},
-                titleTextStyle:{color:"808080"},
-                gridlines:{"color":"#808080"},
+                textStyle: {
+                    color: "#808080"
+                },
+                titleTextStyle: {
+                    color: "808080"
+                },
+                gridlines: {
+                    "color": "#808080"
+                },
                 format: '0'
             },
             explorer: {
-                actions:['dragToPan', 'rightClickToReset', 'scrollToZoom'],
+                actions: ['dragToPan', 'rightClickToReset', 'scrollToZoom'],
             },
-            colors:["red", "#910000"]
+            colors: ["red", "#910000"]
         };
-        
+
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'X');
         data.addColumn('number', choice.charAt(0).toUpperCase() + choice.slice(1));
-        counter = 0;arr = [];times = []
+        counter = 0;
+        arr = [];
+        times = []
         for (check in infoday) {
             counter = counter + 1
             first = new Date(Date.parse(check))
             arr.push([first, infoday[check][choice]])
-            times.push({v: first, f: check})
+            times.push({
+                v: first,
+                f: check
+            })
         }
         data.addRows(arr)
-        
+
         document.getElementById('chart_div_' + choice + "_day").style = "padding:15px;border-radius:50px;width:100%;"
         document.getElementById('chart_div_' + choice + "_day").removeAttribute('class')
         var chart = new google.visualization.LineChart(document.getElementById('chart_div_' + choice + "_day"));
 
         chart.draw(data, options);
     }
-
 </script>
+
 </html>

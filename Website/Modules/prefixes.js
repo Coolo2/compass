@@ -18,7 +18,8 @@ const { prefixes } = require("../../Commands/databasesetup");
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-bot = require('../../unnamed').bot
+bot = require('../../compass').bot
+const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
 
 function contents() {
   return fs.readFileSync('.//Resources/workreplies.json')
@@ -56,7 +57,7 @@ router.get('/app/:guildid/changeprefix', (req, res, next) => {
     guild = bot.guilds.cache.get(req.params.guildid)
     id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
     member = functions.memberfromarg(guild, id)
-    if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+    if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD")) {
         startup(guild, member)
         prefix = req.query.replydata.split(" ")[0]
         if (prefix == "") {return res.redirect(`${address}/app/${guild.id}/prefix`)}
@@ -84,14 +85,14 @@ router.get('/app/:guildid/prefix', (req, res) => {
     li = ""
     bot.guilds.cache.forEach((guild) => {
       try {
-        if (guild.member(user.id)) {
+        if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id)) {
           if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
           li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
           in1 = 1
         }
       } catch {}
     })
-    if (!guild.member(user).hasPermission("MANAGE_GUILD")) {
+    if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(user).hasPermission("MANAGE_GUILD")) {
         disabled = "disabled"
     } else {disabled = ""}
     prefix = require('../../Commands/prefix').get(guild)
@@ -100,7 +101,7 @@ router.get('/app/:guildid/prefix', (req, res) => {
     li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot')" id="dasb" src='https://i.ibb.co/dG0x5Ch/plus2.png'>`)
     avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
     example = functions.randomcommandusage().replace("[prefix]", prefix)
-    if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+    if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD")) {
       data = `<h3 style="color:white;text-align:center;">Prefix for ${guild.name}</h3> <br> <p style="margin-left:150px;margin-right:100px;color:white;text-align:center;font-size:20px;">Prefixes are what you add to use a command, so the bot can detect what messages are for commands. You can use <span style="background-color:#323844">[prefix][command]</span> or <span style="background-color:#323844">[prefix][space][command]</span> or <span style="background-color:#323844">[botmention]command</span></p><p style="color:white;text-align:center;font-size:20px;"><b>Exmaple:</b> ${example}</p><br> ${returnvalue}`
     } else {
       data = `<h3 style="color:white;text-align:center;">Prefix for ${guild.name}</h3> <br> <p style="margin-left:150px;margin-right:100px;color:white;text-align:center;font-size:20px;">Prefixes are what you add to use a command, so the bot can detect what messages are for commands. You can use <span style="background-color:#323844">[prefix][command]</span> or <span style="background-color:#323844">[prefix][space][command]</span> or <span style="background-color:#323844">[botmention]command</span></p><p style="color:white;text-align:center;font-size:20px;"><b>Exmaple:</b> ${example}</p><br>${returnvalue}`

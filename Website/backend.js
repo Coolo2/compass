@@ -4,7 +4,8 @@ const fs = require('fs')
 const path = require('path');
 const router = express.Router();
 const fetch = require('node-fetch');
-const cookie = require('cookie')
+const functions = require('../functions')
+
 const {
   catchAsync
 } = require('../utils');
@@ -18,7 +19,7 @@ const CLIENT_SECRET = "Qj4t6sMoeE_ecXCWdcAQFoI7L2v2Qxak";
 const redirect = encodeURIComponent(address + '/dashboard');
 
 const redirectSUPPORT = encodeURIComponent(address + '/joinsupport');
-const setup = JSON.parse(fs.readFileSync('.//Resources/test.json'))
+const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
 
 router.get('/', function (req, res) {
   var allguilds = bot.guilds.cache.size;
@@ -59,9 +60,15 @@ router.get('/documentation', function (req, res) {
 });
 
 router.get('/options', function (req, res) {
+  try{
+    id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+    if(setup.botadmins.includes(id)) {adminmode=`<span></span><button id="admin" class="newButton" onclick="toggleadmin()">Toggle admin mode</button> <span style="color:white" id="adminMode">Admin mode is </span></span>`} else {adminmode=``}
+  } catch{adminmode = ``}
+  
   res.render(path.join(__dirname + '/HTML/options.html'), {
       address:address, 
-      status:`${address}/status`
+      status:`${address}/status`,
+      adminmode:adminmode
   });
 });
 
@@ -146,8 +153,8 @@ router.get('/stats', function(req, res) {
   res.render(path.join(__dirname + '/HTML/stats.html'), {
     address:address, 
     status:`${address}/status`,
-    servers:fs.readFileSync('minute.json'),
-    serversday:fs.readFileSync('day.json'),
+    servers:fs.readFileSync('./Databases/minute.json'),
+    serversday:fs.readFileSync('./Databases/day.json'),
     stats_guilds:bot.guilds.cache.size,
     stats_users:bot.users.cache.size,
     title:"Stats",
@@ -194,7 +201,7 @@ router.get('/joinsupport', async function (req, res) {
 });
 
 var testRoutes = require('./database');
-const { bot } = require('../unnamed');
+const { bot } = require('../compass');
 
 router.get('/redirect', (req, res) => {
   res.render(__dirname + '/HTML/redirect.html', {url:address})
@@ -216,11 +223,12 @@ router.get('/app', (req, res) => {
   } catch {
     res.redirect('/login')
   }
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id))) {admin = `<a class="h" href="${address}/admin">Admin</a></li>`} else {admin = ``}
   in1 = 0
   li = ""
   bot.guilds.cache.forEach((guild) => {
     try {
-      if (guild.member(user.id)) {
+      if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id)) {
           li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
         in1 = 1
       }
@@ -234,11 +242,11 @@ router.get('/app', (req, res) => {
       id: id,
       avatar: `<img class="avatar" id="output" src="${avatar}">`,
       address:address, 
-      status:`${address}/status`
+      status:`${address}/status`,
+      admin:admin
     });
-  
-  
 })
+
 const getAppCookies = (req, res) => {
   try {
     const rawCookies = req.headers.cookie.split('; ');

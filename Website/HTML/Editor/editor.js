@@ -12,9 +12,10 @@ const functions = require('../../../functions')
 const express = require('express');
 const app = express();
 const router = express.Router();
-const bot = require('../../../unnamed').bot
+const bot = require('../../../compass').bot
 
 const path = require('path');
+const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
 
 const getAppCookies = (req, res) => {
   try {
@@ -55,7 +56,7 @@ router.get('/app/:guildid/editor', (req, res, next) => {
   li = ""
   bot.guilds.cache.forEach((guild) => {
     try {
-      if (guild.member(user.id)) {
+      if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id)) {
         if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
         li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
         in1 = 1
@@ -90,7 +91,7 @@ router.get('/app/:guildid/editor/join', function (req, res) {
   li = ""
   bot.guilds.cache.forEach((guild) => {
     try {
-      if (guild.member(user.id)) {
+      if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id)) {
         if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
         li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
         in1 = 1
@@ -125,7 +126,7 @@ router.get('/app/:guildid/editor/join', function (req, res) {
   if (fs.existsSync(dir + "/" + req.params.guildid + "/welcomeopts.html")){
     defaultopts = fs.readFileSync(dir + "/" + req.params.guildid + "/welcomeopts.html", "utf8").split("<%- joinchannels %>").join(joinchannels)
   } else {defaultopts = fs.readFileSync("./Website/HTML/Editor/Defaults/defaultopts.html", "utf8").split("<%- joinchannels %>").join(joinchannels) }
-  if (!guild.member(user).hasPermission("MANAGE_GUILD")) {defaulthtml = "<h3 style='color:white'>You are missing manage server permissions to use the Editor</h3><div style='padding-bottom:1900px;'></div>";defaultopts = ""}
+  if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(user).hasPermission("MANAGE_GUILD")) {defaulthtml = "<h3 style='color:white'>You are missing manage server permissions to use the Editor</h3><div style='padding-bottom:1900px;'></div>";defaultopts = ""}
     res.render(__dirname + '/Defaults/editor.html', {guild:req.params.guildid, defaulthtml:defaulthtml, opts:defaultopts.replace("guildid", req.params.guildid), address:address,
     membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
       worksection:`<a class="section" href="${address}/app/${guild.id}">Replies</a>`,
@@ -154,7 +155,7 @@ router.post('/app/:guildid/render/join', function (req, res) {
     guild = bot.guilds.cache.get(req.params.guildid)
     id = req.body['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
     user = bot.users.cache.get(String(id))
-    if (!guild.member(user).hasPermission("MANAGE_GUILD")) {return res.redirect(address + "/app/" + req.params.guildid + "/editor/join#main")}
+    if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(user).hasPermission("MANAGE_GUILD")) {return res.redirect(address + "/app/" + req.params.guildid + "/editor/join#main")}
 
     try{enabled = decodeURIComponent(req.body.enabled)
     channel = decodeURIComponent(req.body.channel)
@@ -191,7 +192,7 @@ router.get('/app/:guildid/reset/join', function (req, res) {
     guild = bot.guilds.cache.get(req.params.guildid)
     id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
     user = bot.users.cache.get(String(id))
-    if (!guild.member(user).hasPermission("MANAGE_GUILD")) {return res.redirect(address + "/app/" + req.params.guildid + "/editor/join#main")}
+    if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(user).hasPermission("MANAGE_GUILD")) {return res.redirect(address + "/app/" + req.params.guildid + "/editor/join#main")}
   if (!fs.existsSync(dir + "/" + req.params.guildid)){
     return res.redirect(address + "/app/" + req.params.guildid + "/editor/join#main")
   }

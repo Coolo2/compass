@@ -53,7 +53,7 @@ function help(message1) {
                     .then(() => message.react("⏩"))
                 function getpage(message, page){
                     if (page == 0) {
-                        message.edit(functions.embed(`Help page ${page} - Introduction`, `Use the emojis to navigate around help - or see the [Web commands](${address}/commands).\nUnNamed is an advanced and deeply customizable economy and moderation bot.`, r.d))
+                        message.edit(functions.embed(`Help page ${page} - Introduction`, `Use the emojis to navigate around help - or see the [Web commands](${address}/commands).\nCompass is an advanced and deeply customizable economy and moderation bot.`, r.d))
                     }
                     if (page == 1) {
                         message.edit(functions.embed(`Help page ${page} - Moderation`, functions.GetHelp(message.guild, 'Moderation') + `\n\nType **${prefixes.get(message1.guild)}help [command]** to get more information on a command`, r.d))

@@ -19,13 +19,14 @@ const e = require("express");
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-bot = require('../unnamed').bot
+bot = require('../compass').bot
 
 function contents() {
   return fs.readFileSync('.//Resources/workreplies.json')
 }
 
 const databasesetup = require('../Commands/databasesetup')
+const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
 
 function startup(server, member) {
   databasesetup.startup(server, member)
@@ -55,7 +56,7 @@ router.get('/app/:guildid', (req, res, next) => {
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
   data = `<h3 style="color:white;text-align:center;">Replies for ${guild.name} </h3>`
-  if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD")) {
     data = data.concat(`<center>
     <p style="color:white;margin-left:100px;margin-right:100px;text-align:center">Your reply share ID is <b>${functions.encode(guild.id)}</b> - Giving this lets others use/load your work and crime replies! (only people with manage guild permissions can see this)</p>
     <form action="${guild.id}/load" method="get"><input type="text" class="forminput" name="replydata"/><input type="submit" class="formbutton" value="Load work and crime replies from ShareID (clears current work and crime replies!)"/></form></center> 
@@ -74,7 +75,7 @@ router.get('/app/:guildid', (req, res, next) => {
   li = ""
   bot.guilds.cache.forEach((guild) => {
     try {
-      if (guild.member(user.id)) {
+      if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id)) {
         if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {
           style = "style='border-radius:10px'"
         } else {
@@ -139,7 +140,7 @@ router.get('/app/:guildid/add', (req, res, next) => {
   if (reply == "") {
     return res.redirect(`${address}/app/${guild.id}/work`)
   }
-  if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") ) {
     replyid = functions.int(1, 99999)
     replies = JSON.parse(sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(guild.id).data)
     replies[String(replyid)] = reply
@@ -159,7 +160,7 @@ router.get('/app/:guildid/set', (req, res, next) => {
   if (thecooldown == "") {
     return res.redirect(`${address}/app/${guild.id}/work`)
   }
-  if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") ) {
     databasesetup.cooldowns(guild)
     try {
       sqlc.prepare(`INSERT OR REPLACE INTO cooldowns${guild.id} (type, value) VALUES (?, ?);`).run("work", cooldowns.get_time(thecooldown));
@@ -176,7 +177,7 @@ router.get('/app/:guildid/help', (req, res, next) => {
   guild = bot.guilds.cache.get(req.params.guildid)
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
-  if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") ) {
     data = `<span><img src="https://i.ibb.co/w0cmcqY/help.png">
       <div style="position:absolute;left:1100px;top:350px;transform: translate(-50%, -50%);z-index:10;"><a onselectstart="return false" class="button link" href="${address}/app/${guild.id}">Back</a></span>`
     res.render(path.join(__dirname + '/HTML/custom.html'), {
@@ -197,7 +198,7 @@ router.get('/app/:guildid/load', (req, res, next) => {
     return res.redirect(`${address}/app/${to.id}/work`)
   }
   from1 = functions.decode(req.query.replydata.split(" ")[0])
-  if (to.member(member).hasPermission("MANAGE_GUILD")) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || to.member(member).hasPermission("MANAGE_GUILD") ) {
     if (from1 == undefined) {
       return res.redirect(`${address}/app/${to.id}`)
     }
@@ -234,7 +235,7 @@ router.get('/app/:guildid/reset', (req, res, next) => {
   guild = bot.guilds.cache.get(req.params.guildid)
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
-  if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") ) {
     startup(guild, member)
     sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(guild.id, JSON.stringify(JSON.parse(fs.readFileSync('.//Resources/workreplies.json'))));
     res.redirect(`${address}/app/${guild.id}/work`)
@@ -247,7 +248,7 @@ router.get('/app/:guildid/clear', (req, res, next) => {
   guild = bot.guilds.cache.get(req.params.guildid)
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
-  if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") ) {
     startup(guild, member)
     sql.prepare(`INSERT OR REPLACE INTO workreplies (server, data) VALUES (?, ?);`).run(guild.id, '{}');
     res.redirect(`${address}/app/${guild.id}/work`)
@@ -261,7 +262,7 @@ router.get('/app/:guildid/delete/:replyid', (req, res, next) => {
   replyid = req.params.replyid
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
-  if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") ) {
     replies = JSON.parse(sql.prepare(`SELECT * FROM workreplies WHERE server = ?`).get(guild.id).data)
     if (replies.hasOwnProperty(String(replyid))) {
       delete replies[String(replyid)]
@@ -293,7 +294,7 @@ router.get('/app/:guildid/work', (req, res) => {
     returnvalue = "<div style='padding-bottom:50px;'></div>"
     for (k in JSON.parse(replies)) {
       var obj = JSON.parse(replies)[k]
-      if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+      if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") ) {
         returnvalue = returnvalue.concat(`<div class="members"><b>ID ${k}</b> - ${obj}<div style="padding-right:50px"></div><button class="formbutton" onclick="window.open('/app/${guild.id}/delete/${k}', '_self')">Delete</button></div><div style="padding:10px;"></div>`)
       } else {
         returnvalue = returnvalue.concat(`<div class="members"><b>ID ${k}</b> - ${obj}<div style="padding-right:50px"></div><button class="formbuttondisabled" disabled>Delete (missing perms)</button></div><div style="padding:10px;"></div>`)
@@ -303,7 +304,7 @@ router.get('/app/:guildid/work', (req, res) => {
     li = ""
     bot.guilds.cache.forEach((guild) => {
       try {
-        if (guild.member(user.id)) {
+        if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id) ) {
           if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {
             style = "style='border-radius:10px'"
           } else {
@@ -316,15 +317,15 @@ router.get('/app/:guildid/work', (req, res) => {
     })
     li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot')" id="dasb" src='https://i.ibb.co/dG0x5Ch/plus2.png'>`)
     avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
-    if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+    if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") ) {
       data = `<h3 style="color:white;text-align:center;">Work replies for ${guild.name} <i class="fa fa-info-circle" onclick="window.open('${address}/app/${guild.id}/help', '_self')" style="cursor:pointer"></i></h3><center>
       <form action="/app/${guild.id}/add" method="get"><input type="text" class="forminput" name="replydata"/><input type="submit" class="formbutton" value="Add work reply" /></form>
       <div>
       <form action="/app/${guild.id}/set" method="get"><input type="text" class="forminput" placeholder="${cooldowns.readable(cooldowns.get(guild, 'work'))}" name="replydata"/><input type="submit" class="formbutton" value="Set work cooldown" /></form>
       </div>
       <div style="text-align:center">
-      <button class="formbutton" style="background-color:red" onclick="window.open('/app/${guild.id}/reset', '_self')">Reset work replies to default</button>
-      <button class="formbutton" style="background-color:red" onclick="window.open('/app/${guild.id}/clear', '_self')">Clear work replies</button>
+      <button class="formbutton" style="border: 2px solid red" onclick="window.open('/app/${guild.id}/reset', '_self')">Reset work replies to default</button>
+      <button class="formbutton" style="border: 2px solid red" onclick="window.open('/app/${guild.id}/clear', '_self')">Clear work replies</button>
       </div>
       <br>
       ${returnvalue}`

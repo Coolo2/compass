@@ -18,6 +18,11 @@ if (getCookieValue("theme") == "light") {
     lighttheme()
 }
 
+if (!getCookieValue("adminMode")) {
+    document.cookie = `adminMode=on; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`
+    location.reload()
+}
+
 function lighttheme() {
     try{Array.from(document.getElementsByTagName("*")).forEach(element => element.classList.add('notransition'))}catch{}
 

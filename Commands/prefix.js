@@ -6,7 +6,7 @@ const SQLite = require("better-sqlite3");
 const sql = new SQLite('./Databases/prefixes.sqlite');
 const fs = require('fs')
 
-defaultPFX = JSON.parse(fs.readFileSync('.//Resources/test.json')).prefix
+defaultPFX = JSON.parse(fs.readFileSync('.//Resources/setup.json')).prefix
 
 const r = require('../Resources/rs')
 

@@ -17,7 +17,7 @@ const e = require("express");
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-bot = require('../../unnamed').bot
+bot = require('../../compass').bot
 
 function contents() {
   return fs.readFileSync('.//Resources/workreplies.json')

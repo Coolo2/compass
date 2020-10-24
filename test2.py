@@ -1,23 +1,19 @@
-import nltk
-from nltk.corpus import wordnet 
+"""from textblob import TextBlob
+from textblob.sentiments import NaiveBayesAnalyzer
 
+def textblob_Sentiment(text):
+    print("Starting TextBlob Sentiment Analysis")
+    
+    score =  TextBlob(text, analyzer=NaiveBayesAnalyzer()).sentiment
+    return score
 
+input_sen = str(input("Enter Text: "))
+print(" ")
+score = textblob_Sentiment(input_sen)
+print("Score: ", score)"""
 
-inp = "someone give me a random sentence".split(' ')
-final = []
+from textblob import Blobber
+from textblob.sentiments import NaiveBayesAnalyzer
+tb = Blobber(analyzer=NaiveBayesAnalyzer())
 
-for item in inp:
-    synonyms = [] 
-    antonyms = [] 
-    for syn in wordnet.synsets(item): 
-        for l in syn.lemmas(): 
-            synonyms.append(l.name()) 
-            if l.antonyms(): 
-                antonyms.append(l.antonyms()[0].name()) 
-
-    try:
-        final.append(antonyms[0]) 
-    except:
-        final.append(item)
-
-print(" ".join(inp) + " -> " + " ".join(final))
+print(tb("sentence you want to test").sentiment)

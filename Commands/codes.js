@@ -9,7 +9,7 @@ Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+
 const SQLite = require("better-sqlite3");
 const fs = require('fs')
 
-const setup = JSON.parse(fs.readFileSync('./Resources/test.json'))
+const setup = JSON.parse(fs.readFileSync('./Resources/setup.json'))
 
 const economy = require('./economy')
 const sql = new SQLite('./Databases/balances.sqlite');

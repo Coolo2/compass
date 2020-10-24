@@ -7,7 +7,7 @@ else {
     document.getElementById("versionButton").setAttribute("hidden", "hidden")
     document.cookie = `notVersion=${document.getElementById("version").innerHTML}; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`
     var notification = new Notification(`New version (${document.getElementById("version").innerHTML})`, {
-        icon: 'https://cdn.discordapp.com/avatars/732208102652379187/07cdc23792f9c6ecf7dd2c976f1e8111.webp?size=1024',
+        icon: 'https://cdn.discordapp.com/attachments/769464671731449876/769464697359302676/compass.png',
         body: `Version ${document.getElementById("version").innerHTML} was released! Click the notification for more info`,
     });
     notification.onclick = function() {
@@ -66,8 +66,8 @@ function notifyMe() {
                 if (permission === 'granted') {
                     document.cookie = `notVersion=${document.getElementById("version").innerHTML}; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`
                     document.getElementById("versionButton").setAttribute("hidden", "hidden")
-                    var notification = new Notification('UnNamed releases', {
-                        icon: 'https://cdn.discordapp.com/avatars/732208102652379187/07cdc23792f9c6ecf7dd2c976f1e8111.webp?size=1024',
+                    var notification = new Notification('Compass releases', {
+                        icon: 'https://cdn.discordapp.com/attachments/769464671731449876/769464697359302676/compass.png',
                         body: 'You will now be notified for new versions!',
                     });
                 }

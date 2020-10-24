@@ -17,7 +17,8 @@ const e = require("express");
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-bot = require('../../unnamed').bot
+bot = require('../../compass').bot
+const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
 
 function contents() {
   return fs.readFileSync('.//Resources/workreplies.json')
@@ -67,7 +68,7 @@ router.get('/app/:guildid/:memberid/remove', (req, res, next) => {
   reply = req.query.replydata
   if (req.query.balance=="") {return res.redirect(`${address}/app/${guild.id}/members`)}
   if (isNaN(req.query.balance)) {return res.redirect(`${address}/app/${guild.id}/members`)}
-  if (guild.member(member).hasPermission("MANAGE_GUILD") && !member.bot) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") && !member.bot) {
     startup(guild, user)
     toadd = Math.floor(req.query.balance)
     try {
@@ -94,7 +95,7 @@ router.get('/app/:guildid/:memberid/add', (req, res, next) => {
   reply = req.query.replydata
   if (req.query.balance=="") {return res.redirect(`${address}/app/${guild.id}/members`)}
   if (isNaN(req.query.balance)) {return res.redirect(`${address}/app/${guild.id}/members`)}
-  if (guild.member(member).hasPermission("MANAGE_GUILD") && !member.bot) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") && !member.bot) {
     startup(guild, user)
     toadd = Math.floor(req.query.balance)
     try {
@@ -119,7 +120,7 @@ router.get('/app/:guildid/:memberid/set', (req, res, next) => {
   reply = req.query.replydata
   if (req.query.balance=="") {return res.redirect(`${address}/app/${guild.id}/members`)}
   if (isNaN(req.query.balance)) {return res.redirect(`${address}/app/${guild.id}/members`)}
-  if (guild.member(member).hasPermission("MANAGE_GUILD") && !member.bot) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") && !member.bot) {
     startup(guild, user)
     toadd = Math.floor(req.query.balance)
     try {
@@ -147,7 +148,7 @@ router.get('/app/:guildid/members', (req, res) => {
     bots = ""
     guild.members.cache.forEach(member => {
         disabled = ""
-        if (!guild.member(user).hasPermission("MANAGE_GUILD") || member.user.bot) {
+        if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(user).hasPermission("MANAGE_GUILD") || member.user.bot) {
           disabled = "disabled"
         }
         if (!member.user.bot) {
@@ -161,7 +162,7 @@ router.get('/app/:guildid/members', (req, res) => {
     li = ""
     bot.guilds.cache.forEach((guild) => {
       try {
-        if (guild.member(user.id)) {
+        if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id)) {
           if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
           li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
           in1 = 1
@@ -170,7 +171,7 @@ router.get('/app/:guildid/members', (req, res) => {
     })
     li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot')" id="dasb" src='https://i.ibb.co/dG0x5Ch/plus2.png'>`)
     avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
-    if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+    if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD")) {
       data = `<h3 style="color:white;text-align:center;">Members for ${guild.name}</h3> <br> ${returnvalue}`
     } else {
       data = `<h3 style="color:white;text-align:center;">Members for ${guild.name}</h3> <br> ${returnvalue}`

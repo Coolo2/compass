@@ -21,7 +21,8 @@ const databasesetup = require("../../Commands/databasesetup");
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-bot = require('../../unnamed').bot
+bot = require('../../compass').bot
+const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
 
 function contents() {
   return fs.readFileSync('.//Resources/workreplies.json')
@@ -82,7 +83,7 @@ router.get('/app/:guildid/amount/:choice', (req, res, next) => {
     upper = req.query.upper
     if (!lower || !upper || lower=="" || upper=="" || !['work', 'daily', 'crime'].includes(choice)) {return res.redirect(`${address}/app/${guild.id}/options`)}
     
-    if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+    if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD")) {
         if (isNaN(lower) || isNaN(upper)) {
             return res.redirect(`${address}/app/${guild.id}/options`)
         }
@@ -113,21 +114,21 @@ router.get('/app/:guildid/options', (req, res) => {
     li = ""
     bot.guilds.cache.forEach((guild) => {
       try {
-        if (guild.member(user.id)) {
+        if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id)) {
           if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
           li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
           in1 = 1
         }
       } catch {}
     })
-    if (!guild.member(user).hasPermission("MANAGE_GUILD")) {
+    if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(user).hasPermission("MANAGE_GUILD")) {
         disabled = "disabled"
     } else {disabled = ""}
     prefix = require('../../Commands/prefix').get(guild)
 
     li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot')" id="dasb" src='https://i.ibb.co/dG0x5Ch/plus2.png'>`)
     avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
-    if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+    if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD")) {
         data = `<h3 style="color:white;text-align:center;">Economy options for ${guild.name}</h3><br> 
         <div style="color:white">
         From <form action="/app/${guild.id}/amount/work" method="get"><input type="text" value="${returns.get(guild, 'work')[0]}" class="forminput" name="lower"/> to <input type="text" class="forminput" value="${returns.get(guild, 'work')[1]}" name="upper"/><input type="submit" class="formbutton" value="Set work return amount"/></form><br>

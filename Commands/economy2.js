@@ -83,9 +83,9 @@ function lower(message) {
     }
 }
 
-main = require('../unnamed')
+main = require('../compass')
 
-const setup = JSON.parse(fs.readFileSync('./Resources/test.json'))
+const setup = JSON.parse(fs.readFileSync('./Resources/setup.json'))
 
 function vote(message) {
     const args = message.content.slice(prefix.length).split(' ');
@@ -175,6 +175,8 @@ async function crash(message) {
         clearInterval(interval);
     }
 }
+
+
 
 module.exports.crash = crash
 module.exports.rlo = TalkedRecentlyLeftOther

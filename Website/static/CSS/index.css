@@ -2,8 +2,9 @@ html {
     scroll-behavior: smooth;
 }
 body {
-    font-family: 'Alatsi';
+    font-family: 'Helvetica';
     font-size: 22px;
+    font-weight: 550;
 }
 .noscroll {
     overflow-y: hidden;
@@ -137,7 +138,7 @@ body {
     }
 
     to {
-        width: 25em;
+        width: 27em;
     }
 }
 

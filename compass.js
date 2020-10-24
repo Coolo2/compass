@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const fs = require('fs')
-const setup = JSON.parse(fs.readFileSync('.//Resources/test.json'))
+const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
 const functions = require('./functions')
 
 const maths = require('./Commands/math');
@@ -13,15 +13,15 @@ const warns = require('./Commands/warns')
 const help = require('./Commands/help')
 const info = require('./Commands/info')
 const apis = require('./Commands/apis')
-const blocking = require('.//Commands/blocking')
-const prefixes = require('.//Commands/prefix')
-const takereplies = require('.//Commands/takereplies')
-const emojis = require('.//Commands/emoji')
-const timely = require('.//Commands/timely')
-const messages = require('.//Commands/messages')
-const cooldown = require('.//Commands/cooldowns')
-const returns = require('.//Commands/returns')
-const codes = require('.//Commands/codes')
+const blocking = require('./Commands/blocking')
+const prefixes = require('./Commands/prefix')
+const takereplies = require('./Commands/takereplies')
+const emojis = require('./Commands/emoji')
+const timely = require('./Commands/timely')
+const messages = require('./Commands/messages')
+const cooldown = require('./Commands/cooldowns')
+const returns = require('./Commands/returns')
+const codes = require('./Commands/codes')
 
 const r = require('./Resources/rs');
 
@@ -159,6 +159,7 @@ app.use('/', require('./Website/Modules/channels'));
 app.use('/', require('./Website/Modules/currency'));
 app.use('/', require('./Website/Modules/prefixes'));
 app.use('/', require('./Website/backend'));
+app.use('/', require('./Website/Modules/status'));
 app.use('/', require('./Website/HTML/Editor/editor').router);
 app.use('/', require('./Website/HTML/Editor/editorleave').router);
 
@@ -226,16 +227,16 @@ setTimeout(function () {
 
 function loadData() {
   
-    f = JSON.parse(fs.readFileSync('minute.json'))
-    f2 = JSON.parse(fs.readFileSync('day.json'))
+    f = JSON.parse(fs.readFileSync('./Databases/minute.json'))
+    f2 = JSON.parse(fs.readFileSync('./Databases/day.json'))
     if (!f2[new Date().toDateString()]) {f2[new Date().toDateString()] = {"guilds":bot.guilds.cache.size, "users":bot.users.cache.size}}
     d = new Date()
     if (String(Math.ceil(d.toTimeString().split(":")[1]/5)*5).length != 2) {top = String(Math.ceil(d.toTimeString().split(":")[1]/5)*5) + "0"} else {top = String(Math.ceil(d.toTimeString().split(":")[1]/5)*5)}
     datetext = d
     f[String(datetext)] = {"users":bot.users.cache.size, "guilds":bot.guilds.cache.size, "channels":bot.channels.cache.size, "free_memory":Math.round(os.freemem()/1000000), "used_memory":Math.round((os.totalmem()-os.freemem())/1000000)}
     if (Object.keys(f).length > 288) {delete f[Object.keys(f)[0]]}
-    fs.writeFileSync('minute.json', JSON.stringify(f))
-    fs.writeFileSync('day.json', JSON.stringify(f2))
+    fs.writeFileSync('./Databases/minute.json', JSON.stringify(f))
+    fs.writeFileSync('./Databases/day.json', JSON.stringify(f2))
 }
 
 

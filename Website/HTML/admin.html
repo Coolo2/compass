@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Alatsi' rel='stylesheet'>
+    <title>Compass Bot - Admin</title>
+<link rel="icon" href="https://cdn.discordapp.com/attachments/769464671731449876/769464697359302676/compass.png">
+    <link href="/CSS/dashboardguild.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body id="thebody" style="background:#1C1F26">
+    <div class="navbar">
+        <a class="h" href="<%= address %>/">Home</a>
+        
+        <a class="h" href="<%= address %>/app">Dashboard</a></li>
+        <a class="h" href="<%= address %>/options">Options</a></li>
+        <a class="h active" href="<$- address $>/admin">Admin</a></li>
+        <div class="dropdown">
+            <button class="dropbtn">More
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a class="h" href="<%= address %>/stats">Stats <i class="fa fa-line-chart" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
+            </div>
+        </div>
+    </div>
+    <div style="padding:21px"></div>
+    <div class="container">
+        <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage"
+            src="https://i.ibb.co/V9ZZ4r5/cubes.png">
+        <div class="centered" onselectstart="return false" style="cursor: context-menu;">Compass bot - Admin</div>
+    </div>
+    <div class="topcornerdiv" id="topcorner">
+        <button
+            style="float:right;margin-top:25px;background-color: #ffffff30;color:white;box-shadow: 0px 0px 4px 2px #00000050;border:none;border-radius: 5px;cursor:pointer;"
+            onclick="logout()">Log out</button>
+        <button
+            style="float:right;margin-top:25px;background-color: #ffffff30;color:white;box-shadow: 0px 0px 4px 2px #00000050;border:none;border-radius: 5px;cursor:pointer;"
+            onclick="change()">Switch accounts</button>
+        <%- avatar %>
+        <p style="z-index:100;color:white" id="logintext">You're logged in as <%= name %></p>
+
+    </div>
+    <div class="text">
+        <div class="dataSection" style="color:white;position:absolute;box-shadow: 0px 0px 20px 6px #00000050;border-radius:10px;background-color:#1C1F26;min-width:95%;margin-top:5%;margin-right:2%;margin-left:2%;top:0;max-width:90%;padding:10px;">
+            
+            <div style="background-color:#15181a;float:left;width:33%;position:relative;height:300px;">
+                <p style="color:white"><u>Create incident</u></p>
+                <br>
+                <span>Incident name <input class="forminput" id="incident--name"></span>
+                <div style="padding-top:5px;"></div>
+                <span>Incident body <input class="forminput" id="incident--body"></span>
+                <div style="padding-top:5px;"></div>
+                <select name="status" id="incident--status">
+                    <option name="status" value="investigating" selected>Investigating</option>
+                    <option name="status" value="identified">Identified</option>
+                    <option name="status" value="monitoring">Monitoring</option>
+                    <option name="status" value="resolved">Resolved</option>
+                </select>
+                <select name="impact" id="incident--impact">
+                    <option name="impact" value="minor" selected>Minor</option>
+                    <option name="impact" value="major">Major</option>
+                    <option name="impact" value="critical">Critical</option>
+                </select>
+                <div style="padding-top:5px;"></div>
+                <button onclick="postincident()" class="formbutton">Create Incident</button><span id="newIncident" style="font-size:15px;color:gray">  Not sent</span>
+                
+            </div>
+            <div style="background-color:#15181a;display:inline-block;width:33%;position:relative;height:300px;">
+                <p style="color:white"><u>Update incident</u></p>
+                <div style="padding-top:5px;"></div>
+                <span>Incident ID <input class="forminput" oninput="autoUpdateEdit()" id="incidentUpdate--id"></span>
+                <div style="padding-top:5px;"></div>
+                <span>Incident name <input class="forminput" id="incidentUpdate--name"></span>
+                <div style="padding-top:5px;"></div>
+                <span>Incident body <input class="forminput" id="incidentUpdate--body"></span>
+                <div style="padding-top:5px;"></div>
+                <select name="status" id="incidentUpdate--status">
+                    <option name="status" value="investigating" selected>Investigating</option>
+                    <option name="status" value="identified">Identified</option>
+                    <option name="status" value="monitoring">Monitoring</option>
+                    <option name="status" value="resolved">Resolved</option>
+                    <option name="status" value="---">---Scheduled incident below---</option>
+                    <option name="status" value="scheduled">Scheduled</option>
+                    <option name="status" value="in_progress">In progress</option>
+                    <option name="status" value="verifying">Verifying</option>
+                    <option name="status" value="completed">Completed</option>
+                </select>
+                <select name="impact" id="incidentUpdate--impact">
+                    <option name="impact" value="minor" selected>Minor</option>
+                    <option name="impact" value="major">Major</option>
+                    <option name="impact" value="critical">Critical</option>
+                </select>
+                <div style="padding-top:5px;"></div>
+                <button onclick="updateIncident()" class="formbutton">Update incident</button><span id="updateStatus" style="font-size:15px;color:gray">  Not sent</span>
+            </div>
+            <div style="background-color:#15181a;display:inline-block;width:33%;position:relative;height:300px;">
+                <p style="color:white"><u>Scheduled incident</u></p>
+                <div style="padding-top:5px;"></div>
+                <span>Incident name <input class="forminput" id="incidentSch--name"></span>
+                <div style="padding-top:5px;"></div>
+                <span>Incident body <input class="forminput" id="incidentSch--body"></span>
+                <div style="padding-top:5px;"></div>
+                <span>Scheduled for <input class="forminput" id="incidentSch--for" value="2020-05-07T03:00:00.007Z"> until <input class="forminput" id="incidentSch--until" value="2020-05-07T03:01:00.007Z"></span>
+                <div style="padding-top:5px;"></div>
+                <select name="status" id="incidentSch--status">
+                    <option name="status" value="scheduled" selected>Scheduled</option>
+                    <option name="status" value="in_progress">In progress</option>
+                    <option name="status" value="verifying">Verifying</option>
+                    <option name="status" value="completed">Completed</option>
+                </select>
+                <div style="padding-top:5px;"></div>
+                <button onclick="scheduleIncident()" class="formbutton">Schedule incident</button><span id="scheduleStatus" style="font-size:15px;color:gray">  Not sent</span>
+            </div>
+            <iframe src="https://compassbot.statuspage.io/" id="statuspage" style="display:inline-block;width:33%;height:300px"></iframe>
+            <div id="allIncidentsText" style="padding-top:20px;padding-bottom:20px;"><u>All incidents (loading)</u></div>
+            <div id="incidents" style="position:relative"></div>
+        </div>
+        
+        
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/JS/dashboardguild.js"></script>
+<script>
+    function reloadSchedule() {
+        if (Date.parse(document.getElementById("incidentSch--for").value) < new Date()) {
+            d = new Date(new Date().getTime() + 10*60000);
+            d1 = new Date(new Date().getTime() + 5*60000)
+
+            d.setMilliseconds(0)
+            d.setSeconds(0)
+            
+            d1.setSeconds(0)
+            d1.setMilliseconds(0)
+            document.getElementById("incidentSch--for").value = d1.toISOString()
+            document.getElementById("incidentSch--until").value = d.toISOString()
+        }
+        
+    }
+
+    reloadSchedule()
+
+    incidentCache = {}
+
+    function httpGet(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+        xmlHttp.send( null );
+        return JSON.parse(xmlHttp.response);
+    }
+
+    function postincident() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 422) {
+                    return document.getElementById("newIncident").innerHTML = "Invalid options"
+                }
+                else if (xhr.status == 404) {
+                    return document.getElementById("newIncident").innerHTML = "Invalid name"
+                } else {
+                    document.getElementById("newIncident").innerHTML = "Success - Refreshing..."
+                    setTimeout(function() {
+                        reloadPage()
+                        document.getElementById("newIncident").innerHTML = "Success"
+                    }, 3000)
+                }
+                
+            }
+        }
+        xhr.open("POST", `<%- address %>/admin/newIncident`, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        r = xhr.send(JSON.stringify({
+            "incident": {
+                "name": document.getElementById('incident--name').value,
+                "status": document.getElementById('incident--status').value,
+                "impact_override": document.getElementById('incident--impact').value,
+                "backfill_date": "string",
+                "body": document.getElementById('incident--body').value,
+                "components": {},
+                "component_ids": [],
+            }
+        }));
+    }
+
+    function scheduleIncident() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 422) {
+                    return document.getElementById("scheduleStatus").innerHTML = "Invalid options"
+                }
+                else if (xhr.status == 404) {
+                    return document.getElementById("scheduleStatus").innerHTML = "Invalid name"
+                } else {
+                    document.getElementById("scheduleStatus").innerHTML = "Success - Refreshing..."
+                    setTimeout(function() {
+                        reloadPage()
+                        document.getElementById("scheduleStatus").innerHTML = "Success"
+                    }, 3000)
+                }
+                
+            }
+        }
+        xhr.open("POST", `<%- address %>/admin/newSchIncident`, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        r = xhr.send(JSON.stringify({
+            "incident": {
+                "name": document.getElementById('incidentSch--name').value,
+                "status": document.getElementById('incidentSch--status').value,
+                "scheduled_for":document.getElementById('incidentSch--for').value,
+                "scheduled_until":document.getElementById('incidentSch--until').value,
+                "backfill_date": "string",
+                "body": document.getElementById('incidentSch--body').value,
+                "components": {},
+                "component_ids": [],
+            }
+        }));
+        
+    }
+
+    function updateIncident() {
+        id = document.getElementById('incidentUpdate--id').value
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 422) {
+                    return document.getElementById("updateStatus").innerHTML = "Invalid options"
+                }
+                else if (xhr.status == 404) {
+                    return document.getElementById("updateStatus").innerHTML = "Invalid ID"
+                }
+                else if (id.split(" ").join("") == "") {
+                    return document.getElementById("updateStatus").innerHTML = "No ID provided"
+                } else {
+                    document.getElementById("updateStatus").innerHTML = "Success - Refreshing..."
+                    setTimeout(function() {
+                        reloadPage()
+                        document.getElementById("updateStatus").innerHTML = "Success"
+                    }, 3000)
+                }
+                
+            }
+        }
+        r = xhr.open("PUT", `<%- address %>/admin/updateIncident/${id}`, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        if (document.getElementById('incidentUpdate--impact').value.split(" ").join("") == "") {
+            xhr.send(JSON.stringify({
+                "incident": {
+                    "name": document.getElementById('incidentUpdate--name').value,
+                    "status": document.getElementById('incidentUpdate--status').value,
+                    "backfill_date": "string",
+                    "body": document.getElementById('incidentUpdate--body').value,
+                    "components": {},
+                    "component_ids": [],
+                }
+            }));
+        } else {
+            xhr.send(JSON.stringify({
+                "incident": {
+                    "name": document.getElementById('incidentUpdate--name').value,
+                    "status": document.getElementById('incidentUpdate--status').value,
+                    "impact_override": document.getElementById('incidentUpdate--impact').value,
+                    "backfill_date": "string",
+                    "body": document.getElementById('incidentUpdate--body').value,
+                    "components": {},
+                    "component_ids": [],
+                }
+            }));
+        }
+    }
+
+    function reloadPage() {
+        document.getElementById('statuspage').src = document.getElementById('statuspage').src
+        refreshIncidents()
+        for (option of ['incident--body', 'incident--name', 'incidentSch--body', 'incidentSch--name', 'incidentUpdate--name', 'incidentUpdate--id', 'incidentUpdate--body']) {document.getElementById(option).value=""}
+    }
+
+    function refreshIncidents() {
+        final = httpGet('<%- address %>/admin/getIncidents')
+        incidentCache = final
+        htmlIncidents = ""
+        final.forEach(incident => {
+            htmlIncidents = htmlIncidents + `<div class="members">${incident.name} : ${incident["incident_updates"][0].body} (${incident.status}) - ${incident.id} <button onclick='deleteincident("${incident.id}")' class="formbutton">Delete</button><button onclick='setID("${incident.id}")' class="formbutton">Update</button></div><div style="padding:10px;"></div>`
+        })
+        document.getElementById('incidents').innerHTML = htmlIncidents
+        document.getElementById("allIncidentsText").innerHTML = "<u>All Incidents</u>"
+    }
+    refreshIncidents()
+
+    function deleteincident(id) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("DELETE", `<%- address %>/admin/delIncident/${id}`, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        r = xhr.send();
+
+        setTimeout(function() {
+            reloadPage()
+        }, 3000)
+    }
+
+    function autoUpdateEdit() {
+        all = {}
+        for (element of incidentCache) {
+            all[element["id"]] = element
+        }
+        if (document.getElementById('incidentUpdate--id').value in all) {element=all[document.getElementById('incidentUpdate--id').value];document.getElementById('incidentUpdate--name').value = element["name"];document.getElementById('incidentUpdate--body').value = element["incident_updates"][0].body;document.getElementById('incidentUpdate--status').value = element.status;document.getElementById('incidentUpdate--impact').value = element["impact_override"]}
+        else {try{for (option of [{'thing':'incidentUpdate--body','value':''}, {'thing':'incidentUpdate--name','value':''}, {'thing':'incidentUpdate--status','value':'investigating'}, {'thing':'incidentUpdate--impact','value':'minor'}]) {document.getElementById(option['thing']).value=option['value']} }catch(err){console.log(err)}}
+    }
+
+    function setID(id) {
+        document.getElementById('incidentUpdate--id').value = id 
+        autoUpdateEdit()
+    }
+
+    
+    
+
+</script>
+
+</html>

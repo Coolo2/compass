@@ -12,10 +12,24 @@ if (getCookieValue("theme") == "light") {
 }
 
 function changetheme() {
-    console.log("is")
     if (getCookieValue("theme") == 'dark') {document.cookie = `theme=light; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`;location.reload()}
     else {document.cookie = `theme=dark; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`;location.reload()}
 }
+
+function toggleadmin() {
+    if (getCookieValue("adminMode") == 'on') {document.cookie = `adminMode=off; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`;location.reload()}
+    else {document.cookie = `adminMode=on; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`;location.reload()}
+}
+
+if (!getCookieValue("adminMode")) {
+    document.cookie = `adminMode=on; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`
+}
+if (getCookieValue("adminMode") == 'on') {
+    document.getElementById("adminMode").innerHTML = "Admin mode is on"
+} else {
+    document.getElementById("adminMode").innerHTML = "Admin mode is off"
+}
+
 
 function lighttheme() {
     try{Array.from(document.getElementsByTagName("*")).forEach(element => element.classList.add('notransition'))}catch{}
@@ -27,6 +41,7 @@ function lighttheme() {
     try{Array.from(document.getElementsByClassName("readability")).forEach(element => element.style.backgroundColor = '#D4D7DC')}catch{}
     try{Array.from(document.getElementsByClassName("beginning")).forEach(element => element.style.backgroundColor = '#c4c7cc')}catch{}
     try{Array.from(document.getElementsByClassName("replyoption")).forEach(element => {element.style.backgroundColor = '#a9acb0'})}catch{}
+    try{Array.from(document.getElementsByClassName("newButton")).forEach(element => {element.style.backgroundColor = '#a9acb0'})}catch{}
     try{Array.from(document.getElementsByClassName("section")).forEach(element => {element.style.backgroundColor = '#c4c7cc';element.style.border = '2px black solid'})}catch{}
     try{Array.from(document.getElementsByClassName("sectionactive")).forEach(element => {element.style.backgroundColor = '#a9acb0';element.style.border = '2px black solid'})}catch{}
     try{Array.from(document.getElementsByClassName("topcornerdiv")).forEach(element => {element.style.backgroundColor = '#a9acb0';element.style.border = '2px black solid'})}catch{}

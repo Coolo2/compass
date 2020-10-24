@@ -16,7 +16,8 @@ const e = require("express");
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-bot = require('../../unnamed').bot
+bot = require('../../compass').bot
+const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
 
 function contents() {
   return fs.readFileSync('.//Resources/workreplies.json')
@@ -48,7 +49,7 @@ router.get('/app/:guildid/:channelid/block', (req, res, next) => {
   channel = bot.channels.cache.get(req.params.channelid)
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
-  if (guild.member(member).hasPermission("MANAGE_CHANNELS")) {
+  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_CHANNELS")) {
     guild.channels.cache.forEach(channel1 => {
       if (channel1.type == "text" && channel1.id == req.params.channelid) {
         blocked = JSON.parse(fs.readFileSync('.//Databases/blocked.json'))
@@ -77,7 +78,7 @@ router.get('/app/:guildid/:channelid/unblock', (req, res, next) => {
     channel = bot.channels.cache.get(req.params.channelid)
     id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
     member = functions.memberfromarg(guild, id)
-    if (guild.member(member).hasPermission("MANAGE_CHANNELS")) {
+    if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_CHANNELS")) {
         guild.channels.cache.forEach(channel1 => {
           if (channel1.type == "text" && channel1.id == req.params.channelid) {
             blocked = JSON.parse(fs.readFileSync('.//Databases/blocked.json'))
@@ -105,7 +106,7 @@ router.get('/app/:guildid/channels', (req, res) => {
     guild.channels.cache.forEach(channel => {
         if (channel.type == "text") {
         disabled = ""
-        if (!guild.member(user).hasPermission("MANAGE_GUILD")) {
+        if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(user).hasPermission("MANAGE_GUILD")) {
           disabled = "disabled"
         }
         if (blocked.channels.includes(channel.id)) {
@@ -119,7 +120,7 @@ router.get('/app/:guildid/channels', (req, res) => {
     li = ""
     bot.guilds.cache.forEach((guild) => {
       try {
-        if (guild.member(user.id)) {
+        if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id)) {
           if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
           li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
           in1 = 1
@@ -128,7 +129,7 @@ router.get('/app/:guildid/channels', (req, res) => {
     })
     li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot')" id="dasb" src='https://i.ibb.co/dG0x5Ch/plus2.png'>`)
     avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
-    if (guild.member(member).hasPermission("MANAGE_GUILD")) {
+    if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD")) {
       data = `<h3 style="color:white;text-align:center;">Channels for ${guild.name}</h3> <br> ${returnvalue}`
     } else {
       data = `<h3 style="color:white;text-align:center;">Channels for ${guild.name}</h3> <br> ${returnvalue}`

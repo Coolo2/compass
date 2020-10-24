@@ -1,8 +1,8 @@
 
-
 body {
-    font-family: 'Alatsi';
+    font-family:'Helvetica';
     font-size: 22px;
+font-weight: 550;
 }
 
 .noscroll {
@@ -260,33 +260,47 @@ div.topcornerdiv:hover {
     -webkit-transition: all 0.5s;
 }
 form {
-    display: inline-block; //Or display: inline; 
+    display: inline-block;
 }
 .forminput {
+    color:rgb(207, 207, 207);
     background-color:#282C34;
-    color:white;
-    border: 2px white solid;
-    border-radius:2px;
+    padding:7px;
+    border-radius:5px;
+    border: 1px solid white;
+    -webkit-transition: all 0.5s;
 }
 .formbutton {
-    background-color:gray;
-    color:white;
-    border: 2px white solid;
-    border-radius:2px;
+    color:rgb(207, 207, 207);
+    background-color:#404652;
+    padding:8px;
+    border-radius:5px;
+    border: 1px solid white;
     cursor:pointer;
+    -webkit-transition: all 0.5s;
+}
+.formbutton:hover {
+    color:rgb(255, 255, 255);
+    background-color:#5d6677;
+    -webkit-transition: all 0.5s;
 }
 
 .forminputdisabled {
     background-color:#36393E;
     color:white;
     border: 1px #636363 solid;
-    border-radius:2px;
+    padding:7px;
+    border-radius:5px;
+    -webkit-transition: all 0.5s;
 }
+
 .formbuttondisabled {
     background-color:#36393E;
     color:white;
+    padding:8px;
+    border-radius:5px;
     border: 1px #636363 solid;
-    border-radius:2px;
+    -webkit-transition: all 0.5s;
 }
 input:focus, textarea:focus, select:focus{
     outline: none;

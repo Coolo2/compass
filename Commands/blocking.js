@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const functions = require('../functions')
 const fs = require('fs')
-const setup = JSON.parse(fs.readFileSync('./Resources/test.json'))
+const setup = JSON.parse(fs.readFileSync('./Resources/setup.json'))
 
 const r = require('../Resources/rs')
 
