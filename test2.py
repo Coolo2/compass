@@ -1,19 +1,9 @@
-"""from textblob import TextBlob
-from textblob.sentiments import NaiveBayesAnalyzer
+from discordwebhook import create
 
-def textblob_Sentiment(text):
-    print("Starting TextBlob Sentiment Analysis")
-    
-    score =  TextBlob(text, analyzer=NaiveBayesAnalyzer()).sentiment
-    return score
+while True:
 
-input_sen = str(input("Enter Text: "))
-print(" ")
-score = textblob_Sentiment(input_sen)
-print("Score: ", score)"""
+    webhook = create.Webhook("https://discord.com/api/webhooks/770346461182296131/dug_mrn8flAk0QEmYVLDAjqJs7m7Kmfe_HGgerqJ8jy8ZtFfruWJmYkZBQjh2OTWk1JJ")
 
-from textblob import Blobber
-from textblob.sentiments import NaiveBayesAnalyzer
-tb = Blobber(analyzer=NaiveBayesAnalyzer())
+    webhook.avatar_url("https://cdn.discordapp.com/avatars/520187313884495872/f6d8361b2de0b71c60c7e63b1695f348.webp?size=1024")
 
-print(tb("sentence you want to test").sentiment)
+    webhook.send(message=input(">>> "), username="dathommiebacon")

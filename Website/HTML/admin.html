@@ -4,7 +4,7 @@
 <head>
     <link href='https://fonts.googleapis.com/css?family=Alatsi' rel='stylesheet'>
     <title>Compass Bot - Admin</title>
-<link rel="icon" href="https://cdn.discordapp.com/attachments/769464671731449876/769464697359302676/compass.png">
+<link rel="icon" href="https://cdn.discordapp.com/attachments/769464671731449876/770241900266782730/compass-0.png">
     <link href="/CSS/dashboardguild.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -57,13 +57,13 @@
                 <div style="padding-top:5px;"></div>
                 <span>Incident body <input class="forminput" id="incident--body"></span>
                 <div style="padding-top:5px;"></div>
-                <select name="status" id="incident--status">
+                <select class="formselect" name="status" id="incident--status">
                     <option name="status" value="investigating" selected>Investigating</option>
                     <option name="status" value="identified">Identified</option>
                     <option name="status" value="monitoring">Monitoring</option>
                     <option name="status" value="resolved">Resolved</option>
                 </select>
-                <select name="impact" id="incident--impact">
+                <select class="formselect" name="impact" id="incident--impact">
                     <option name="impact" value="minor" selected>Minor</option>
                     <option name="impact" value="major">Major</option>
                     <option name="impact" value="critical">Critical</option>
@@ -81,7 +81,7 @@
                 <div style="padding-top:5px;"></div>
                 <span>Incident body <input class="forminput" id="incidentUpdate--body"></span>
                 <div style="padding-top:5px;"></div>
-                <select name="status" id="incidentUpdate--status">
+                <select class="formselect" name="status" id="incidentUpdate--status">
                     <option name="status" value="investigating" selected>Investigating</option>
                     <option name="status" value="identified">Identified</option>
                     <option name="status" value="monitoring">Monitoring</option>
@@ -92,7 +92,7 @@
                     <option name="status" value="verifying">Verifying</option>
                     <option name="status" value="completed">Completed</option>
                 </select>
-                <select name="impact" id="incidentUpdate--impact">
+                <select class="formselect" name="impact" id="incidentUpdate--impact">
                     <option name="impact" value="minor" selected>Minor</option>
                     <option name="impact" value="major">Major</option>
                     <option name="impact" value="critical">Critical</option>
@@ -109,7 +109,7 @@
                 <div style="padding-top:5px;"></div>
                 <span>Scheduled for <input class="forminput" id="incidentSch--for" value="2020-05-07T03:00:00.007Z"> until <input class="forminput" id="incidentSch--until" value="2020-05-07T03:01:00.007Z"></span>
                 <div style="padding-top:5px;"></div>
-                <select name="status" id="incidentSch--status">
+                <select class="formselect" name="status" id="incidentSch--status">
                     <option name="status" value="scheduled" selected>Scheduled</option>
                     <option name="status" value="in_progress">In progress</option>
                     <option name="status" value="verifying">Verifying</option>
@@ -118,7 +118,21 @@
                 <div style="padding-top:5px;"></div>
                 <button onclick="scheduleIncident()" class="formbutton">Schedule incident</button><span id="scheduleStatus" style="font-size:15px;color:gray">  Not sent</span>
             </div>
-            <iframe src="https://compassbot.statuspage.io/" id="statuspage" style="display:inline-block;width:33%;height:300px"></iframe>
+            <div style="background-color:#15181a;display:inline-block;width:33%;position:relative;height:300px;">
+                <p style="color:white"><u>Update compnent</u></p>
+                <div style="padding-top:5px;"></div>
+                <select class="formselect" oninput="updateComponentStatus()" name="components" id="updateComponent--id"></select>
+                <select class="formselect" name="status" id="updateComponent--status">
+                    <option name="status" value="operational">Operational</option>
+                    <option name="status" value="under_maintenance">Under maintenance</option>
+                    <option name="status" value="degraded_performance">Degraded performance</option>
+                    <option name="status" value="partial_outage">Partial outage</option>
+                    <option name="status" value="major_outage">Major outage</option>
+                </select>
+                <div style="padding-top:5px;"></div>
+                <button onclick="updateComponent()" class="formbutton">Update component</button><span id="updateComponentStatus" style="font-size:15px;color:gray">  Not sent</span>
+            </div>
+            <iframe src="https://compassbot.statuspage.io/" id="statuspage" style="width:33%;height:300px;position: relative;float:right;"></iframe>
             <div id="allIncidentsText" style="padding-top:20px;padding-bottom:20px;"><u>All incidents (loading)</u></div>
             <div id="incidents" style="position:relative"></div>
         </div>
@@ -149,6 +163,7 @@
     reloadSchedule()
 
     incidentCache = {}
+    componentCache = {}
 
     function httpGet(theUrl) {
         var xmlHttp = new XMLHttpRequest();
@@ -279,6 +294,39 @@
         }
     }
 
+    function updateComponent() {
+        id = document.getElementById('updateComponent--id').value
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 422) {
+                    return document.getElementById("updateComponentStatus").innerHTML = "Invalid options"
+                }
+                else if (xhr.status == 404) {
+                    return document.getElementById("updateComponentStatus").innerHTML = "Invalid ID"
+                }
+                else if (id.split(" ").join("") == "") {
+                    return document.getElementById("updateComponentStatus").innerHTML = "No ID provided"
+                } else {
+                    document.getElementById("updateComponentStatus").innerHTML = "Success - Refreshing..."
+                    setTimeout(function() {
+                        reloadPage()
+                        document.getElementById("updateComponentStatus").innerHTML = "Success"
+                    }, 3000)
+                }
+                
+            }
+        }
+        r = xhr.open("PUT", `<%- address %>/admin/updateComponent/${id}`, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            "component": {
+                "status": document.getElementById("updateComponent--status").value,
+            }
+
+        }));
+    } 
+
     function reloadPage() {
         document.getElementById('statuspage').src = document.getElementById('statuspage').src
         refreshIncidents()
@@ -296,6 +344,17 @@
         document.getElementById("allIncidentsText").innerHTML = "<u>All Incidents</u>"
     }
     refreshIncidents()
+
+    function refreshComponents() {
+        final = httpGet('<%- address %>/admin/getComponents')
+        componentCache = final
+        htmlIncidents = ""
+        final.forEach(component => {
+            htmlIncidents = htmlIncidents + `\n<option name="status" value="${component.id}">${component.name}</option>`
+        })
+        document.getElementById('updateComponent--id').innerHTML = htmlIncidents
+    }
+    refreshComponents()
 
     function deleteincident(id) {
         var xhr = new XMLHttpRequest();
@@ -316,6 +375,14 @@
         }
         if (document.getElementById('incidentUpdate--id').value in all) {element=all[document.getElementById('incidentUpdate--id').value];document.getElementById('incidentUpdate--name').value = element["name"];document.getElementById('incidentUpdate--body').value = element["incident_updates"][0].body;document.getElementById('incidentUpdate--status').value = element.status;document.getElementById('incidentUpdate--impact').value = element["impact_override"]}
         else {try{for (option of [{'thing':'incidentUpdate--body','value':''}, {'thing':'incidentUpdate--name','value':''}, {'thing':'incidentUpdate--status','value':'investigating'}, {'thing':'incidentUpdate--impact','value':'minor'}]) {document.getElementById(option['thing']).value=option['value']} }catch(err){console.log(err)}}
+    }
+
+    function updateComponentStatus() {
+        all = {}
+        for (element of componentCache) {
+            all[element["id"]] = element
+        }
+        if (document.getElementById('updateComponent--id').value in all) {document.getElementById(`updateComponent--status`).value = all[document.getElementById('updateComponent--id').value].status}
     }
 
     function setID(id) {

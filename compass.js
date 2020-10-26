@@ -22,6 +22,7 @@ const messages = require('./Commands/messages')
 const cooldown = require('./Commands/cooldowns')
 const returns = require('./Commands/returns')
 const codes = require('./Commands/codes')
+const suggest = require('./Commands/suggestion')
 
 const r = require('./Resources/rs');
 
@@ -121,6 +122,7 @@ bot.on('message', message => {
   codes.generateGlobal(message)
   codes.deleteCodeCommand(message)
   codes.deleteCodeGlobalCommand(message)
+  suggest.suggest(bot, message)
 });
 
 bot.on("error", error => console.log(error.message));
@@ -159,9 +161,10 @@ app.use('/', require('./Website/Modules/channels'));
 app.use('/', require('./Website/Modules/currency'));
 app.use('/', require('./Website/Modules/prefixes'));
 app.use('/', require('./Website/backend'));
-app.use('/', require('./Website/Modules/status'));
+app.use('/', require('./Website/Modules/admin'));
 app.use('/', require('./Website/HTML/Editor/editor').router);
 app.use('/', require('./Website/HTML/Editor/editorleave').router);
+
 
 
 const getAppCookies = (req, res) => {

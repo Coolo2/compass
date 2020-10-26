@@ -246,6 +246,13 @@
         }
     },
     "Misc":{
+        "suggest": {
+            "name":"suggest",
+            "description":"Suggest something for the bot",
+            "usage":"[prefix]suggest [suggestion]",
+            "permissions":"none",
+            "aliases":["suggest", "suggest-command"]
+        },
         "math": {
             "name":"math",
             "description":"Calculate a math equasion",

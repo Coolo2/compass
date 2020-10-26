@@ -4,7 +4,7 @@
 <head>
     <link href='https://fonts.googleapis.com/css?family=Alatsi' rel='stylesheet'>
     <title>Compass Bot - Bot Docs</title>
-<link rel="icon" href="https://cdn.discordapp.com/attachments/769464671731449876/769464697359302676/compass.png">
+<link rel="icon" href="https://cdn.discordapp.com/attachments/769464671731449876/770241900266782730/compass-0.png">
     <link href="/CSS/docs.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -54,7 +54,7 @@
             
 
 
-            <div class="readability" style="border:3px red solid;padding:30px;border-style:dashed;background-color:#24272e"><b>BEWARE:</b> All commands shown on this webpage will use the default prefix (?), however servers may have custom prefixes setup. To see the prefix, type:
+            <div class="readability" style="border:3px red solid;padding:30px;border-style:dashed;background-color:#24272e"><b>BEWARE:</b> All commands shown on this webpage will use the default prefix (<%- prefix %>), however servers may have custom prefixes setup. To see the prefix, type:
 <pre><code>      @Compass prefix</code></pre>
             </div>
             <br>
@@ -86,8 +86,8 @@
                 You can use the two below commands for adding and removing work replies.
             </p>
             <p>
-<pre><code>      ?addreply [response]</code></pre> 
-<pre><code>      ?removereply [replyID/all]</code></pre> 
+<pre><code>      <%- prefix %>addreply [response]</code></pre> 
+<pre><code>      <%- prefix %>removereply [replyID/all]</code></pre> 
             </p>
             <h4 style="padding-top:25px;padding-bottom:25px"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> <u>    What are share IDs?</u></h4>
             <p>
@@ -97,7 +97,7 @@
                 and if you have sufficient permissions it will be listed with the server name above the work replies. 
                 To get a server ShareID through commands, use:
             </p>
-<pre><code>      ?sharereplies</code></pre> 
+<pre><code>      <%- prefix %>sharereplies</code></pre> 
             <h4 style="padding-top:25px;padding-bottom:25px"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> <u>    How do I load another servers work replies?</u></h4>
             <span style="color:rgb(194, 194, 194);font-style:italic">Beware:</span> These functions require
                 manage_server permissions.
@@ -118,7 +118,7 @@
                 You can use the below command to load work replies from a ShareID
             </p>
             <p>
-<pre><code>      ?loadreplies [ShareID]</code></pre> 
+<pre><code>      <%- prefix %>loadreplies [ShareID]</code></pre> 
             </p>
             <h4 style="padding-top:25px;padding-bottom:25px"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> <u>   How do I disable the bot from working in a channel?</u></h4>
             <span style="color:rgb(194, 194, 194);font-style:italic">Beware:</span> These functions require
@@ -137,8 +137,8 @@
                 <b>Through the bot/comamnds: </b>
                 You can use the below command to enable or disable channels
             </p>
-            <pre><code>      ?disable [channel]</code></pre> 
-            <pre><code>      ?enable [channel]</code></pre> 
+            <pre><code>      <%- prefix %>disable [channel]</code></pre> 
+            <pre><code>      <%- prefix %>enable [channel]</code></pre> 
         </div>
     </div>
         

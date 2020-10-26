@@ -302,6 +302,17 @@ form {
     border: 1px #636363 solid;
     -webkit-transition: all 0.5s;
 }
+
+.formselect {
+    color:rgb(207, 207, 207);
+    background-color:#404652;
+    padding:4px;
+    border-radius:2px;
+    border: 1px solid white;
+    cursor:pointer;
+    -webkit-transition: all 0.5s;
+}
+
 input:focus, textarea:focus, select:focus{
     outline: none;
 }

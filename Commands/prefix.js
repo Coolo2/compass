@@ -51,7 +51,7 @@ function getmess(message) {
         if (message.content.toLowerCase().startsWith(final + " ")) return final + " ";
         else return final
     } catch {
-        if (message.content.toLowerCase().startsWith("^ ")) return defaultPFX + " ";
+        if (message.content.toLowerCase().startsWith(defaultPFX + " ")) return defaultPFX + " ";
         else return defaultPFX;
     }
 }

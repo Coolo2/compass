@@ -55,7 +55,8 @@ router.get('/changelogs', function (req, res) {
 router.get('/documentation', function (req, res) {
   res.render(path.join(__dirname + '/HTML/Docs/help.html'), {
       address:address, 
-      status:`${address}/status`
+      status:`${address}/status`,
+      prefix:setup.prefix
   });
 });
 
