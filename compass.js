@@ -1,5 +1,16 @@
-const Discord = require('discord.js');
-const bot = new Discord.Client();
+const Discord = require("discord.js-light");
+const bot = new Discord.Client({
+  cacheGuilds: true,
+  cacheChannels: true,
+  cacheOverwrites: false,
+  cacheRoles: false,
+  cacheEmojis: false,
+  fetchAllMembers:true,
+  cachePresences: false,
+  disabledEvents:["channelPinsUpdate"],
+});
+ 
+
 const fs = require('fs')
 const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
 const functions = require('./functions')
@@ -114,7 +125,7 @@ bot.on('message', message => {
   economy3.deposit(message)
   economy3.withdrawl(message)
   economy3.balance(message)
-  economy2.vote(message)
+  //economy2.vote(message)
   economy2.crash(message)
   info.uptime(message)
   codes.generate(message)
@@ -123,6 +134,7 @@ bot.on('message', message => {
   codes.deleteCodeCommand(message)
   codes.deleteCodeGlobalCommand(message)
   suggest.suggest(bot, message)
+  suggest.issue(bot, message)
 });
 
 bot.on("error", error => console.log(error.message));
@@ -143,6 +155,21 @@ const address = JSON.parse(fs.readFileSync('.//Resources/website.json')).address
 const domainall = JSON.parse(fs.readFileSync('.//Resources/website.json')).domainall
 
 app.engine('html', require('ejs').renderFile);
+var minifyHTML = require('express-minify-html-2');
+
+app.use(minifyHTML({
+  override:      true,
+  exception_url: ['/app'],
+  htmlMinifier: {
+      removeComments:            true,
+      collapseWhitespace:        true,
+      collapseBooleanAttributes: true,
+      removeAttributeQuotes:     true,
+      removeEmptyAttributes:     true,
+      minifyJS:                  true
+  }
+}));
+
 
 oauth = require('./Website/oauth2/oauth')
 var testRoutes = require('./Website/database');
@@ -160,6 +187,7 @@ app.use('/', require('./Website/Modules/options'));
 app.use('/', require('./Website/Modules/channels'));
 app.use('/', require('./Website/Modules/currency'));
 app.use('/', require('./Website/Modules/prefixes'));
+app.use('/', require('./Website/Modules/codes'));
 app.use('/', require('./Website/backend'));
 app.use('/', require('./Website/Modules/admin'));
 app.use('/', require('./Website/HTML/Editor/editor').router);
@@ -197,15 +225,15 @@ router.get('/api/*', function (req, res) {
 
 votes = {}
 
-router.post('/dblwebhook', function (req, res) {
+/*router.post('/dblwebhook', function (req, res) {
   vote = req.body
   try {
     user = bot.users.cache.get(req.body.user)
-    user.send(functions.embed(`Thanks for voting!`, `Thank you so much for voting for me! It helps support the bot! As a thanks, you can redeem a reward every time you vote with **^vote**`, r.s))
+    user.send(functions.embed(`Thanks for voting!`, `Thank you so much for voting for me, it helps support the bot! As a thanks, you can redeem a reward every time you vote with **^vote**`, r.s))
   } catch{}
   votes[String(vote.user)] = true
   console.log(`User with ID ${vote.user} just voted!`);
-})
+})*/
 
 router.get('*', function (req, res) {
   res.sendFile(path.join(__dirname + '/Website/HTML/404.html'));

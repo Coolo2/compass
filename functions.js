@@ -1,5 +1,5 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
+const Discord = require("discord.js-light");
+const bot = new Discord.Client({cacheGuilds: true,cacheChannels: true,cacheOverwrites: false,cacheRoles: false,cacheEmojis: false,fetchAllMembers:true,cachePresences: false});
 
 const prefixes = require('./Commands/prefix')
 

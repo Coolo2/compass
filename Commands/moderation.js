@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const Discord = require('discord.js-light');
 const bot = new Discord.Client();
 const math = require('mathjs');
 const { json } = require('body-parser');

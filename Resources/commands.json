@@ -100,13 +100,6 @@
             "permissions":"none",
             "aliases":["crash"]
         },
-        "vote": {
-            "name":"vote",
-            "description":"Vote for the bot and get 2500 in every server",
-            "usage":"[prefix]vote",
-            "permissions":"none",
-            "aliases":["vote"]
-        },
         "balance": {
             "name":"balance",
             "description":"Get a user's (or your own) balance",
@@ -252,6 +245,13 @@
             "usage":"[prefix]suggest [suggestion]",
             "permissions":"none",
             "aliases":["suggest", "suggest-command"]
+        },
+        "issue": {
+            "name":"issue",
+            "description":"Report an issue with the bot",
+            "usage":"[prefix]issue [issue]",
+            "permissions":"none",
+            "aliases":["issue", "bug", "issue-report", "bug-report"]
         },
         "math": {
             "name":"math",

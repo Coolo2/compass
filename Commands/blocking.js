@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const Discord = require('discord.js-light');
 const functions = require('../functions')
 const fs = require('fs')
 const setup = JSON.parse(fs.readFileSync('./Resources/setup.json'))

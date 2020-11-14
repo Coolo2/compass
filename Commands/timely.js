@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const Discord = require("discord.js-light");
 const SQLite = require("better-sqlite3");
 
 const sql = new SQLite('./Databases/balances.sqlite');

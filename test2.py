@@ -1,9 +1,14 @@
-from discordwebhook import create
+from discord.ext import commands 
+import random
 
-while True:
+bot = commands.Bot('flushed ')
 
-    webhook = create.Webhook("https://discord.com/api/webhooks/770346461182296131/dug_mrn8flAk0QEmYVLDAjqJs7m7Kmfe_HGgerqJ8jy8ZtFfruWJmYkZBQjh2OTWk1JJ")
+@bot.event
+async def on_ready():
+    print(bot.user.name + " online!")
 
-    webhook.avatar_url("https://cdn.discordapp.com/avatars/520187313884495872/f6d8361b2de0b71c60c7e63b1695f348.webp?size=1024")
+@bot.event
+async def on_message(message):
+    await message.add_reaction(random.choice(['😳', '😔']))
 
-    webhook.send(message=input(">>> "), username="dathommiebacon")
+bot.run("NzAyODgwNDk0ODk4OTA1MTE4.XqGeeA.GcPZRUeQ4RSLi47tvxQBEIWlo8o")

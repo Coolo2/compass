@@ -1,5 +1,5 @@
 const r = require('../Resources/rs')
-const Discord = require('discord.js');
+const Discord = require('discord.js-light');
 const bot = new Discord.Client();
 const functions = require('../functions')
 const SQLite = require("better-sqlite3");

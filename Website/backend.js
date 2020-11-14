@@ -204,10 +204,6 @@ router.get('/joinsupport', async function (req, res) {
 var testRoutes = require('./database');
 const { bot } = require('../compass');
 
-router.get('/redirect', (req, res) => {
-  res.render(__dirname + '/HTML/redirect.html', {url:address})
-})
-
 router.get('/app', (req, res) => {
   try {
     id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")

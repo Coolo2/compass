@@ -10,9 +10,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 const fs = require('fs')
 
+const codes = require('../../Commands/codes')
+
 var automatedRoutes = require('../automated');
 const bodyParser = require('body-parser');
 const e = require("express");
+ user = require("../../Extras/balance");
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -44,79 +47,48 @@ const domain = JSON.parse(fs.readFileSync('./Resources/website.json')).domain
 const address = JSON.parse(fs.readFileSync('./Resources/website.json')).address
 const domainall = JSON.parse(fs.readFileSync('./Resources/website.json')).domainall
 
-router.get('/app/:guildid/:channelid/block', (req, res, next) => {
-  guild = bot.guilds.cache.get(req.params.guildid)
-  channel = bot.channels.cache.get(req.params.channelid)
-  id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
-  member = functions.memberfromarg(guild, id)
-  if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_CHANNELS")) {
-    guild.channels.cache.forEach(channel1 => {
-      if (channel1.type == "text" && channel1.id == req.params.channelid) {
-        blocked = JSON.parse(fs.readFileSync('.//Databases/blocked.json'))
-        blocked.channels[blocked.channels.length] = channel.id
-        fs.writeFile("./Databases/blocked.json", JSON.stringify(blocked), function(err) {
-            if (err) {}
-        });
-        return res.redirect(`${address}/app/${guild.id}/channels`)
-      }
-    })
-    
-  } else {return res.redirect(`${address}/app/${guild.id}/channels`)}
+function isNumeric(str) {
+    if (typeof str != "string") return false 
+    return !isNaN(str) && !isNaN(parseFloat(str)) 
+  }
 
-});
-
-function removeAllElements(array, elem) {
-    var index = array.indexOf(elem);
-    while (index > -1) {
-        array.splice(index, 1);
-        index = array.indexOf(elem);
-    }
-}
-
-router.get('/app/:guildid/:channelid/unblock', (req, res, next) => {
+router.get('/app/:guildid/deleteCode/:code', (req, res) => {
+    id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
     guild = bot.guilds.cache.get(req.params.guildid)
-    channel = bot.channels.cache.get(req.params.channelid)
-    id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
-    member = functions.memberfromarg(guild, id)
-    if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_CHANNELS")) {
-        guild.channels.cache.forEach(channel1 => {
-          if (channel1.type == "text" && channel1.id == req.params.channelid) {
-            blocked = JSON.parse(fs.readFileSync('.//Databases/blocked.json'))
-            if (!blocked.channels.includes(channel.id)) {res.redirect(`${address}/app/${guild.id}/channels`)}
-            removeAllElements(blocked.channels, channel.id)
-            fs.writeFile("./Databases/blocked.json", JSON.stringify(blocked), function(err) {
-                if (err) {}
-            });
-          }
-        })
-      return res.redirect(`${address}/app/${guild.id}/channels`)
-    } else {return res.redirect(`${address}/app/${guild.id}/channels`)}
-  
-  });
+    if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(member).hasPermission("MANAGE_GUILD")) {return res.redirect(`/app/${guild.id}`)}
+    code = req.params.code
+    try{codes.deleteCode(guild, code)}catch{}
+    res.redirect(`/app/${guild.id}`)
+})
 
-router.get('/app/:guildid/channels', (req, res) => {
+router.get('/app/:guildid/generateCode', (req, res) => {
+    id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+    guild = bot.guilds.cache.get(req.params.guildid)
+    if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(member).hasPermission("MANAGE_GUILD")) {return res.redirect(`/app/${guild.id}/codes`)}
+    value = req.query.value
+    if (!isNumeric(value)) {return res.redirect(`/app/${guild.id}/codes`)}
+    try{codes.generateServerCode(guild, value)}catch(err){console.log(err)}
+    res.redirect(`/app/${guild.id}/codes`)
+})
+
+
+router.get('/app/:guildid/codes', (req, res) => {
   if (req.params.guildid) {
     id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
     guild = bot.guilds.cache.get(req.params.guildid)
     member = functions.memberfromarg(guild, id)
     user = bot.users.cache.get(String(id))
     startup(guild, user)
-    returnvalue = ""
-    blocked = JSON.parse(fs.readFileSync('.//Databases/blocked.json'))
-    guild.channels.cache.forEach(channel => {
-        if (channel.type == "text") {
-        disabled = ""
+    final = ``
+    guildCodes = codes.getCodes(guild)
+    for (code in guildCodes) {
         if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(user).hasPermission("MANAGE_GUILD")) {
-          disabled = "disabled"
-        }
-        if (blocked.channels.includes(channel.id)) {
-            returnvalue = returnvalue.concat(`<div class="members"><b>Channel:</b> #${channel.name}<span style="padding-left:30px;"> </span><button class="formbutton${disabled}" onclick="window.open('/app/${guild.id}/${channel.id}/unblock', '_self')" ${disabled}/>Unblock Channel</button></div><div style="padding:10px;"></div>`)
-        } else {
-            returnvalue = returnvalue.concat(`<div class="members"><b>Channel: </b>#${channel.name}<span style="padding-left:30px;"> </span><button class="formbutton${disabled}" onclick="window.open('/app/${guild.id}/${channel.id}/block', '_self')" ${disabled}/>Block Channel</button></div><div style="padding:10px;"></div>`)
-        }
+            disabled = "disabled"
+        } else {disabled = ``}
+        final = final.concat(`<div class="members" id="code${code}"><b>Code: ${code}</b> - Value: ${guildCodes[code]}<span style="padding-left:30px;"> <button class="formbutton${disabled}" onclick="window.open('${address}/app/${guild.id}/deleteCode/${code}', '_self')" ${disabled}>Delete code</button></span></div><div style="padding:10px;"></div>`)
     }
-    })
     in1 = 0
+    returnvalue = final
     li = ""
     bot.guilds.cache.forEach((guild) => {
       try {
@@ -130,9 +102,9 @@ router.get('/app/:guildid/channels', (req, res) => {
     li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot')" id="dasb" src='https://i.ibb.co/dG0x5Ch/plus2.png'>`)
     avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
     if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD")) {
-      data = `<h3 style="color:white;text-align:center;">Channels for ${guild.name}</h3> <br> ${returnvalue}`
+        data = `<div style="color:white"><h3 style="color:white;text-align:center;">Codes for  ${guild.name}</h3> <br> <center>Generate code <form action="${address}/app/${guild.id}/generateCode" method="get"><input type="text" class="forminput" name="value" /><input type="submit" class="formbutton" value="Code value"/></form></center></div> <br> ${returnvalue}`
     } else {
-      data = `<h3 style="color:white;text-align:center;">Channels for ${guild.name}</h3> <br> ${returnvalue}`
+        data = `<div style="color:white"><h3 style="color:white;text-align:center;">Codes for ${guild.name}</h3> <br> <center>Generate code <form method="get"><input type="text" class="forminputdisabled" name="value" disabled/><input type="submit" class="formbuttondisabled" value="Code value (missing permissions)" disabled/></form></center></div> <br> ${returnvalue}`
     }
     return res.render(path.join(__dirname, '../HTML/dashboardguild.html'), {
       servers: li,
@@ -145,10 +117,9 @@ router.get('/app/:guildid/channels', (req, res) => {
       membersection:`<a class="section" href="${address}/app/${guild.id}/members">Members</a>`,
       worksection:`<a class="section" href="${address}/app/${guild.id}">Replies</a>`,
       optionsection:`<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
-      
-      channelsection:`<a class="sectionactive" href="${address}/app/${guild.id}/channels">Channels</a>`,
+      channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
       prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
-codesection:`<a class="section" href="${address}/app/${guild.id}/codes">Codes</a>`,
+      codesection:`<a class="sectionactive" href="${address}/app/${guild.id}/codes">Codes</a>`,
       editor:`<a class="section" href="${address}/app/${guild.id}/editor">Editor</a>`
     })
   }

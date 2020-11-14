@@ -1,5 +1,5 @@
-const Discord = require("discord.js");
-const bot = new Discord.Client();
+const Discord = require("discord.js-light");
+const bot = new Discord.Client({cacheGuilds: true,cacheChannels: true,cacheOverwrites: false,cacheRoles: false,cacheEmojis: false,fetchAllMembers:true,cachePresences: false});
 const functions = require('../functions')
 const fetch = require('node-fetch');
 PythonShell = require('python-shell').PythonShell;

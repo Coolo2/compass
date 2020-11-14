@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const Discord = require('discord.js-light');
 
 //const prefix = setup.prefix;
 var fs = require('fs');
@@ -88,6 +88,7 @@ router.get('/app/:guildid/editor/leave', function (req, res) {
       optionsection:`<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
       channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
       prefixsection:`<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
+codesection:`<a class="section" href="${address}/app/${guild.id}/codes">Codes</a>`,
       editor:`<a class="sectionactive" href="${address}/app/${guild.id}/editor">Editor</a>`,
     address: address,
     status: `${address}/status`,

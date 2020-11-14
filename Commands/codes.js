@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const Discord = require("discord.js-light");
 const functions = require('../functions')
 const databasesetup = require('./databasesetup')
 const prefixes = require('./prefix')
@@ -74,10 +74,10 @@ function checkAddRemove(message, code) {
     else {return false}
 }
 
-function deleteCode(message, code) {
+function deleteCode(guild, code) {
     codes = JSON.parse(fs.readFileSync('./Databases/codes.json'))
-    if (codes[message.guild.id][code]) {
-        delete codes[message.guild.id][code]
+    if (codes[guild.id][code]) {
+        delete codes[guild.id][code]
         fs.writeFileSync('./Databases/codes.json', JSON.stringify(codes))
         return {code:code}
     }
@@ -120,7 +120,7 @@ function deleteCodeCommand(message) {
         }
         code = args[0]
         if (!code) {return message.channel.send(functions.error(`Invalid usage, use: ${prefixes.get(message.guild)}delete-code [code]`))}
-        final = deleteCode(message, code)
+        final = deleteCode(message.guild, code)
         if (!final) {return message.channel.send(functions.error(`Invalid code (XXXX-XXXX-XXXX)`))}
         if (final["code"]) {return message.channel.send(functions.embed(`Deleted`, `Deleted code ${final["code"]}!`, r.s))}
     }
@@ -130,7 +130,7 @@ function deleteCodeGlobalCommand(message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
     if (["deleteglobalcode", "deleteglobal", "delete-global", "delete-global-code"].includes(command)) {
-        if (!message.author.id == "368071242189897728") {return message.channel.send(functions.error("You do not have permissions to do this"))}
+        if (!setup.botadmins.includes(message.author.id)) {return message.channel.send(functions.error("You do not have permissions to do this"))}
         code = args[0]
         if (!code) {return message.channel.send(functions.error(`Invalid usage, use: ${prefixes.get(message.guild)}delete-global-code [code]`))}
         final = deleteGlobal(code)
@@ -143,7 +143,7 @@ function generateGlobal(message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
     if (["generateglobal", "generate-global"].includes(command)) {
-        if (!message.author.id == "368071242189897728") {return message.channel.send(functions.error("You do not have permissions to do this"))}
+        if (!setup.botadmins.includes(message.author.id)) {return message.channel.send(functions.error("You do not have permissions to do this"))}
         amount = args[0]
         if (!amount || !isInteger(amount.jn())) {return message.channel.send(functions.error(`Invalid usage, use: ${prefixes.get(message.guild)}generate-global [code value]`))}
         amount = args[0].jn()
@@ -165,8 +165,24 @@ function redeem(message) {
     }
 }
 
+function getCodes(guild) {
+    try{return JSON.parse(fs.readFileSync('./Databases/codes.json'))[guild.id]}
+    catch {return {}}
+}
+
+function getGlobalCodes() {
+    try{return JSON.parse(fs.readFileSync('./Databases/codes.json'))["global"]}
+    catch {return {}}
+}
+
+module.exports.getGlobalCodes = getGlobalCodes
+module.exports.deleteGlobal = deleteGlobal
+module.exports.deleteCode = deleteCode
+module.exports.getCodes = getCodes
 module.exports.generate = generate
 module.exports.redeem = redeem
+module.exports.generateGlobalCode = globalGenerate
+module.exports.generateServerCode = serverGenerate
 module.exports.generateGlobal = generateGlobal
 module.exports.deleteCodeCommand = deleteCodeCommand
 module.exports.deleteCodeGlobalCommand = deleteCodeGlobalCommand

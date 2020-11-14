@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const Discord = require("discord.js-light");
 const SQLite = require("better-sqlite3");
 const path = require('path')
 const sql = new SQLite('./Databases/prefixes.sqlite');
@@ -120,6 +120,7 @@ router.get('/app/:guildid/prefix', (req, res) => {
       
       channelsection:`<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
       prefixsection:`<a class="sectionactive" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
+      codesection:`<a class="section" href="${address}/app/${guild.id}/codes">Codes</a>`,
       editor:`<a class="section" href="${address}/app/${guild.id}/editor">Editor</a>`
     })
   }

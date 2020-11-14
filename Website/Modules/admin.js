@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const Discord = require("discord.js-light");
 const SQLite = require("better-sqlite3");
 const path = require('path')
 const sql = new SQLite('./Databases/balances.sqlite');
@@ -9,6 +9,7 @@ var express = require('express'),
 const app = express()
 
 const rs = require('../../Resources/rs')
+const codes = require('../../Commands/codes')
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -38,6 +39,7 @@ const address = JSON.parse(fs.readFileSync('./Resources/website.json')).address
 const domainall = JSON.parse(fs.readFileSync('./Resources/website.json')).domainall
 
 var bodyParser = require('body-parser');
+const { isInteger } = require("mathjs");
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
@@ -247,18 +249,41 @@ router.put('/admin/updateIncident/:incident', function (req, res) {
         });
 })
 
-router.get('/admin/delete/:suggestionID', (req, res) => {
+router.get('/admin/delete/:type/:suggestionID', (req, res) => {
     id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
     if(!setup.botadmins.includes(id)) { return res.redirect(`/`)}
     suggestionID = req.params.suggestionID 
-    suggestions = JSON.parse(fs.readFileSync('./Databases/suggestions.json'))
+    type = req.params.type
+    suggestions = JSON.parse(fs.readFileSync(`./Databases/${type}s.json`))
     for (suggestion of suggestions) {
         if (suggestion.id == suggestionID) {
             removeAllElements(suggestions, suggestion)
-            fs.writeFileSync('./Databases/suggestions.json', JSON.stringify(suggestions))
-            res.redirect(`/admin/suggestions`)
+            fs.writeFileSync(`./Databases/${type}s.json`, JSON.stringify(suggestions))
         }
     }
+    res.redirect(`/admin/${type}s`)
+})
+
+function isNumeric(str) {
+    if (typeof str != "string") return false 
+    return !isNaN(str) && !isNaN(parseFloat(str)) 
+  }
+
+router.get('/admin/deleteGlobalCode/:code', (req, res) => {
+    id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+    if(!setup.botadmins.includes(id)) { return res.redirect(`/`)}
+    code = req.params.code
+    try{codes.deleteGlobal(code)}catch{}
+    res.redirect(`/admin/globalCodes`)
+})
+
+router.get('/admin/generateGlobalCode', (req, res) => {
+    id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+    if(!setup.botadmins.includes(id)) { return res.redirect(`/`)}
+    value = req.query.value
+    if (!isNumeric(value)) {return res.redirect(`/admin/globalCodes`)}
+    try{codes.generateGlobalCode(value)}catch(err){console.log(err)}
+    res.redirect(`/admin/globalCodes`)
 })
 
 router.get('/admin/verify/:suggestionID', (req, res) => {
@@ -267,12 +292,12 @@ router.get('/admin/verify/:suggestionID', (req, res) => {
     suggestionID = req.params.suggestionID 
     suggestions = JSON.parse(fs.readFileSync('./Databases/suggestions.json'))
     for (suggestion of suggestions) {
-        if (suggestion.id == suggestionID) {
+        if (suggestion.id == suggestionID && suggestion.verified == false) {
             try {from = "from " + bot.users.cache.get(suggestion.user).username } catch{from = ``}
             message = bot.channels.cache.get(`770289538954035251`).send(functions.embed(`New suggestion ${from}`, suggestion.suggestion, rs.d))
                 .then(function(message) {message.react("👍").then(() => message.react('👎'))})
             try {
-                 bot.users.cache.get(user).send(`**Your suggestion, **${suggestion.suggestion}**, was verified to be voted on. If people want it, it may be added to the bot!**`)
+                 bot.users.cache.get(user).send(`**Your suggestion, **${suggestion.suggestion}**, was verified to be voted on in the discord server. If people want it, it may be added to the bot!**`)
             } catch {}
             final = suggestion 
             final[`verified`] = true
@@ -283,15 +308,16 @@ router.get('/admin/verify/:suggestionID', (req, res) => {
     }
 })
 
-router.get('/admin/dm/:user', (req, res) => {
+router.get('/admin/dm/:type/:user', (req, res) => {
     id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
     if(!setup.botadmins.includes(id)) { return res.redirect(`/`)}
     user = req.params.user
+    type = req.params.type
     suggestions = JSON.parse(fs.readFileSync('./Databases/suggestions.json'))
     try {
-        bot.users.cache.get(user).send(`**Message from Bot Admin in relation to a suggestion:** ${req.query.dmContent}`)
+        bot.users.cache.get(user).send(`**Message from Bot Admin in relation to a ${type}:** ${req.query.dmContent}`)
     } catch {}
-    res.redirect(`/admin/suggestions`)
+    res.redirect(`/admin/${type}s`)
 })
 
 function removeAllElements(array, elem) {
@@ -310,12 +336,12 @@ router.get('/admin/suggestions', (req, res) => {
         user = bot.users.cache.get(String(id))
         avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
         suggestions = JSON.parse(fs.readFileSync('./Databases/suggestions.json')).reverse()
-        finalHTML = `<div class="dataSection" style="box-shadow: 0px 0px 20px 6px #00000050;border-radius:10px;background-color:#1C1F26;min-width:80%;margin-left:5%;top:0;max-width:90%;padding-bottom:1000px">`
+        finalHTML = `<div class="dataSection" style="color:white;position:absolute;box-shadow: 0px 0px 20px 6px #00000050;border-radius:10px;background-color:#1C1F26;min-width:95%;margin-top:5%;margin-right:2%;margin-left:2%;top:0;max-width:90%;padding:10px;padding-bottom:1000px;">`
         for (suggestion of suggestions) {
             if (suggestion[`verified`] == false) {
-                finalHTML = finalHTML.concat(`<div class="members" id="suggestion${suggestion.id}"><b>User: ${bot.users.cache.get(suggestion.user).username}</b> - Suggestion: ${suggestion.suggestion} <span style="padding-left:30px;"> </span><button class="formbutton" onclick="window.open('${address}/admin/verify/${suggestion.id}', '_self')">Verify suggestion</button><button class="formbutton" onclick="window.open('${address}/admin/delete/${suggestion.id}', '_self')">Delete suggestion</button><form action="${address}/admin/dm/${suggestion.user}" method="get"><input type="text" class="forminput" name="dmContent" /><input type="submit" class="formbutton" value="Respond"/></form></div><div style="padding:10px;"></div>`)
+                finalHTML = finalHTML.concat(`<div class="members" id="suggestion${suggestion.id}"><b>User: ${bot.users.cache.get(suggestion.user).username}</b> - Suggestion: ${suggestion.suggestion} <span style="padding-left:30px;"> </span><button class="formbutton" onclick="window.open('${address}/admin/verify/${suggestion.id}', '_self')">Verify suggestion</button><button class="formbutton" onclick="window.open('${address}/admin/delete/suggestion/${suggestion.id}', '_self')">Delete suggestion</button><form action="${address}/admin/dm/suggestion/${suggestion.user}" method="get"><input type="text" class="forminput" name="dmContent" /><input type="submit" class="formbutton" value="Respond"/></form></div><div style="padding:10px;"></div>`)
             } else {
-                finalHTML = finalHTML.concat(`<div class="members" id="suggestion${suggestion.id}"><b>User: ${bot.users.cache.get(suggestion.user).username}</b> - Suggestion: ${suggestion.suggestion} (verified) <span style="padding-left:30px;"> </span><button class="formbuttondisabled">Verify suggestion</button><button class="formbutton" onclick="window.open('${address}/admin/delete/${suggestion.id}', '_self')">Delete suggestion</button><form action="${address}/admin/dm/${suggestion.user}" method="get"><input type="text" class="forminput" name="dmContent" /><input type="submit" class="formbutton" value="Respond"/></form></div><div style="padding:10px;"></div>`)
+                finalHTML = finalHTML.concat(`<div class="members" id="suggestion${suggestion.id}"><b>User: ${bot.users.cache.get(suggestion.user).username}</b> - Suggestion: ${suggestion.suggestion} (verified) <span style="padding-left:30px;"> </span><button class="formbuttondisabled">Verify suggestion</button><button class="formbutton" onclick="window.open('${address}/admin/delete/suggestion/${suggestion.id}', '_self')">Delete suggestion</button><form action="${address}/admin/dm/suggestion/${suggestion.user}" method="get"><input type="text" class="forminput" name="dmContent" /><input type="submit" class="formbutton" value="Respond"/></form></div><div style="padding:10px;"></div>`)
             }
             
         }
@@ -327,7 +353,73 @@ router.get('/admin/suggestions', (req, res) => {
             address:address, 
             status:`${address}/status`,
             data:finalHTML,
-            title:"Suggestions"
+            title:"Suggestions",
+            suggestions:`<a class="sectionactive" href="${address}/admin/suggestions">Suggestions</a>`,
+            issues:`<a class="section" href="${address}/admin/issues">Issues</a>`,
+            codes:`<a class="section" href="${address}/admin/globalCodes">Global codes</a>`
+        })
+    } else {
+        res.redirect('/')
+    }
+});
+
+router.get('/admin/globalCodes', (req, res) => {
+    id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+    if(setup.botadmins.includes(id)) {
+        guild = bot.guilds.cache.get(req.params.guildid)
+        member = functions.memberfromarg(guild, id)
+        user = bot.users.cache.get(String(id))
+        avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
+        suggestions = JSON.parse(fs.readFileSync('./Databases/issues.json')).reverse()
+        finalHTML = `<div class="dataSection" style="color:white;position:absolute;box-shadow: 0px 0px 20px 6px #00000050;border-radius:10px;background-color:#1C1F26;min-width:95%;margin-top:5%;margin-right:2%;margin-left:2%;top:0;max-width:90%;padding:10px;padding-bottom:1000px;"><center>Generate code <form action="${address}/admin/generateGlobalCode" method="get"><input type="text" class="forminput" name="value" /><input type="submit" class="formbutton" value="Code value"/></form></center>`
+        allCodes = codes.getGlobalCodes()
+        for (code in allCodes) {
+            finalHTML = finalHTML.concat(`<div class="members" id="code${code}"><b>Code: ${code}</b> - Value: ${allCodes[code]}<span style="padding-left:30px;"> <button class="formbutton" onclick="window.open('${address}/admin/deleteGlobalCode/${code}', '_self')">Delete code</button></span></div><div style="padding:10px;"></div>`)
+            
+        }
+        finalHTML = finalHTML + `</div>`
+        return res.render(path.join(__dirname, '../HTML/suggestions.html'), {
+            name: decodeURIComponent(getAppCookies(req, res)['name']),
+            id: id,
+            avatar: `<img class="avatar" id="output" src="${avatar}">`,
+            address:address, 
+            status:`${address}/status`,
+            data:finalHTML,
+            title:"Suggestions",
+            suggestions:`<a class="section" href="${address}/admin/suggestions">Suggestions</a>`,
+            issues:`<a class="section" href="${address}/admin/issues">Issues</a>`,
+            codes:`<a class="sectionactive" href="${address}/admin/globalCodes">Global codes</a>`
+        })
+    } else {
+        res.redirect('/')
+    }
+});
+
+router.get('/admin/issues', (req, res) => {
+    id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+    if(setup.botadmins.includes(id)) {
+        guild = bot.guilds.cache.get(req.params.guildid)
+        member = functions.memberfromarg(guild, id)
+        user = bot.users.cache.get(String(id))
+        avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
+        suggestions = JSON.parse(fs.readFileSync('./Databases/issues.json')).reverse()
+        finalHTML = `<div class="dataSection" style="color:white;position:absolute;box-shadow: 0px 0px 20px 6px #00000050;border-radius:10px;background-color:#1C1F26;min-width:95%;margin-top:5%;margin-right:2%;margin-left:2%;top:0;max-width:90%;padding:10px;padding-bottom:1000px;">`
+        for (suggestion of suggestions) {
+            finalHTML = finalHTML.concat(`<div class="members" id="issue${suggestion.id}"><b>User: ${bot.users.cache.get(suggestion.user).username}</b> - Issue: ${suggestion.issue}<span style="padding-left:30px;"> </span><button class="formbutton" onclick="window.open('${address}/admin/delete/issue/${suggestion.id}', '_self')">Delete issue</button><form action="${address}/admin/dm/issue/${suggestion.user}" method="get"><input type="text" class="forminput" name="dmContent" /><input type="submit" class="formbutton" value="Respond"/></form></div><div style="padding:10px;"></div>`)
+            
+        }
+        finalHTML = finalHTML + `</div>`
+        return res.render(path.join(__dirname, '../HTML/suggestions.html'), {
+            name: decodeURIComponent(getAppCookies(req, res)['name']),
+            id: id,
+            avatar: `<img class="avatar" id="output" src="${avatar}">`,
+            address:address, 
+            status:`${address}/status`,
+            data:finalHTML,
+            title:"Suggestions",
+            suggestions:`<a class="section" href="${address}/admin/suggestions">Suggestions</a>`,
+            issues:`<a class="sectionactive" href="${address}/admin/issues">Issues</a>`,
+            codes:`<a class="section" href="${address}/admin/globalCodes">Global codes</a>`
         })
     } else {
         res.redirect('/')

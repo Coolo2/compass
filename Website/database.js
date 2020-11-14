@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const Discord = require("discord.js-light");
 const SQLite = require("better-sqlite3");
 const path = require('path')
 const fs = require('fs')
@@ -101,6 +101,7 @@ router.get('/app/:guildid', (req, res, next) => {
     optionsection: `<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
     channelsection: `<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
     prefixsection: `<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
+    codesection:`<a class="section" href="${address}/app/${guild.id}/codes">Codes</a>`,
     editor: `<a class="section" href="${address}/app/${guild.id}/editor">Editor</a>`
   })
 })
@@ -353,6 +354,7 @@ router.get('/app/:guildid/work', (req, res) => {
       optionsection: `<a class="section" href="${address}/app/${guild.id}/options">Economy opts</a>`,
       channelsection: `<a class="section" href="${address}/app/${guild.id}/channels">Channels</a>`,
       prefixsection: `<a class="section" href="${address}/app/${guild.id}/prefix">Prefix</a>`,
+      codesection:`<a class="section" href="${address}/app/${guild.id}/codes">Codes</a>`,
       editor: `<a class="section" href="${address}/app/${guild.id}/editor">Editor</a>`
     })
   }

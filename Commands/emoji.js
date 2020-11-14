@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const Discord = require("discord.js-light");
 const functions = require('../functions')
 const setup = require('./databasesetup')
 
