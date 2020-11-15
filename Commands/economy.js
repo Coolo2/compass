@@ -189,6 +189,8 @@ function crime(message) {
 
 module.exports.rl = talkedRecentlyLeft
 module.exports.rlc = talkedRecentlyLeftCrime
+module.exports.trc = talkedRecentlyCrime
+module.exports.tr = talkedRecently
 module.exports.getTimeLeft = getTimeLeft
 
 function workreplies(message) {

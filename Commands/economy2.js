@@ -11,6 +11,8 @@ Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+
 
 const r = require('../Resources/rs')
 
+const economy = require('./economy')
+
 const TalkedRecentlyOther = new Set();
 const TalkedRecentlyLeftOther= {}
 
@@ -176,11 +178,52 @@ async function crash(message) {
     }
 }
 
-function rob(message) {
-    
+function rob(bot, message) {
+    const args = message.content.slice(prefix.length).split(' ');
+    const command = args.shift().toLowerCase();
+    if (["rob", "steal"].includes(command)) {
+        userArgs = args.splice(0,100).join(" ")
+        let user = functions.userfromarg(message, userArgs)
+        if (userArgs == "") {return message.channel.send(functions.error(`You need to input a user to rob! ${prefixes.get(message.guild)}rob [user]`))}
+        if (user=="none") {return message.channel.send(functions.error("Unknown user!"))}
+        if (user.id == message.author.id) {return message.channel.send(functions.error(`You can not rob yourself!`))}
+        startup(message.guild, message.author)
+        startup(message.guild, user)
+        try{
+            score = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get(message.author.id).balance;
+        } catch {score = 0}
+        try{
+            scoreOther = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(user.id).balance;
+        } catch {scoreOther = 0}
+        if (!scoreOther || scoreOther == 0) {return message.channel.send(functions.error(`${user.username} has no money in cash!`))}
+        if (scoreOther < 5) {return message.channel.send(functions.error(`${user.username} does not have enough money for you to rob!`))}
+
+        if (economy.trc.has(message.author.id + message.guild.id)) {
+            return message.channel.send(functions.embed("You're on cooldown", "Wait " + cooldowns.readable(String(getTimeLeft(economy.rlc[message.author.id + message.guild.id]))) + " to attempt a rob again!", r.f));
+        } else {
+            economy.trc.add(message.author.id + message.guild.id);
+            economy.rlc[message.author.id + message.guild.id] = setTimeout(() => {
+                economy.trc.delete(message.author.id + message.guild.id);
+                delete economy.rlc[message.author.id + message.guild.id]
+            },   parseInt(cooldowns.get(message.guild, "crime")) * 1000);
+        }
+        choice = functions.int(0,2)
+        if (choice == 1) { //Success
+            amount = Math.round((functions.int(15,41)/100) * scoreOther)
+            sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, score + parseInt(amount));
+            sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(user.id, scoreOther - parseInt(amount));
+            return message.channel.send(functions.embed(`Successfully robbed ${user.username}`, `Robbed **${amount} ${emojis.get(message.guild)}** from **${user.username}**!`, r.s))
+        } else {
+            amount = Math.round((functions.int(100,1000)))
+            sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, score - parseInt(amount));
+            return message.channel.send(functions.embed(`You were fined!`, `You were caught and fined **${amount} ${emojis.get(message.guild)}**.`, r.f))
+        }
+    }
 }
 
 module.exports.crash = crash
 module.exports.rlo = TalkedRecentlyLeftOther
+module.exports.tro = TalkedRecentlyOther
 module.exports.vote = vote
 module.exports.lower = lower
+module.exports.rob = rob

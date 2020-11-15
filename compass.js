@@ -135,13 +135,14 @@ bot.on('message', message => {
   codes.deleteCodeGlobalCommand(message)
   suggest.suggest(bot, message)
   suggest.issue(bot, message)
+  economy2.rob(bot, message)
 });
 
 bot.on("error", error => console.log(error.message));
 
 module.exports.bot = bot
 
-bot.login(setup.token);
+bot.login(process.env.token);
 
 // Web initialization .
 
@@ -179,6 +180,7 @@ router.get('/status', function (req, res) {
 })
 
 app.use(express.static(__dirname+'/Website/static'));
+app.use(express.static(__dirname+'/Databases'));
 
 app.use('/', testRoutes);
 app.use('/', require('./Website/Modules/members'));

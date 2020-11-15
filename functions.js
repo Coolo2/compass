@@ -47,7 +47,7 @@ function randomchoice(choices) {
 }
 function userfromarg(message, args) { 
 	try {
-		return message.guild.members.cache.find(member => member.user.username === args).user
+		return message.guild.members.cache.find(member => member.user.username.toLowerCase().replace(/[0-9]/g, '') === args.toLowerCase().replace(/[0-9]/g, '')).user
 	} catch {
 		try {
 			return message.guild.members.cache.find(member => member.user.id === args).user

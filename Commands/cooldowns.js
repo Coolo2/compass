@@ -53,7 +53,6 @@ function readable(data) {
 
 const economy = require('./economy')
 const economy2 = require('./economy2');
-const { isNumber } = require("util");
 
 function cooldown(message) {
     const args = message.content.slice(prefix.length).split(' ');
@@ -66,7 +65,7 @@ function cooldown(message) {
             if (economy.rl[message.author.id + message.guild.id]) {work = readable(String(economy.getTimeLeft(economy.rl[message.author.id + message.guild.id]))) + " left /"} else {work = ""}
             if (economy.rlc[message.author.id + message.guild.id]) {crime = readable(String(economy.getTimeLeft(economy.rlc[message.author.id + message.guild.id]))) + " left /"} else {crime = ""}
             if (economy2.rlo[message.author.id + message.guild.id]) {other = readable(String(economy.getTimeLeft(economy2.rlo[message.author.id + message.guild.id]))) + " left /"} else {other = ""}
-            return message.channel.send(functions.embed(`Cooldowns for ${message.guild.name}`, `Work cooldown: ${work}${readable(get(message.guild, 'work'))}\nCrime cooldown: ${crime}${readable(get(message.guild, 'crime'))}\nOther cooldowns: ${other}${readable(get(message.guild, 'other'))}\n\n**Change one with ${getprefix.get(message.guild)}set-cooldown [work/crime/other] *[cooldown(s/m/h)]**`, "#0099ff"))
+            return message.channel.send(functions.embed(`Cooldowns for ${message.guild.name}`, `Work cooldown: ${work}${readable(get(message.guild, 'work'))}\nCrime cooldown: ${crime}${readable(get(message.guild, 'crime'))}\nOther cooldowns: ${other}${readable(get(message.guild, 'other'))}\n\n**Change one with \`${getprefix.get(message.guild)}set-cooldown [work/crime/other] [cooldown(s/m/h)]\`**`, "#0099ff"))
         }
         if (!message.member.hasPermission("MANAGE_GUILD")) {
             if (economy.rl[message.author.id + message.guild.id]) {work = readable(String(economy.getTimeLeft(economy.rl[message.author.id + message.guild.id]))) + " left /"} else {work = ""}
@@ -77,12 +76,16 @@ function cooldown(message) {
         time = time.jn()
         if (!get_time(time)) {return message.channel.send(functions.error(`Invalid command syntax, use: ${getprefix.get(message.guild)}set-cooldown [work/crime/other] [cooldown(m/s/h)]`))}
         setup.cooldowns(message.guild)
+        newTime = get_time(time)
         try {
             sql.prepare(`INSERT OR REPLACE INTO cooldowns${message.guild.id} (type, value) VALUES (?, ?);`).run(choice, get_time(time));
         }
         catch {
         }
         score = sql.prepare(`SELECT * FROM cooldowns${message.guild.id} WHERE type=?`).get(choice).value
+        if (choice == "work") {for (item in economy.rl) {if (item.includes(message.guild.id)) {if (Number(economy.getTimeLeft(economy.rl[item])) > newTime) {delete economy.rl[item];economy.tr.delete(item)}}  }}
+        if (choice == "crime") {for (item in economy.rlc) {if (item.includes(message.guild.id)) {if (Number(economy.getTimeLeft(economy.rlc[item])) > newTime) {delete economy.rlc[item];economy.trc.delete(item)}}  }}
+        if (choice == "other") {for (item in economy2.rlo) {if (item.includes(message.guild.id)) {if (Number(economy.getTimeLeft(economy2.rlo[item])) > newTime) {delete economy2.rlo[item];economy2.tro.delete(item)}}  }}
         message.channel.send(functions.embed("Set cooldown for " + message.guild.name, `Set the ${choice} cooldown for ${message.guild.name} to ${readable(score)}`, "#0099ff"))
     }
 }

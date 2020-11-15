@@ -79,6 +79,13 @@
             "permissions":"none",
             "aliases":["crime"]
         },
+        "rob": {
+            "name":"rob",
+            "description":"Attempt to rob someone, either successfully take money or get fined!",
+            "usage":"[prefix]rob [user]",
+            "permissions":"none",
+            "aliases":["rob", "steal"]
+        },
         "daily": {
             "name":"daily",
             "description":"Get money on a daily basis",
