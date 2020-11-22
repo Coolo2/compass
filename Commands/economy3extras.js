@@ -75,7 +75,7 @@ function balance(message) {
             try{
                 scorebank = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get("bank" + message.author.id).balance
             } catch {scorebank = 0}
-            message.channel.send(functions.embed(`Your balance`, ``, r.d)
+            message.channel.send(functions.embed(`Your balance`, `[Your profile](${JSON.parse(fs.readFileSync('./Resources/website.json')).address + '/p/' + require('../Website/Modules/profiles').checkUser(message.author.id) + '/' + message.guild.id})`, r.d)
                 .addField(`Cash`, `${score.sep()}${emojis.get(message.guild)}`, true)
                 .addField(`Bank`, `${scorebank.sep()}${emojis.get(message.guild)}`, true)
                 .addField(`Total`, `${(scorebank + score).sep()}${emojis.get(message.guild)}`, true)
@@ -88,7 +88,7 @@ function balance(message) {
             try{
                 scorebank = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get("bank" + user.id).balance
             } catch {scorebank = 0}
-            message.channel.send(functions.embed(`${user.username}'s balance`, ``, r.d)
+            message.channel.send(functions.embed(`${user.username}'s balance`, `[${user.username}'s profile](${JSON.parse(fs.readFileSync('./Resources/website.json')).address + '/p/' + require('../Website/Modules/profiles').checkUser(user.id) + '/' + message.guild.id})`, r.d)
                 .addField(`Cash`, `${score.sep()}${emojis.get(message.guild)}`, true)
                 .addField(`Bank`, `${scorebank.sep()}${emojis.get(message.guild)}`, true)
                 .addField(`Total`, `${(scorebank + score).sep()}${emojis.get(message.guild)}`, true)

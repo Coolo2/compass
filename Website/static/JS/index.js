@@ -127,7 +127,6 @@ window.onload = function () {
 };
 //If window is small change how the *invite me* animation runs
 if (window.innerWidth < 960) {
-    //document.getElementById("centered").classList.add("hover");
     document.getElementById("centerbutton").classList.add("appearmobile");
     setTimeout(function () {
         document.getElementById("invitetext").textContent = " >";
@@ -173,7 +172,7 @@ if (window.innerWidth < 960) {
     
     
 }
-var oAuth = "https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot"
+var oAuth = "https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=2147483647&scope=bot"
 function clickfunction() {
     window.open(oAuth);
 }

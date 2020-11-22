@@ -368,13 +368,13 @@ function leaderboards(message) {
         finalj = {}
         for (tables of sql.prepare("select name from sqlite_master where type='table'").iterate()) {
             if (tables.name.replace("balances", "").startsWith(message.guild.id)) {
-                user = message.guild.members.cache.find(member => member.user.id === tables.name.replace(message.guild.id, "").replace("balances", "")).user
+                try{user = message.guild.members.cache.find(member => member.user.id === tables.name.replace(message.guild.id, "").replace("balances", "")).user
                 try {
                     score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(user.id).balance
                 } catch {}
                 if (score == 0) return
-                finalj[score] = user.username
-                final.push(score)
+                finalj[score] = {username:user.username,id:user.id}
+                final.push(score)}catch{}
             }
         }
         final.sort(function(a, b) {
@@ -385,7 +385,7 @@ function leaderboards(message) {
         counter = 0
         final.forEach(item => {
             counter = counter + 1
-            lb = lb.concat(counter + ". **" + finalj[item] + "**: " + item.sep() + " " + emojis.get(message.guuk) + "\n")
+            lb = lb.concat(counter + `. **[${finalj[item].username}](${JSON.parse(fs.readFileSync('./Resources/website.json')).address + '/p/' + require('../Website/Modules/profiles').checkUser(finalj[item].id) + '/' + message.guild.id})**: ` + item.sep() + " " + emojis.get(message.guuk) + "\n")
         })
         if (lb == "") {return message.channel.send(functions.embed("Leaderboard for " + message.guild.name, "*Its feeling kinda empty in here! Check out economy commands with **" + prefixes.get(message.guild) + "help economy**!*", r.d))}
         message.channel.send(functions.embed("Leaderboard for " + message.guild.name, lb, r.d))

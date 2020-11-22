@@ -10,6 +10,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 const fs = require('fs')
 
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.split(",").join("")}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.split(",").join("")}
+
 const codes = require('../../Commands/codes')
 
 var automatedRoutes = require('../automated');
@@ -58,7 +61,7 @@ router.get('/app/:guildid/deleteCode/:code', (req, res) => {
     if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(member).hasPermission("MANAGE_GUILD")) {return res.redirect(`/app/${guild.id}`)}
     code = req.params.code
     try{codes.deleteCode(guild, code)}catch{}
-    res.redirect(`/app/${guild.id}`)
+    res.redirect(`/app/${guild.id}/codes`)
 })
 
 router.get('/app/:guildid/generateCode', (req, res) => {
@@ -66,8 +69,8 @@ router.get('/app/:guildid/generateCode', (req, res) => {
     guild = bot.guilds.cache.get(req.params.guildid)
     if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(member).hasPermission("MANAGE_GUILD")) {return res.redirect(`/app/${guild.id}/codes`)}
     value = req.query.value
-    if (!isNumeric(value)) {return res.redirect(`/app/${guild.id}/codes`)}
-    try{codes.generateServerCode(guild, value)}catch(err){console.log(err)}
+    if (!isNumeric(value.jn())) {return res.redirect(`/app/${guild.id}/codes`)}
+    try{codes.generateServerCode(guild, value.jn())}catch(err){console.log(err)}
     res.redirect(`/app/${guild.id}/codes`)
 })
 
@@ -85,7 +88,8 @@ router.get('/app/:guildid/codes', (req, res) => {
         if (!(getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) && !guild.member(user).hasPermission("MANAGE_GUILD")) {
             disabled = "disabled"
         } else {disabled = ``}
-        final = final.concat(`<div class="members" id="code${code}"><b>Code: ${code}</b> - Value: ${guildCodes[code]}<span style="padding-left:30px;"> <button class="formbutton${disabled}" onclick="window.open('${address}/app/${guild.id}/deleteCode/${code}', '_self')" ${disabled}>Delete code</button></span></div><div style="padding:10px;"></div>`)
+        if (disabled == 'disabled') {final = final.concat(`<div class="members" id="code${code}"><b>Code: [missing perms]</b> - Value: ${guildCodes[code].sep()}<span style="padding-left:30px;"> <button class="formbutton${disabled}" onclick="window.open('${address}/app/${guild.id}/deleteCode/${code}', '_self')" ${disabled}>Delete code</button></span></div><div style="padding:10px;"></div>`)}
+        else {final = final.concat(`<div class="members" id="code${code}"><b>Code: ${code}</b> - Value: ${guildCodes[code].sep()}<span style="padding-left:30px;"> <button class="formbutton${disabled}" onclick="window.open('${address}/app/${guild.id}/deleteCode/${code}', '_self')" ${disabled}>Delete code</button></span></div><div style="padding:10px;"></div>`)}
     }
     in1 = 0
     returnvalue = final
@@ -94,7 +98,7 @@ router.get('/app/:guildid/codes', (req, res) => {
       try {
         if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id)) {
           if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
-          li = li.concat(`<img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}' title='${guild.name}'>`)
+          li = li.concat(`<div aria-label="${guild.name}" data-balloon-pos="right"><img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}'></div>`)
           in1 = 1
         }
       } catch {}

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title><%= username %> - <%= guildName %></title>
+<link rel="icon" href="/Images/favicon.png">
+    <link href="/CSS/dashboardguild.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Compass Bot (dashboard)" />
+    <meta property="og:description" content="Compass bot - An advanced, customizable Economy and Moderation Discord Bot." />
+    <meta property="og:url" content="<%- address %>" />
+    <meta property="og:image" content="/Images/icon.png" />
+    <meta name="theme-color" content="#272b33">
+</head>
+
+<body id="thebody" style="background-color:#1C1F26;background-image: url('https://i.ibb.co/V9ZZ4r5/cubes.png');background-repeat: repeat;">
+    <div class="navbar">
+        <a class="h" href="<%= address %>/">Home</a>
+        
+        <a class="h" href="<%= address %>/app">Dashboard</a></li>
+<a class="h active" href="<%= address %>/p">Profiles</a></li>
+        <a class="h" href="<%= address %>/options">Options</a></li>
+        <div class="dropdown">
+            <button class="dropbtn">More
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a class="h" href="<%= address %>/stats">Stats <i class="fa fa-line-chart" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
+            </div>
+        </div>
+    </div>
+    <div style="padding:21px"></div>
+    <div id="profilelocation" style="-webkit-transition:padding-top 1s;padding-top:150px;">
+        <div id="profile" class="dataSection" style="-webkit-transition:opacity 1s;opacity:0%;box-shadow: 0px 0px 20px 6px #00000050;border-radius:50px;background-color:#383d49;margin-left:15%;top:0;width:70%;">
+            <%- editButton %>
+            <div><div style='padding:1px;'></div>
+            <center>
+                    <img src="<%- guildIconURL %>" width='50px' style='display: inline-block;vertical-align:top;border-radius:50px;'>
+                    <span style="color:#9FA6B2;font-size:25px;display: inline-block;vertical-align:top;padding:8px 0px 0px 0px"><span style="color:white">Server:</span> <%- guildName %></span>
+                    <span><i class="fa fa-times" aria-hidden="true" onmouseover="this.style.color='#9FA6B2'" onmouseout="this.style.color='white'" onclick='window.open("<%- address %>/p/<%- userid %>", "_self")' style="cursor:pointer;color:white;display: inline-block;vertical-align:top;padding:13px 0px 0px 5px;font-size:25px;"></i></span>
+            </center>
+            <div style='margin-top:0px;'>
+                <img src='<%- avatarURL %>' width='100px' style='border-radius:50px;margin-left:100px;display: inline-block;'>
+                <div style="display: inline-block;height:100px;top:0;vertical-align:top">
+                    <div style="padding-top:25px"></div>
+                    <span style="padding-left:10px;color:white;font-size:30px;"><%- username %></span>
+                    <span style="color:#9FA6B2;font-size:15px;display: inline-block;vertical-align:top;padding:16px 0px 0px 0px">#<%- tag%></span>
+                    <span style='margin-left:10px;display: inline-block;vertical-align:top;padding:4px 0px 5px 0px' ><%- badges %></span>
+                    <div style="padding-top:0px"></div>
+                    <span style="color:#9FA6B2;padding-left:10px"><%- description %></span>
+                <div style='padding-left:210px'></div></div></div>
+            
+            
+        <div style='margin-left:150px;'><table style="width:calc(100% - 210px);width:-webkit-calc(100% - 210px);width:-moz-calc(100% - 210px);">
+            <tr>
+                <th style="color:white" width="50%">Value: <span style="color:#9FA6B2;"><%- fullBalance %></span></th>
+                <th style="color:white" width="50%">Grade: <%- grade %></th>
+            </tr>
+            
+        </table></div></div>
+        <div style='padding-bottom:50px'></div>
+        </div>
+    </div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/JS/dashboardguild.js"></script>
+
+<script>
+    document.getElementById("profile").style.opacity="100%"
+    window.onresize= resize;resize()
+    
+    function resize() {
+        document.getElementById("profilelocation").style.paddingTop = `${Math.round(window.innerHeight/4)}px`
+        if (window.innerWidth < 1200) {
+            document.getElementById("profile").style.width = "90%";document.getElementById("profile").style.marginLeft = "5%"} 
+            else {document.getElementById("profile").style.width = "70%";document.getElementById("profile").style.marginLeft = "15%"}
+    }
+</script>
+
+</html>

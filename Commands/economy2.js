@@ -212,12 +212,40 @@ function rob(bot, message) {
             amount = Math.round((functions.int(15,41)/100) * scoreOther)
             sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, score + parseInt(amount));
             sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(user.id, scoreOther - parseInt(amount));
-            return message.channel.send(functions.embed(`Successfully robbed ${user.username}`, `Robbed **${amount} ${emojis.get(message.guild)}** from **${user.username}**!`, r.s))
+            return message.channel.send(functions.embed(`Successfully robbed ${user.username}`, `Robbed **${amount.sep()} ${emojis.get(message.guild)}** from **${user.username}**!`, r.s))
         } else {
             amount = Math.round((functions.int(100,1000)))
             sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, score - parseInt(amount));
-            return message.channel.send(functions.embed(`You were fined!`, `You were caught and fined **${amount} ${emojis.get(message.guild)}**.`, r.f))
+            return message.channel.send(functions.embed(`You were fined!`, `You were caught and fined **${amount.sep()} ${emojis.get(message.guild)}**.`, r.f))
         }
+    }
+}
+
+function pay(bot, message) {
+    const args = message.content.slice(prefix.length).split(' ');
+    const command = args.shift().toLowerCase();
+    if (["pay", "transfer", "give"].includes(command)) {
+        userArgs = args.splice(0,1).join(" ")
+        amount = args.splice(0,100).join(" ")
+        let user = functions.userfromarg(message, userArgs)
+        if (userArgs == "") {return message.channel.send(functions.error(`You need to input a user to pay! ${prefixes.get(message.guild)}pay [user] [amount]`))}
+        if (user=="none") {return message.channel.send(functions.error("Unknown user!"))}
+        if (user.id == message.author.id) {return message.channel.send(functions.error(`You can not pay yourself!`))}
+        if (!amount || isNaN(amount.jn())) {return message.channel.send(functions.error(`Missing or invalid amount`))}
+        amount = Math.floor(amount).jn()
+        if (amount < 1) {return message.channel.send(functions.error(`You can't pay less than 0!`))}
+        startup(message.guild, message.author)
+        startup(message.guild, user)
+        try{
+            score = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get(message.author.id).balance;
+        } catch {score = 0}
+        try{
+            scoreOther = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(user.id).balance;
+        } catch {scoreOther = 0}
+        if (amount > Number(score)) {return message.channel.send(functions.error(`You can't pay more than you have in cash!`))}
+        sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, score - parseInt(amount));
+        sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(user.id, scoreOther + parseInt(amount));
+        return message.channel.send(functions.embed(`Successfully paid ${user.username}`, `Paid **${amount.sep()} ${emojis.get(message.guild)}** to **${user.username}**!`, r.s))
     }
 }
 
@@ -227,3 +255,4 @@ module.exports.tro = TalkedRecentlyOther
 module.exports.vote = vote
 module.exports.lower = lower
 module.exports.rob = rob
+module.exports.pay = pay

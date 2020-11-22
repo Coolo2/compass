@@ -8,6 +8,9 @@ var express = require('express'),
   router = express.Router();
 const app = express()
 
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.split(",").join("")}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.split(",").join("")}
+
 const rs = require('../../Resources/rs')
 const codes = require('../../Commands/codes')
 
@@ -39,7 +42,6 @@ const address = JSON.parse(fs.readFileSync('./Resources/website.json')).address
 const domainall = JSON.parse(fs.readFileSync('./Resources/website.json')).domainall
 
 var bodyParser = require('body-parser');
-const { isInteger } = require("mathjs");
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
@@ -281,8 +283,8 @@ router.get('/admin/generateGlobalCode', (req, res) => {
     id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
     if(!setup.botadmins.includes(id)) { return res.redirect(`/`)}
     value = req.query.value
-    if (!isNumeric(value)) {return res.redirect(`/admin/globalCodes`)}
-    try{codes.generateGlobalCode(value)}catch(err){console.log(err)}
+    if (!isNumeric(value.jn())) {return res.redirect(`/admin/globalCodes`)}
+    try{codes.generateGlobalCode(value.jn())}catch(err){console.log(err)}
     res.redirect(`/admin/globalCodes`)
 })
 
@@ -374,7 +376,7 @@ router.get('/admin/globalCodes', (req, res) => {
         finalHTML = `<div class="dataSection" style="color:white;position:absolute;box-shadow: 0px 0px 20px 6px #00000050;border-radius:10px;background-color:#1C1F26;min-width:95%;margin-top:5%;margin-right:2%;margin-left:2%;top:0;max-width:90%;padding:10px;padding-bottom:1000px;"><center>Generate code <form action="${address}/admin/generateGlobalCode" method="get"><input type="text" class="forminput" name="value" /><input type="submit" class="formbutton" value="Code value"/></form></center>`
         allCodes = codes.getGlobalCodes()
         for (code in allCodes) {
-            finalHTML = finalHTML.concat(`<div class="members" id="code${code}"><b>Code: ${code}</b> - Value: ${allCodes[code]}<span style="padding-left:30px;"> <button class="formbutton" onclick="window.open('${address}/admin/deleteGlobalCode/${code}', '_self')">Delete code</button></span></div><div style="padding:10px;"></div>`)
+            finalHTML = finalHTML.concat(`<div class="members" id="code${code}"><b>Code: ${code}</b> - Value: ${allCodes[code].sep()}<span style="padding-left:30px;"> <button class="formbutton" onclick="window.open('${address}/admin/deleteGlobalCode/${code}', '_self')">Delete code</button></span></div><div style="padding:10px;"></div>`)
             
         }
         finalHTML = finalHTML + `</div>`

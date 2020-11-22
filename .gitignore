@@ -1,11 +1,9 @@
 node_modules/
-Resources/setup.json
 .vscode/
 Website/Junk/
 .env
 
 package-lock.json 
-package.json
 
 test.js 
 test2.js 

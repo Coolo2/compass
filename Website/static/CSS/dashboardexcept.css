@@ -1,10 +1,14 @@
+@import url('./font.css');
+@import "./baloon.css";
+
 html {
     scroll-behavior: smooth;
 }
+
 body {
-    font-family: 'Helvetica';
+    font-family:'Manrope' ;
     font-size: 22px;
-font-weight: 550;
+    font-weight: 550;
 }
 .noscroll {
     overflow-y: hidden;

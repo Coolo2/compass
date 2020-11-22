@@ -106,7 +106,8 @@ function generate(message) {
         amount = args[0]
         if (!amount || !isInteger(amount.jn())) {return message.channel.send(functions.error(`Invalid usage, use: ${prefixes.get(message.guild)}generate [code value]`))}
         amount = args[0].jn()
-        message.channel.send(functions.embed(`Generated code`, `Generated code: **${serverGenerate(message.guild, parseInt(amount))}** worth ${amount.sep()} ${emojis.get(message.guild)}. \n\nRedeem it with **${prefixes.get(message.guild)}redeem [code]**`, r.s))
+        serverGenerate(message.guild, parseInt(amount))
+        message.channel.send(functions.embed(`Generated code`, `Generated code worth ${amount.sep()} ${emojis.get(message.guild)}. (Find it on the [web dashboard](${JSON.parse(fs.readFileSync('.//Resources/website.json')).address}/app/${message.guild.id}/codes)) \n\nRedeem it with **${prefixes.get(message.guild)}redeem [code]**`, r.s))
     }
 }
 
@@ -147,7 +148,8 @@ function generateGlobal(message) {
         amount = args[0]
         if (!amount || !isInteger(amount.jn())) {return message.channel.send(functions.error(`Invalid usage, use: ${prefixes.get(message.guild)}generate-global [code value]`))}
         amount = args[0].jn()
-        message.channel.send(functions.embed(`Generated code`, `Generated code: **${globalGenerate(parseInt(amount))}** worth ${amount.sep()} ${emojis.get(message.guild)}. \n\nRedeem it with **${prefixes.get(message.guild)}redeem [code]**`, r.s))
+        globalGenerate(parseInt(amount))
+        message.channel.send(functions.embed(`Generated code`, `Generated code worth ${amount.sep()} ${emojis.get(message.guild)}. (Find it on the [admin page](${JSON.parse(fs.readFileSync('.//Resources/website.json')).address}/admin/globalCodes)) \n\nRedeem it with **${prefixes.get(message.guild)}redeem [code]**`, r.s))
     }
 }
 
@@ -156,12 +158,12 @@ function redeem(message) {
     const command = args.shift().toLowerCase();
     if (["redeem", "redeem-code", "redeemcode"].includes(command)) {
         if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
-        code = args[0]
+        code = args.splice(0,500).join("")
         if (!code) {return message.channel.send(functions.error(`Invalid usage, use: ${prefixes.get(message.guild)}redeem [code]`))}
         startup(message.guild, message.author)
         final = checkAddRemove(message, code)
         if (!final) {return message.channel.send(functions.error(`Invalid code (XXXX-XXXX-XXXX)`))}
-        if (final["amount"]) {return message.channel.send(functions.embed(`Redeemed`, `Redeemed code ${final["code"]} and got ${final["amount"]} ${emojis.get(message.guild)}! You are now on ${final["balance"].sep()} ${emojis.get(message.guild)}`, r.s))}
+        if (final["amount"]) {return message.channel.send(functions.embed(`Redeemed`, `Redeemed code ${final["code"]} and got ${final["amount"].sep()} ${emojis.get(message.guild)}! You are now on ${final["balance"].sep()} ${emojis.get(message.guild)}`, r.s))}
     }
 }
 

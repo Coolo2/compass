@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title><%= username %> - Edit</title>
+<link rel="icon" href="/Images/favicon.png">
+    <link href="/CSS/dashboardguild.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Compass Bot (dashboard)" />
+    <meta property="og:description" content="Compass bot - An advanced, customizable Economy and Moderation Discord Bot." />
+    <meta property="og:url" content="<%- address %>" />
+    <meta property="og:image" content="/Images/icon.png" />
+    <meta name="theme-color" content="#272b33">
+</head>
+
+<body id="thebody" style="background-color:#1C1F26;background-image: url('https://i.ibb.co/V9ZZ4r5/cubes.png');background-repeat: repeat;">
+    <div class="navbar">
+        <a class="h" href="<%= address %>/">Home</a>
+        
+        <a class="h" href="<%= address %>/app">Dashboard</a></li>
+<a class="h active" href="<%= address %>/p">Profiles</a></li>
+        <a class="h" href="<%= address %>/options">Options</a></li>
+        <div class="dropdown">
+            <button class="dropbtn">More
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a class="h" href="<%= address %>/stats">Stats <i class="fa fa-line-chart" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
+            </div>
+        </div>
+    </div>
+    <div style="padding:21px"></div>
+    <div style="padding-top:200px;">
+        <div class="dataSection" style="box-shadow: 0px 0px 20px 6px #00000050;border-radius:50px 50px 0px 0px;background-color:#383d49;margin-left:15%;top:0;width:70%;">
+            <i class="fa fa-chevron-left" onmouseover="this.style.color='white'" onmouseout="this.style.color='#9FA6B2'" onclick="window.open(document.baseURI.replace('/edit', ''), '_self')" style="margin-left:30px;margin-top:30px;cursor:pointer;color:#9FA6B2;float:left" aria-hidden="true"></i>
+            <div><div style='padding:1px;'></div>
+            <div style='margin-top:50px;'>
+                <img src='<%- avatarURL %>' width='100px' style='border-radius:50px;margin-left:100px;display: inline-block;'>
+                <div style="display: inline-block;height:100px;top:0;vertical-align:top">
+                    <div style="padding-top:25px"></div>
+                    <span style="padding-left:10px;color:white;font-size:30px;"><%- username %></span>
+                    <span style="color:#9FA6B2;font-size:15px;display: inline-block;vertical-align:top;padding:16px 0px 0px 0px">#<%- tag%></span>
+                    <span style='margin-left:10px;display: inline-block;vertical-align:top;padding:4px 0px 5px 0px' ><%- badges %></span>
+                    <div style="padding-top:0px"></div>
+                    <span style="color:#9FA6B2;padding-left:10px" id="edit--description--demo"><%- description %></span>
+                <div style='padding-left:210px'></div></div></div>
+        <div style='margin-left:150px;'><table style="width:calc(100% - 210px);width:-webkit-calc(100% - 210px);width:-moz-calc(100% - 210px);">
+            <tr>
+                <th style="color:white" width="33%"><span style="color:#9FA6B2;"><%- mutualServers %></span> server<% if(mutualServers > 1){ %>s<% } else{ %>  <% } %></th>
+                <th style="color:white" width="33%">Value: <span style="color:#9FA6B2;"><%- fullBalance %></span></th>
+                <th style="color:white" width="33%">Grade: <%- grade %></th>
+            </tr>
+            
+        </table></div></div>
+        
+        <div style='padding-bottom:50px'></div>
+        </div>
+        <div class="dataSection" style="box-shadow: 0px 0px 20px 6px #00000050;border-radius:0px 0px 20px 20px;background-color:#2C2F33;margin-left:15%;top:0;width:70%;padding:15px 0px 15px 0px">
+            <div style='margin-left:20px'>
+                <input class="forminput" oninput="sendURLInput()" id="edit--URL"><button id="edit--URL--button" class="formbuttondisabled" onclick="sendURL()" disabled>Edit URL</button>
+                <span style="color:#9FA6B2;font-size:15px;display:inline-block" id="edit--URL--demo"></span>
+                <span id="edit--URL--error" style="display:none"><i class="fa fa-times" aria-hidden="true" style="margin-left:20px;background-color:red;color:white;border-radius:10px;border:2px solid white"></i> <span id="edit--URL--error--value" style="color:#9FA6B2;">Success</span></span><div style='padding-top:1px;'></div>
+                <div style='padding-top:1px;'></div>
+                <span><input class="forminput" oninput="editDescriptionInput()" id="edit--description"><button id="edit--description--button" class="formbutton" onclick="editDescription()">Edit Description</button>
+                <span id="success" style="display:none"><i class="fa fa-check" aria-hidden="true" style="background-color:limegreen;color:white;border-radius:10px;border:2px solid white"></i> <span style="color:#9FA6B2;">Success</span></span><div style='padding-top:1px;'></div>
+                <%- setBadges %>
+                </span>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/JS/dashboardguild.js"></script>
+<script>
+    function httpGet(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false );
+        xmlHttp.send( null );
+        console.log(xmlHttp.response)
+        return JSON.parse(xmlHttp.response);
+    }
+
+    profiles = httpGet(`<%- address %>/profilesJSON`)
+
+    function sendURL() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                console.log(xhr.response)
+                if (xhr.response != 'Done') {
+                    document.getElementById("edit--URL--error").style.display = 'inline-block'
+                    document.getElementById("edit--URL--error--value").innerHTML = 'Unknown error.'
+                } else {
+                    window.open(`<%- address %>/p/` + encodeURIComponent(document.getElementById("edit--URL").value) + '/edit', '_self')
+                }
+            }
+        }
+        r = xhr.open("POST", document.baseURI + '/url', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({url:`<%- address %>/p/` + encodeURIComponent(document.getElementById("edit--URL").value)}))
+    }
+
+    function sendURLInput () {
+        document.getElementById("edit--URL--demo").innerHTML = `<%- address %>/p/` + encodeURIComponent(document.getElementById("edit--URL").value)
+        if (profiles.includes(encodeURIComponent(document.getElementById("edit--URL").value))) {
+            document.getElementById("edit--URL--error").style.display = 'inline-block'
+            document.getElementById("edit--URL--error--value").innerHTML = 'Taken URL'
+            document.getElementById(`edit--URL--button`).setAttribute(`disabled`, `disabled`);
+            document.getElementById(`edit--URL--button`).setAttribute(`class`, `formbuttondisabled`)
+        } 
+        else {
+            document.getElementById("edit--URL--error").style.display = 'none'
+            if (document.getElementById("edit--URL").value.split(" ").join("") == `` || document.getElementById("edit--URL").value.length > 20) {
+                document.getElementById(`edit--URL--button`).setAttribute(`disabled`, `disabled`);
+                document.getElementById(`edit--URL--button`).setAttribute(`class`, `formbuttondisabled`)
+                document.getElementById("edit--URL--demo").innerHTML = ``
+            }
+            else {
+                document.getElementById(`edit--URL--button`).removeAttribute(`disabled`);
+                document.getElementById(`edit--URL--button`).setAttribute(`class`, `formbutton`);
+        
+            }
+        }
+        
+    }
+
+    function editDescriptionInput () {
+        if (document.getElementById("edit--description").value.length > 50) {
+            document.getElementById(`edit--description--button`).setAttribute(`disabled`, `disabled`);
+            document.getElementById(`edit--description--button`).setAttribute(`class`, `formbuttondisabled`)
+            document.getElementById("edit--description--demo").innerHTML = `<%- description %>`
+        }
+        else {document.getElementById(`edit--description--button`).removeAttribute(`disabled`);
+            document.getElementById(`edit--description--button`).setAttribute(`class`, `formbutton`);
+            document.getElementById("edit--description--demo").innerHTML = document.getElementById("edit--description").value
+        }
+        
+    }
+
+    function editDescription() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                console.log(xhr.response)
+                if (xhr.response != "Invalid Desc") {
+                    document.getElementById("success").style.display = 'inline-block'
+                    document.getElementById("edit--description--demo").innerHTML = xhr.response
+                    setTimeout(function() {
+                        document.getElementById("success").style.display = 'none'
+                    }, 3000)
+                }
+            }
+        }
+        r = xhr.open("POST", document.baseURI + '/description', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({description:document.getElementById("edit--description").value}))
+        document.getElementById("edit--description").value = ``
+        document.getElementById(`edit--description--button`).setAttribute(`disabled`, `disabled`);document.getElementById(`edit--description--button`).setAttribute(`class`, `formbuttondisabled`)
+    }
+</script>
+</html>

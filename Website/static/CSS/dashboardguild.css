@@ -1,8 +1,10 @@
+@import url('./font.css');
+@import "./baloon.css";
 
 body {
-    font-family:'Helvetica';
+    font-family:'Manrope' ;
     font-size: 22px;
-font-weight: 550;
+    font-weight: 550;
 }
 
 .noscroll {
@@ -176,6 +178,7 @@ img.dasb:hover {
     border-radius: 50px;
     -webkit-transition: all 0.5s;
     background-color: #36393E;
+    
 }
 
 #topcorner {
@@ -291,15 +294,17 @@ form {
     border: 1px #636363 solid;
     padding:7px;
     border-radius:5px;
+    cursor:not-allowed;
     -webkit-transition: all 0.5s;
 }
 
 .formbuttondisabled {
     background-color:#36393E;
-    color:white;
+    color:rgb(138, 138, 138);
     padding:8px;
     border-radius:5px;
     border: 1px #636363 solid;
+    cursor:not-allowed;
     -webkit-transition: all 0.5s;
 }
 
@@ -348,6 +353,31 @@ a.sectionactive:visited, a.sectionactive:link, a.sectionactive:active {
     background-color:#616675;
     border-radius:5px;
 }
+
+.profileoption {
+    display: inline-block;
+    position:relative;
+    background-color:#525764;
+    -webkit-transition: top 0.2s;
+    border-radius:10px;
+    box-shadow: 0px 0px 20px 10px #00000070;
+}
+.profileoption:hover {
+    -webkit-transition: top 0.2s;
+    top:5px;
+    background-color:#616675;
+    border-radius:5px;
+}
+.profileoptionimage {
+    margin:5px;
+    border-radius:10px;
+}
+
+.profileoption:hover .profileoptionimage {
+    filter:blur(0px);
+    border-radius:5px;
+}
+
 .notransition {
     -webkit-transition: none !important;
     -moz-transition: none !important;

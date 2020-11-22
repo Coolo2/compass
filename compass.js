@@ -15,6 +15,8 @@ const fs = require('fs')
 const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
 const functions = require('./functions')
 
+require("dotenv").config();
+
 const maths = require('./Commands/math');
 const database = require('./Commands/economy')
 const economy2 = require('./Commands/economy2')
@@ -136,6 +138,7 @@ bot.on('message', message => {
   suggest.suggest(bot, message)
   suggest.issue(bot, message)
   economy2.rob(bot, message)
+  economy2.pay(bot, message)
 });
 
 bot.on("error", error => console.log(error.message));
@@ -189,13 +192,12 @@ app.use('/', require('./Website/Modules/options'));
 app.use('/', require('./Website/Modules/channels'));
 app.use('/', require('./Website/Modules/currency'));
 app.use('/', require('./Website/Modules/prefixes'));
+app.use('/', require('./Website/Modules/profiles'));
 app.use('/', require('./Website/Modules/codes'));
 app.use('/', require('./Website/backend'));
 app.use('/', require('./Website/Modules/admin'));
 app.use('/', require('./Website/HTML/Editor/editor').router);
 app.use('/', require('./Website/HTML/Editor/editorleave').router);
-
-
 
 const getAppCookies = (req, res) => {
   try {

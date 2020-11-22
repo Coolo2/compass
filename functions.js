@@ -1,5 +1,6 @@
 const Discord = require("discord.js-light");
-const bot = new Discord.Client({cacheGuilds: true,cacheChannels: true,cacheOverwrites: false,cacheRoles: false,cacheEmojis: false,fetchAllMembers:true,cachePresences: false});
+
+const bot = require('./compass').bot
 
 const prefixes = require('./Commands/prefix')
 
@@ -45,6 +46,20 @@ function randomchoice(choices) {
 	var index = Math.floor(Math.random() * choices.length);
 	return choices[index];
 }
+
+function realuserfromarg(args) { 
+	try {
+		return bot.users.cache.find(member => member.username.toLowerCase().replace(/[0-9]/g, '') === args.toLowerCase().replace(/[0-9]/g, ''))
+	} catch {
+		try {
+			return bot.users.cache.find(member => member.id === args)
+		}
+		catch {
+			return "none"
+		} 
+	}
+}
+
 function userfromarg(message, args) { 
 	try {
 		return message.guild.members.cache.find(member => member.user.username.toLowerCase().replace(/[0-9]/g, '') === args.toLowerCase().replace(/[0-9]/g, '')).user
@@ -62,6 +77,7 @@ function userfromarg(message, args) {
 		} 
 	}
 }
+
 function memberfromarg(guild, args) { 
 	try {
 		return guild.members.cache.find(member => member.user.username === args).user
@@ -169,3 +185,4 @@ module.exports.randomcommandusage = randomcommandusage
 module.exports.encode = encode 
 module.exports.decode = decode
 module.exports.commandArray = commandArray
+module.exports.realuserfromarg = realuserfromarg

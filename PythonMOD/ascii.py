@@ -1,7 +1,5 @@
 
 class Dec:
-
-
     def Bin(decimal, return_type=bin):
         if type(decimal) is list:
             return_list = []
