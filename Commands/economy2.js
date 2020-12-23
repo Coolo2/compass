@@ -6,8 +6,8 @@ const functions = require('../functions')
 const cooldowns = require('./cooldowns')
 const returns = require('./returns')
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.split(",").join("")}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.split(",").join("")}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
 
 const r = require('../Resources/rs')
 
@@ -146,6 +146,7 @@ async function crash(message) {
         bet = args[0]
         if (!bet || isNaN(bet.jn()) && !bet.includes(".")) {return message.channel.send(functions.error(`Invalid usage, use: ${prefixes.get(message.guild)}crash [bet]`))}
         crashBet[message.author.id] = bet.jn()
+        if (crashBet[message.author.id] < 1) {return message.channel.send(functions.error(`You can't bet less than 0!`))}
         try {balance = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get(message.author.id).balance} catch {balance = 0}
         if (crashBet[message.author.id] > balance) {return message.channel.send(functions.error("You can not bet more than you have in cash."))}
         embed = generate(message, 1.0, 0)    
@@ -231,8 +232,8 @@ function pay(bot, message) {
         if (userArgs == "") {return message.channel.send(functions.error(`You need to input a user to pay! ${prefixes.get(message.guild)}pay [user] [amount]`))}
         if (user=="none") {return message.channel.send(functions.error("Unknown user!"))}
         if (user.id == message.author.id) {return message.channel.send(functions.error(`You can not pay yourself!`))}
-        if (!amount || isNaN(amount.jn())) {return message.channel.send(functions.error(`Missing or invalid amount`))}
-        amount = Math.floor(amount).jn()
+        if (!amount || isNaN(amount.jn())) {return message.channel.send(functions.error(`Missing or invalid amount! ${prefixes.get(message.guild)}pay [user] [amount]`))}
+        amount = Math.floor(amount.jn())
         if (amount < 1) {return message.channel.send(functions.error(`You can't pay less than 0!`))}
         startup(message.guild, message.author)
         startup(message.guild, user)

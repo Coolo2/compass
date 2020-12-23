@@ -11,13 +11,15 @@
     <meta property="og:url" content="<%- address %>" />
     <meta property="og:image" content="/Images/icon.png" />
     <meta name="theme-color" content="#272b33">
+    <meta name="description" content="Compass bot - An advanced, deeply customizable multi-purpose discord bot.">
+    <meta name="keywords" content="discord, bot, compass, economy, moderation, fun, slash-commands, commands, home, index">
 </head>
 <body id="thebody" style="background:#1C1F26">
     <div class="navbar" id="topper">
         <a class="h active" href="<%= address %>/">Home</a>
         
         <a class="h" href="<%= address %>/app">Dashboard</a></li>
-<a class="h" href="<%= address %>/p">Profiles</a></li>
+<a class="h" href="<%= address %>/status">Status</a></li>
 <a class="h" href="<%= address %>/options">Options</a></li>
         <div class="dropdown">
             <button class="dropbtn">More
@@ -26,62 +28,123 @@
             <div class="dropdown-content">
                 <a class="h" href="<%= address %>/stats">Stats <i class="fa fa-line-chart" aria-hidden="true"></i></a>
 <a class="h" href="<%= address %>/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i></a>
-                <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                
                 <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
-<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/p">Profiles <i class="fa fa-user" aria-hidden="true"></i></a>
             </div>
         </div>
-        <a style="float:right" class="h" target="_blank" href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=2147483647&scope=bot" >Invite me</a>
+        <a style="float:right" class="h" target="_blank" href="<%- address %>/invite" >Invite me</a>
         <a style="float:right"class="h" href="<%= address %>/supportserver" target="_blank">Join Support Server</a>
     </div>
       <div style="padding:22px"></div>
-    <div class="container">
-        <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage"
-            src="/Images/cubes.png">
-        <div class="centered" onselectstart="return false" onclick="clickfunction()" style="cursor: pointer;">Compass
-            bot</div>
-        <button id="centerbutton" class="centerbutton" type="button">Invite me<span id="invitetext"
-                class="invarrow"></span></button>
+    <div class="container" style="overflow-x:hidden">
+        <img style="width:2000px;height:300px;pointer-events: none;" class="selectDisable" id="myImage" src="/Images/cubes.png">
+        <div style="position:absolute;font-size:50px;left:10%;transform: translate(0, -50%);top:calc(50% - 35px)">Compass Bot</div>
+        <div style="position:absolute;left:10%;transform: translate(0, -50%);top:calc(50% + 20px);color:#DFE1E5">Your next discord bot.</div>
+        
+        <div class="selectDisable" 
+            style="position:absolute;top:calc(50% - 35px);left:calc(75% - 100px);cursor:pointer;width:200px;height:70px;background-color:#4f96d4;border-radius:5px;transition:all 0.25s;text-align:center"
+            onmouseover="this.style.filter='brightness(115%)'"
+            onmouseout="this.style.filter=''"
+            onclick="window.open('/invite')"
+        >
+            <img src="/Images/Discord.svg" style="display: inline-block;margin-top:20px;" width="30px">
+            <span style="display: inline-block;vertical-align:top;margin-top:19px">Invite me</span>
+        </div>
     </div>
     <div class="text">
-        <div style="left:25%;text-align:center;color:white;position:absolute;bottom:100px">
-            <p>And more! Invite me to see what more you can do with Compass, or explore the website.</p>
-            <div style="padding-top:150px"></div>
-            <div style="left:50%;top:50%;position: absolute;transform: translate(-50%, -50%);z-index:10;"><a onselectstart="return false" class="button link" target="_blank" href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=2147483647&scope=bot">Invite me<span id="invitetext" class="invarrow"></span></a></div>
+        <div style="width:99%;margin-left:0.5%;padding-top:100px">
+            <table style="width:100%">
+                <tr style="height:700px;vertical-align:middle">
+                    <th style="color:white" width="50%">
+                        <img src="/Images/Economy.png" class="mainimage" width="70%" 
+                        style="border-radius:10px;box-shadow: 5px 5px 15px #00000050;transition:all 0.25s">
+                    </th>
+                    <th style="color:white;vertical-align:middle;padding-left:100px" width="50%">
+                        <div style="font-size:65px;color:white;text-align:left">Economy</div>
+                        <div style="margin-top:20px;color:#c6c9d1;text-align:left">Compass Bot has a server-specific economy system, providing 
+                            <span style="font-weight:bolder;color:white">advanced, deeply customizable</span> commands to your server. 
+                            <div style="padding-top:10px"></div>
+                            With the many fun games included with the bot, you can keep your server engaged with commands such as 
+                            <span style="font-weight:bolder;color:white">crash, lower, work and rob</span>!</div>
+                    </th>
+                </tr>
+                <tr style="height:700px;vertical-align:middle">
+                    <th style="color:white;vertical-align:middle;padding-right:100px" width="50%">
+                        <div style="font-size:65px;color:white;text-align:right">Profiles</div>
+                        <div style="margin-top:20px;color:#c6c9d1;text-align:right">
+                            <span style="font-weight:bolder;color:white">Customizable</span> 
+                            profile cards to show off your economy stats!
+                            <div style="padding-top:10px"></div>
+                            Viewable from servers using the profile command or from the website, profiles are a great way to show your progress through the bot.
+                            <div style="padding-top:10px"></div>
+                            What will you do with yours?
+                        </div>
+                    </th>
+                    <th style="color:white" width="50%">
+                        <img class="mainimage" src="/Images/Profiles.png" width="90%" style="border-radius:10px;box-shadow: 5px 5px 15px #00000050;transition:all 0.25s;">
+                    </th>
+                </tr>
+                <tr style="height:700px;vertical-align:middle">
+                    <th style="color:white" width="50%">
+                        <img class="mainimage" src="/Images/Moderation.png" width="70%" style="border-radius:10px;box-shadow: 5px 5px 15px #00000050;transition:all 0.25s;">
+                    </th>
+                    <th style="color:white;vertical-align:middle;padding-left:100px" width="50%">
+                        <div style="font-size:65px;color:white;text-align:left">Moderation</div>
+                        <div style="margin-top:20px;color:#c6c9d1;text-align:left">The bot has a great Moderation command system, including
+                            <span style="font-weight:bolder;color:white">warns</span>: A simple way to track users rule-following.
+                            <div style="padding-top:10px"></div>
+                            With the many fun games included with the bot, you can keep your server engaged with commands such as 
+                            <span style="font-weight:bolder;color:white">crash, lower, work and rob</span>!</div>
+                    </th>
+                </tr>
+                <tr style="height:850px;vertical-align:middle">
+                    <th style="color:white;vertical-align:middle;padding-right:100px" width="50%">
+                        <div style="font-size:65px;color:white;text-align:right">Fun</div>
+                        <div style="margin-top:20px;color:#c6c9d1;text-align:right">
+                            <span style="font-weight:bolder;color:white">Funny</span> 
+                            , exciting commands for your members. Commands such as
+                            <span style="font-weight:bolder;color:white">impostor, wide, dog</span> and 
+                            <span style="font-weight:bolder;color:white">meme</span> can keep your server 
+                            active through interaction with Compass.
+                            <div style="padding-top:10px"></div>
+                            You and your members will have a great time with compass in your server.
+                            <div style="padding-top:10px"></div>
+                            Why not give it an invite?
+                        </div>
+                    </th>
+                    <th style="color:white" width="50%">
+                        <img class="mainimage" src="/Images/Fun.png" width="90%" style="border-radius:10px;box-shadow: 5px 5px 15px #00000050;transition:all 0.25s;">
+                    </th>
+                </tr>
+            </table>
+
+            <div style="padding-top:200px"></div>
         </div>
-        <p class="line-1 thetext" id="info" style="text-align: center;user-select: none;">Compass bot: An advanced, customizable economy bot</p>
-        <div style="padding:20px"></div>
-        <div id="stats" class="grid-container" style="cursor:pointer" onclick="movedown()">
-            <div class="grid-item"><p>Used by <%= servers %> servers</p></div>
-            <div class="grid-item"><p>Linked with <%= users %> users</p></div>
-            <div class="grid-item"><p>Access to <%= channels %> channels</p></div>
+        <div class="mainimage" style="position:absolute;left: 50%;transform: translate(-50%, 0%);-ms-transform: translate(-50%, 0%);border-radius:10px;box-shadow: 5px 5px 15px #00000050;transition:all 0.25s;-webkit-transform: translate(-50%, 0); bottom:-150px;z-index:500;background-color:rgb(54,57,63, .8);width:1000px;height:300px;color:white">
+            <div style="width:100%;text-align:center;font-size:45px;color:white;margin-top:25px;">And so much more!</div>
+            <div style="width:100%;text-align:center;color:#c6c9d1;margin-top:25px;">
+                <span style="font-weight:bolder;color:white">Invite Compass</span> to your server(s) to see all of it's features!
+            </div>
+            <div class="selectDisable" 
+                style="cursor:pointer;width:200px;height:70px;margin-top:35px;background-color:#4f96d4;border-radius:5px;transition:all 0.25s;margin-left:calc(50% - 100px)"
+                onmouseover="this.style.filter='brightness(115%)'"
+                onmouseout="this.style.filter=''"
+                onclick="window.open('/invite', '_self')"
+            >
+                <img src="/Images/Discord.svg" style="display: inline-block;margin-top:20px;margin-left:25px" width="30px">
+                <span style="display: inline-block;vertical-align:top;margin-top:19px">Invite me!</span>
+            </div>
         </div>
-        
-        <img src="/Images/Moderation.png" onselectstart="return false" onclick="sizeimage()" style="cursor:pointer;" class="selectDisable imgs" id="image1">
-        <div class="container5" style="overflow:hidden;" id="circles">
-            <img src="/Images/dots.png"  class="selectDisable image5">
-            <p class="text5">Moderation<br><br>An easy moderation system for easy control over your servers</p>
-        </div>
-        <img src="/Images/Economy.png" onclick="sizeimage2()" onselectstart="return false" style="cursor:pointer;" id="image2" class="selectDisable imgs2">
-        <div class="container6" style="margin-top:900px;" id="circles2">
-            <img src="/Images/dots.png"  class="selectDisable image6">
-            <p class="text5">Economy<br><br>A simple, customisable Economy system with cross-saving</p>
-        </div>
-        <div id="versionButton" style="color:white;position:absolute;bottom:50px;left:50px;"><a onclick="notifyMe()" onselectstart="return false" style="cursor:pointer" class="button selectDisable link">Notify me!</a> Get notified on new version releases</div>
     </div>
     <div id="version" hidden><%- version %></div>
     <div class="container">
-        <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage2"
+        <img style="width:2000px;height:300px;pointer-events: none;" class="selectDisable" id="myImage2"
             src="/Images/cubes.png">
-        <div id="botlinks" style="left:30%;top:50%;position: absolute;transform: translate(-50%, -50%);" onselectstart="return false">Compass bot : links</div>
-        <div style="left:50%;top:50%;position: absolute;transform: translate(-50%, -50%);z-index:10;"><a onselectstart="return false" class="button link" target="_blank" href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=2147483647&scope=bot">Invite me<span id="invitetext" class="invarrow"></span></a></div>
-        <div style="left:61%;top:50%;position: absolute;transform: translate(-50%, -50%);z-index:10;"><a onselectstart="return false" class="button selectDisable link" target="_blank" href="<%= address %>/supportserver">Support server<span id="invitetext" class="invarrow"></span></a></div>
-        <div style="left:72.5%;top:50%;position: absolute;transform: translate(-50%, -50%);z-index:10;"><a onselectstart="return false" class="button selectDisable link" href="/app">Dashboard<span id="invitetext" class="invarrow"></span></a></div>
-        <div style="left:81%;top:50%;position: absolute;transform: translate(-50%, -50%);z-index:10;"><a onselectstart="return false" class="button selectDisable link" href="<%= status %>">Status<span id="invitetext" class="invarrow"></span></a></div>
-        <div style="left:50%;top:80%;position: absolute;transform: translate(-50%, -50%);z-index:10;border-radius:50px;"><a onselectstart="return false" class="button selectDisable link" style="background-color:gray;background: linear-gradient(145deg, gray 50%, rgb(114, 114, 114) 50%);" href="#">↑<span id="invitetext" class="invarrow"></span></a></div>
     </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://jqfg9298q74g.statuspage.io/embed/script.js"></script>
 <script src="/JS/index.js"></script>
 </html>

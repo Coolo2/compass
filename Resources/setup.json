@@ -1,6 +1,6 @@
 {
-    "prefix":"!!",
-    "invite":"https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=2147483647&scope=bot",
+    "prefix":".",
+    "invite":"https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=2147483647&scope=bot%20applications.commands",
     "server":"https://discord.gg/fDUs68p",
     "dbltoken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4NjE4MDMyMTQ0NDg4ODU4NiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTQ0ODA1OTk0fQ.umIjmKGAYuMPwS42HZ9lQ2NjKonx821X69FeLM5zAY8",
     "dbllink":"https://top.gg/bot/486180321444888586/vote",
@@ -8,5 +8,5 @@
     "statuspage":"jqfg9298q74g",
     "statuskey":"60b2bf9d-df87-4751-852f-2771addbb89b",
     "statuslink":"compassbot.statuspage.io",
-    "botadmins":["368071242189897728", "549268263289487431", "449662597927665666"]
+    "botadmins":["368071242189897728", "549268263289487431", "449662597927665666", "378189620288159754"]
 }

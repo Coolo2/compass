@@ -15,7 +15,7 @@
         <a class="h" href="<%= address %>/">Home</a>
 
         <a class="h active" href="<%= address %>/app">Dashboard</a></li>
-<a class="h" href="<%= address %>/p">Profiles</a></li>
+<a class="h" href="<%= address %>/status">Status</a></li>
         <a class="h" href="<%= address %>/options">Options</a></li>
         <div class="dropdown">
             <button class="dropbtn">More
@@ -30,15 +30,15 @@
                 <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o"
                         aria-hidden="true"></i></a>
-                <a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
+                <a class="h" href="<%= address %>/p">Profiles <i class="fa fa-user" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>
     <div style="padding:21px"></div>
-    <div class="container">
-        <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage"
-            src="/Images/cubes.png">
-        <div class="centered" onselectstart="return false" style="cursor: context-menu;">Compass bot - Dashboard</div>
+    <div class="container" style="overflow-x:hidden">
+        <img style="width:2000px;height:300px;pointer-events: none;" class="selectDisable" id="myImage" src="/Images/cubes.png">
+        <div style="position:absolute;font-size:50px;left:10%;transform: translate(0, -50%);top:calc(50% - 35px)">Compass Bot</div>
+        <div style="position:absolute;left:10%;transform: translate(0, -50%);top:calc(50% + 20px);color:#DFE1E5">Dashboard</div>
     </div>
     <div class="topcornerdiv" id="topcorner">
         <button
@@ -100,7 +100,17 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="/JS/dashboardguild.js"></script>
 <script>
+    actionPerformed = false
+
+    window.onbeforeunload = function(e) {
+        if (actionPerformed) {
+            return 'Bye now!';
+        } else {return null}
+        
+    };
+
     function drag_start(event) {
+        actionPerformed = true
         document.getElementById("enablewelcome").setAttribute("checked", "checked")
         document.getElementById("joinchannel_main").removeAttribute("disabled")
         var style = window.getComputedStyle(event.target, null);
@@ -110,6 +120,7 @@
     }
 
     function drop(event) {
+        actionPerformed = true
         document.getElementById("enablewelcome").setAttribute("checked", "checked")
         document.getElementById("joinchannel_main").removeAttribute("disabled")
         var offset = event.dataTransfer.getData("Text").split(',');
@@ -121,6 +132,7 @@
     }
 
     function drag_over(event) {
+        actionPerformed = true
         document.getElementById("enablewelcome").setAttribute("checked", "checked")
         document.getElementById("joinchannel_main").removeAttribute("disabled")
         event.preventDefault();
@@ -142,6 +154,7 @@
     }
 
     function buttonmoment() {
+        actionPerformed = false
         e = document.getElementById("joinchannel_main");
         if (document.getElementById("enablewelcome").getAttribute("checked") || document.getElementById(
                 "enablewelcomemessage").getAttribute("checked")) {
@@ -188,6 +201,7 @@
     }
 
     function load_inp() {
+        actionPerformed = true
         document.getElementById("enablewelcome").setAttribute("checked", "checked")
         document.getElementById("joinchannel_main").removeAttribute("disabled")
         document.querySelectorAll(".title").forEach(item => {
@@ -233,6 +247,7 @@
     }
 
     function bold(where) {
+        actionPerformed = true
         document.getElementById("enablewelcome").setAttribute("checked", "checked")
         document.getElementById("joinchannel_main").removeAttribute("disabled")
         title = document.getElementById("titlecheck")
@@ -257,6 +272,7 @@
     }
 
     function enablewelcome() {
+        actionPerformed = true
         enable = document.getElementById("enablewelcome")
         if (!enable.hasAttribute("checked")) {
             enable.setAttribute("checked", "checked");
@@ -268,6 +284,7 @@
     }
 
     function enablewelcomemessage() {
+        actionPerformed = true
         enable = document.getElementById("enablewelcomemessage")
         if (!enable.hasAttribute("checked")) {
             enable.setAttribute("checked", "checked");
@@ -285,6 +302,7 @@
     }
 
     function welcometype() {
+        actionPerformed = true
         document.getElementById("joinmessage").setAttribute("value", document.getElementById("joinmessage").value)
         document.getElementById("joinchannel_main").removeAttribute("disabled")
     }

@@ -19,19 +19,19 @@
         <a class="h" href="<%= address %>/">Home</a>
         
         <a class="h" href="<%= address %>/app">Dashboard</a></li>
-<a class="h active" href="<%= address %>/p">Profiles</a></li>
+        <a class="h" href="<%= address %>/status">Status</a></li>
         <a class="h" href="<%= address %>/options">Options</a></li>
         <div class="dropdown">
-            <button class="dropbtn">More
+            <button class="dropbtn" style="background-color:gray">More
                 <i class="fa fa-caret-down"></i>
             </button>
             <div class="dropdown-content">
                 <a class="h" href="<%= address %>/stats">Stats <i class="fa fa-line-chart" aria-hidden="true"></i></a>
 <a class="h" href="<%= address %>/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i></a>
-                <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                
                 <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
-<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
+<a class="h active" href="<%= address %>/p">Profiles <i class="fa fa-user" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>
@@ -56,12 +56,24 @@
             <tr>
                 <th style="color:white" width="33%"><span style="color:#9FA6B2;"><%- mutualServers %></span> server<% if(mutualServers > 1){ %>s<% } else{ %>  <% } %></th>
                 <th style="color:white" width="33%">Value: <span style="color:#9FA6B2;"><%- fullBalance %></span></th>
-                <th style="color:white" width="33%">Grade: <%- grade %></th>
+                <th style="color:white" width="33%">Grade: <span style="text-shadow: 0px 0px 10px #FFFFFF75"><%- grade %></span></th>
             </tr>
             
         </table></div></div>
         <div style='padding-bottom:50px'></div>
         </div>
+    </div>
+    <button type="button" class="collapsible"></button>
+    <div class="content activeContent" class="noBright" id="serverSelect" style="width:50%;color:white;">
+        <%- serverlist %>
+    </div>
+
+    <div style="position:absolute;color:gray;bottom:2%;text-align:center;width:99.2%"><span onclick="window.open('/p', '_self')" style="text-decoration: underline;cursor:pointer" onmouseover="this.style.textDecoration=''" onmouseout="this.style.textDecoration='underline'">Browse profiles</span>
+         • 
+    <span style="text-decoration: underline;cursor:pointer" onmouseover="this.style.textDecoration=''" onmouseout="this.style.textDecoration='underline'"
+    onclick="
+for (item of document.getElementsByClassName('collapsible')) {item.classList.add('active');document.getElementById('profilelocation').style.paddingTop = `${Math.round(window.innerHeight/4)}px`;if (item.nextElementSibling.style.maxHeight){item.nextElementSibling.style.maxHeight = null;} else {document.getElementById('profilelocation').style.paddingTop = `${Math.round((window.innerHeight/5))}px`;;item.nextElementSibling.style.maxHeight = item.nextElementSibling.scrollHeight + 'px'}}
+    ">View server</span>
     </div>
 
 </body>
@@ -75,8 +87,11 @@
     function resize() {
         document.getElementById("profilelocation").style.paddingTop = `${Math.round(window.innerHeight/4)}px`
         if (window.innerWidth < 1200) {
-            document.getElementById("profile").style.width = "90%";document.getElementById("profile").style.marginLeft = "5%"} 
-            else {document.getElementById("profile").style.width = "70%";document.getElementById("profile").style.marginLeft = "15%"}
+            document.getElementById("profile").style.width = "90%";document.getElementById("profile").style.marginLeft = "5%"
+            document.getElementById("serverSelect").style.width = "90%";document.getElementById("serverSelect").style.marginLeft = "5%"} 
+            else {
+                document.getElementById("profile").style.width = "70%";document.getElementById("profile").style.marginLeft = "15%"
+                document.getElementById("serverSelect").style.width = "70%";document.getElementById("serverSelect").style.marginLeft = "15%"}
     }
 </script>
 </html>

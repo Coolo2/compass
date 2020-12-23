@@ -20,7 +20,7 @@
     <a class="h" href="<%= address %>/">Home</a>
     
     <a class="h active" href="<%= address %>/app">Dashboard</a></li>
-<a class="h" href="<%= address %>/p">Profiles</a></li>
+<a class="h" href="<%= address %>/status">Status</a></li>
     <a class="h" href="<%= address %>/options">Options</a></li>
     <%- admin %>
     <div class="dropdown">
@@ -30,29 +30,29 @@
         <div class="dropdown-content">
           <a class="h" href="<%= address %>/stats">Stats <i class="fa fa-line-chart" aria-hidden="true"></i></a>
 <a class="h" href="<%= address %>/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i></a>
-          <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
+          
           <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
           <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
-<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/p">Profiles <i class="fa fa-user" aria-hidden="true"></i></a>
         </div>
     </div>
   </div>
     <div style="padding:21px"></div>
-    <div class="container">
-        <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage"
-            src="/Images/cubes.png">
-        <div class="centered" onselectstart="return false" style="cursor: context-menu;">Compass bot - Dashboard</div>
-    </div>
+    <div class="container" style="overflow-x:hidden">
+      <img style="width:2000px;height:300px;pointer-events: none;" class="selectDisable" id="myImage" src="/Images/cubes.png">
+      <div style="position:absolute;font-size:50px;left:10%;transform: translate(0, -50%);top:calc(50% - 35px)">Compass Bot</div>
+      <div style="position:absolute;left:10%;transform: translate(0, -50%);top:calc(50% + 20px);color:#DFE1E5">Dashboard</div>
+   </div>
     <div class="topcornerdiv" id="topcorner">
-        <button style="float:right;margin-top:25px;background-color: #ffffff30;color:white;box-shadow: 0px 0px 4px 2px #00000050;border:none;border-radius: 5px;cursor:pointer;" onclick="logout()">Log out</button>
-        <button style="float:right;margin-top:25px;background-color: #ffffff30;color:white;box-shadow: 0px 0px 4px 2px #00000050;border:none;border-radius: 5px;cursor:pointer;" onclick="change()">Switch accounts</button>
+      <button class="formbutton" style="float:right;margin-top:25px;padding:5px" onclick="logout()">Log out</button>
+      <button class="formbutton" style="float:right;margin-top:25px;padding:5px" onclick="change()">Switch accounts</button>
         <%- avatar %>
-        <p style="z-index:100;color:white" id="logintext">You're logged in as <span onmouseover="this.style.color='#9FA6B2'" onmouseout="this.style.color='white'" style="cursor:pointer;text-decoration:underline" onclick='window.open("<%- address %>/p/<%- id %>")'><%= name %></span></p>
+        <p style="z-index:100;color:white" id="logintext">You're logged in as <span onmouseover="this.style.color='#9FA6B2'" onmouseout="this.style.color='white'" style="cursor:pointer;text-decoration:underline" aria-label="View your profile" data-balloon-pos="left" onclick='window.open("<%- address %>/p/<%- id %>", "_self")'><%= name %></span></p>
         
     </div>
     <div class="text" style="">
         <div class="beginning" style="box-shadow: 0px 0px 20px 6px #00000050;border-radius:10px;background-color:#1C1F26;min-width:80%;float: right;margin-right:5%;top:0;max-width:50%;color:white;padding-bottom:1000px;padding-top:25px;text-align:center">Click a server to the left to begin!</div>
-      <div class="footer-logos" style="box-shadow: 0px 0px 20px 6px #00000020;background-color:#282C34;width:60px;margin-left:3%;padding:10px;border-radius:10px;padding-bottom:1000px">
+      <div class="footer-logos" style="box-shadow: 0px 0px 20px 6px #00000075;background-color:rgb(45, 48, 56);width:60px;margin-left:3%;padding:10px;border-radius:10px;padding-bottom:1000px">
         <table style="text-align: center; margin: auto;">
           <tbody>
             <td cellpadding="0" valign="top">

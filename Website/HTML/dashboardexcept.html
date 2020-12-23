@@ -20,7 +20,7 @@
         <a class="h" href="<%= address %>/">Home</a>
         
         <a class="h active" href="<%= address %>/app">Dashboard</a></li>
-<a class="h" href="<%= address %>/p">Profiles</a></li>
+<a class="h" href="<%= address %>/status">Status</a></li>
         <a class="h" href="<%= address %>/options">Options</a></li>
         <div class="dropdown">
             <button class="dropbtn">More
@@ -29,26 +29,22 @@
             <div class="dropdown-content">
                 <a class="h" href="<%= address %>/stats">Stats <i class="fa fa-line-chart" aria-hidden="true"></i></a>
 <a class="h" href="<%= address %>/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i></a>
-                <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                
                 <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
-<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
+<a class="h" href="<%= address %>/p">Profiles <i class="fa fa-user" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>
     <div style="padding:21px"></div>
-    <div class="container">
-        <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage"
-            src="/Images/cubes.png">
-        <div class="centered" onselectstart="return false" style="cursor: pointer;">Compass bot - Dashboard</div>
+    <div class="container" style="overflow-x:hidden">
+        <img style="width:2000px;height:300px;pointer-events: none;" class="selectDisable" id="myImage" src="/Images/cubes.png">
+        <div style="position:absolute;font-size:50px;left:10%;transform: translate(0, -50%);top:calc(50% - 35px)">Compass Bot</div>
+        <div style="position:absolute;left:10%;transform: translate(0, -50%);top:calc(50% + 20px);color:#DFE1E5">Dashboard</div>
     </div>
     <div class="topcorner" id="topcorner">
-        <button
-            style="float:right;margin-top:25px;background-color: #ffffff30;color:white;box-shadow: 0px 0px 4px 2px #00000050;border:none;border-radius: 5px;cursor:pointer;"
-            onclick="logout()">Log out</button>
-        <button
-            style="float:right;margin-top:25px;background-color: #ffffff30;color:white;box-shadow: 0px 0px 4px 2px #00000050;border:none;border-radius: 5px;cursor:pointer;"
-            onclick="change()">Switch accounts</button>
+        <button class="formbutton" style="float:right;margin-top:25px;padding:5px" onclick="logout()">Log out</button>
+        <button class="formbutton" style="float:right;margin-top:25px;padding:5px" onclick="change()">Switch accounts</button>
         <%- avatar %>
         <p style="z-index:100;color:white" id="logintext">You're logged in as <%= name %></p>
         
@@ -56,7 +52,7 @@
     <div class="text" style="">
       <div style="background-color:#272b33;padding: 70px 0;text-align: center;margin-top:100px;box-shadow: 0px 0px 20px 5px #00000030;">
         <p style="color:white">You arent in any servers with Compass!</p>
-        <div style="left:50%;top:35%;position: absolute;transform: translate(-50%, -50%);z-index:10;border-radius:50px;"><a onselectstart="return false" class="button selectDisable link" style="background-color:grey" href="https://discord.com/oauth2/authorize?client_id=732208102652379187&permissions=2147483647&scope=bot" target="_blank">Invite me</a></div>
+        <div style="left:50%;top:35%;position: absolute;transform: translate(-50%, -50%);z-index:10;border-radius:50px;"><a onselectstart="return false" class="button selectDisable link" style="background-color:grey" href="/invite" target="_blank">Invite me</a></div>
     </div>
         
 </div>

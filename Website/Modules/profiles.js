@@ -8,8 +8,8 @@ var express = require('express'),
     router = express.Router();
 const app = express()
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.split(",").join("")}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.split(",").join("")}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
 
 const rs = require('../../Resources/rs')
 const codes = require('../../Commands/codes')
@@ -32,8 +32,23 @@ const getAppCookies = (req, res) => {
             parsedCookies[parsedCookie[0]] = parsedCookie[1];
         });
         return parsedCookies;
-    } catch {
+    } catch (err){
         res.redirect('/login')
+    }
+};
+
+const getAppCookies2 = (req, res) => {
+    try {
+        const rawCookies = req.headers.cookie.split('; ');
+
+        const parsedCookies = {};
+        rawCookies.forEach(rawCookie => {
+            const parsedCookie = rawCookie.split('=');
+            parsedCookies[parsedCookie[0]] = parsedCookie[1];
+        });
+        return parsedCookies;
+    } catch (err){
+        return undefined
     }
 };
 
@@ -244,7 +259,8 @@ router.get('/p/:userid/:guildid', (req, res) => {
     user = bot.users.cache.get(user)
     if (!guild.member(user)) {return res.redirect(address + '/p/' + req.params.userid)}
     avatar = user.displayAvatarURL() + '?size=1024'
-    try{id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")}catch{id=undefined}
+    try{id = getAppCookies2(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")}catch{id=undefined}
+    loggedUser = bot.users.cache.get(id)
     fullBalance = 0
     try{
         fullBalance += sql.prepare(`SELECT * FROM balances${guild.id}${user.id} WHERE user = ?`).get(user.id).balance
@@ -254,8 +270,18 @@ router.get('/p/:userid/:guildid', (req, res) => {
     } catch {fullBalance += 0}
     if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || user.id == id) {editButton = `<i class="fa fa-pencil" aria-hidden="true" onmouseover="this.style.color='white'" onmouseout="this.style.color='#9FA6B2'" onclick="window.open('${address}/p/${userid}/edit', '_self')" style="margin-right:30px;margin-top:30px;cursor:pointer;color:#9FA6B2;float:right"></i>`} else {editButton=``}
     grade = generateGuildGrade(guild, user, userid)
+    serverlist = ``
+    tag='____'
+    bot.guilds.cache.forEach((guild) => {if (guild.member(user.id)) {
+        if((getAppCookies2(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(loggedUser)) {
+            tag=user.tag.split("#")[1]
+            serverlist = serverlist + `<div aria-label="Select Server" data-balloon-pos="down" onclick="window.open('/p/${userid}/${guild.id}', '_self')" onmouseover="this.style.backgroundColor='#2C2F33'" onmouseout="this.style.backgroundColor=''" style="border-radius:10px"><span style="display: inline-block;"><img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" src='${guild.iconURL()}'></span><span style="display: inline-block;vertical-align:top;margin-left:5px;margin-top:10px;color:white">${guild.name}</span></div>`
+        } 
+    }});
+    if (serverlist == `` && !loggedUser) {serverlist = `<p style="color:white;padding:20px">You must be <a href='/login'>logged in</a> and in a mutual server with ${user.username} to see ${user.username}'s servers!</p>`} else if (serverlist == ``) {serverlist = `<p style="color:white;padding:20px">You aren't in any mutual servers with ${user.username}</p>`}
     return res.render(path.join(__dirname, '../HTML/Profiles/profileGuild.html'), {
         name: decodeURIComponent(getAppCookies(req, res)['name']),
+        tag:tag,
         id: id,
         avatarURL: avatar,
         address: address,
@@ -269,7 +295,8 @@ router.get('/p/:userid/:guildid', (req, res) => {
         badges:getBadgeString(userid),
         guildIconURL:guild.iconURL(),
         guildName:guild.name,
-        userid:userid
+        userid:userid,
+        serverlist:serverlist
     })
 });
 
@@ -280,7 +307,7 @@ router.get('/p/:userid', (req, res) => {
     try{bot.users.cache.get(user).username}catch{return res.render(path.join(__dirname, '../HTML/Profiles/profileError.html'), {error:"Could not find that user!",address: address,status: `${address}/status`,})}
     user = bot.users.cache.get(user)
     avatar = user.displayAvatarURL() + '?size=1024'
-    try{id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")}catch{id=undefined}
+    try{id = getAppCookies2(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")}catch{id=undefined}
     loggedUser = bot.users.cache.get(id)
     servers = 0
     fullBalance = 0
@@ -295,11 +322,22 @@ router.get('/p/:userid', (req, res) => {
         }
     }
     tag='____'
-    bot.guilds.cache.forEach((guild) => {if (guild.member(user.id)) {servers++;if(guild.member(loggedUser)) {tag=user.tag.split("#")[1]}};    })
-    if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || user.id == id) {editButton = `<i class="fa fa-pencil" aria-hidden="true" onmouseover="this.style.color='white'" onmouseout="this.style.color='#9FA6B2'" onclick="window.open('${address}/p/${userid}/edit', '_self')" style="margin-right:30px;margin-top:30px;cursor:pointer;color:#9FA6B2;float:right"></i>`} else {editButton=``}
+    serverlist = ``
+    try{adminMode = getAppCookies2(req, res)['adminMode']} catch{adminMode = 'off'}
+
+    try{if ((adminMode == 'on' && setup.botadmins.includes(id)) || user.id == id) {editButton = `<i class="fa fa-pencil" aria-hidden="true" onmouseover="this.style.color='white'" onmouseout="this.style.color='#9FA6B2'" onclick="window.open('${address}/p/${userid}/edit', '_self')" style="margin-right:30px;margin-top:30px;cursor:pointer;color:#9FA6B2;float:right"></i>`} else {editButton=``}}catch{editButton=``}
+    bot.guilds.cache.forEach((guild) => {if (guild.member(user.id)) {
+        servers++;if((adminMode == 'on' && setup.botadmins.includes(id)) || guild.member(loggedUser)) {
+            tag=user.tag.split("#")[1]
+            serverlist = serverlist + `<div aria-label="Select Server" data-balloon-pos="down" onclick="window.open('/p/${userid}/${guild.id}', '_self')" onmouseover="this.style.backgroundColor='#2C2F33'" onmouseout="this.style.backgroundColor=''" style="border-radius:10px"><span style="display: inline-block;"><img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" src='${guild.iconURL()}'></span><span style="display: inline-block;vertical-align:top;margin-left:5px;margin-top:10px;color:white">${guild.name}</span></div>`
+        } 
+    }});
+    if (serverlist == `` && !loggedUser) {serverlist = `<p style="color:white;padding:20px">You must be <a href='/login'>logged in</a> and in a mutual server with ${user.username} to see ${user.username}'s servers!</p>`} else if (serverlist == ``) {serverlist = `<p style="color:white;padding:20px">You aren't in any mutual servers with ${user.username}</p>`}
+    
     grade = generateGrade(user, userid)
+    try {username = getAppCookies2(req, res)['name']} catch {username = 'None'}
     return res.render(path.join(__dirname, '../HTML/Profiles/profile.html'), {
-        name: decodeURIComponent(getAppCookies(req, res)['name']),
+        name: decodeURIComponent(username),
         id: id,
         avatarURL: avatar,
         address: address,
@@ -311,13 +349,14 @@ router.get('/p/:userid', (req, res) => {
         grade:`<span style="color:${grade.color}">${grade.letter} (${grade.number})</span>`,
         editButton:editButton,
         description:description,
-        badges:getBadgeString(userid)
+        badges:getBadgeString(userid),
+        serverlist:serverlist
     })
 });
 
 router.get('/p', (req, res) => {
     profiles = JSON.parse(fs.readFileSync('./Databases/profiles.json'))
-    try{id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")}catch{id=undefined}
+    try{id = getAppCookies2(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")}catch{id=undefined}
     var shuffled = bot.users.cache.array().sort(function(){return .5 - Math.random()});
     var selected=shuffled.slice(0,50);
     randomIDS = [id]
@@ -329,23 +368,37 @@ router.get('/p', (req, res) => {
     for (id_ of randomIDS) {
         if (counter == 4) {data = data + `</tr></table><table width="100%" height="350px"><tr>`;counter=0}
         try{user = bot.users.cache.get(id_)
-        userid = checkUser(encodeURIComponent(user.id))
-        data+=`<td style="padding:5px;" width="${functions.int(13,30)}%"><span class="profileoption" style="float:top;cursor:pointer;height:90%;width:90%;margin-left:5%" onclick="window.open('/p/${checkUser(user.id)}', '_self')">
-        <div class="profileoptionimage" style="background-position:center;min-height:60%;background-image: url(${user.displayAvatarURL() + '?size=1024'});background-size:100%;"><br></div>
-            <center>
-                <span style="color:white;display: inline-block;vertical-align:top;padding-top:10px">${user.username}</span>
-                <span style="display: inline-block;vertical-align:top;padding:4px 0px 5px 0px">${getBadgeString(userid).split(`style="cursor:auto"`).join(``)}
+            userid = checkUser(encodeURIComponent(user.id))
+            fullBalance = 0
+            for (item of sql.prepare(`SELECT * from sqlite_master where type='table'`).iterate()) {
+                doit=false;
+                try{if (bot.guilds.cache.get(item["name"].replace(user.id, "").replace("balances", "")).member(user.id)) {doit=true}}catch{}
+                if (item["name"].includes(user.id) && doit==true) {
+                    try {balance = sql.prepare(`SELECT * FROM ${item["name"]} WHERE user = ?`).get(user.id).balance} catch {balance = 0}
+                    try {balanceBank = sql.prepare(`SELECT * FROM ${item["name"]} WHERE user = ?`).get("bank" + user.id).balance} catch {balanceBank = 0}
+                    fullBalance += balance;
+                    fullBalance+=balanceBank;
+                }
+            }
+            if (fullBalance>5) {
+                data+=`<td style="padding:5px;" width="${functions.int(13,30)}%"><span class="profileoption" style="float:top;cursor:pointer;height:90%;width:90%;margin-left:5%" onclick="window.open('/p/${checkUser(user.id)}', '_self')">
+                <div class="profileoptionimage" style="background-position:center;min-height:60%;background-image: url(${user.displayAvatarURL() + '?size=1024'});background-size:100%;"><br></div>
+                    <center>
+                        <span style="color:white;display: inline-block;vertical-align:top;padding-top:10px">${user.username}</span>
+                        <span style="display: inline-block;vertical-align:top;padding:4px 0px 5px 0px">${getBadgeString(userid).split(`style="cursor:auto"`).join(``)}
+                        </span>
+                    </center>
                 </span>
-            </center>
-        </span>
-    </span></td>`;counter++;} catch{}
+            </span></td>`;counter++;
+            }
+        } catch{}
     }
     data = data + `</tr></table>`
     
-    if (decodeURIComponent(getAppCookies(req, res)['name']) != 'undefined') {name = decodeURIComponent(getAppCookies(req, res)['name'])} else {name = "None"}
+    if (id!=undefined) {avatar=`<img class="avatar" id="output" src="https://cdn.discordapp.com/avatars/${id}/${getAppCookies2(req, res)['avatar']}.png?size=1024">`;name = decodeURIComponent(getAppCookies(req, res)['name'])} else {avatar=`<p>NoAv</p>`;name = "None"}
     return res.render(path.join(__dirname, '../HTML/Profiles/profiles.html'), {
         name: name,
-        avatar:`<img class="avatar" id="output" src="https://cdn.discordapp.com/avatars/${id}/${getAppCookies(req, res)['avatar']}.png?size=1024">`,
+        avatar:avatar,
         id: id,
         address: address,
         status: `${address}/status`,
@@ -355,3 +408,5 @@ router.get('/p', (req, res) => {
 
 module.exports = router;
 module.exports.checkUser = checkUser;
+module.exports.generateGrade = generateGrade
+module.exports.generateGuildGrade = generateGuildGrade

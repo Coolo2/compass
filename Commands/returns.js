@@ -3,8 +3,8 @@ const functions = require('../functions')
 const setup = require('./databasesetup')
 const getprefix = require('./prefix')
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.split(",").join("")}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.split(",").join("")}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
 
 const SQLite = require("better-sqlite3");
 const sql = new SQLite('./Databases/cooldowns.sqlite');
@@ -42,7 +42,7 @@ function returns(message) {
             console.log(err)
         }
         score = sql.prepare(`SELECT * FROM returns${message.guild.id} WHERE type=?`).get(choice).value
-        message.channel.send(functions.embed("Set return amount for " + message.guild.name, `Set the ${choice} return amount for ${message.guild.name} to ${score}`, r.s))
+        message.channel.send(functions.embed("Set return amount for " + message.guild.name, `Set the ${choice} return amount for ${message.guild.name} to ${score.sep()}`, r.s))
     }
 }
 

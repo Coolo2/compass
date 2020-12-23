@@ -13,9 +13,11 @@ router.get('/about',function(req,res){
   res.sendFile(path.join(__dirname+'/HTML/index.html'));
 });
 
+
+
 router.get('*', function(req, res){
     res.sendFile(path.join(__dirname+'/HTML/404.html'));
-  });
+});
 
 app.use('/', router);
 app.listen(process.env.port || 5000);

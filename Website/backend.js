@@ -38,13 +38,6 @@ router.get('/api', function (req, res) {
   res.send({"ERROR":"No section provided", "documentation":address + "/documentation/api"})
 })
 
-router.get('/about', function (req, res) {
-  res.render(path.join(__dirname + '/HTML/about.html'), {
-    address:address, 
-    status:`${address}/status`
-});
-});
-
 router.get('/changelogs', function (req, res) {
   res.render(path.join(__dirname + '/HTML/changelogs.html'), {
       address:address, 
@@ -143,8 +136,13 @@ router.get('/loginswitch', (req, res) => {
 });
 
 router.get('/supportserver', function (req, res) {
-  res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&scope=guilds.join&prompt=none&redirect_uri=${redirectSUPPORT}`)
+  res.redirect(setup.server)
 })
+
+router.get('/invite', function (req, res) {
+  res.redirect(setup.invite)
+})
+
 
 router.get('/supportserverswitch', function (req, res) {
   res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&scope=guilds.join&redirect_uri=${redirectSUPPORT}`)
@@ -215,7 +213,7 @@ router.get('/app', (req, res) => {
       if (isNaN(id) == false) {
         user = {"name":getAppCookies(req, res)['name'],"id":getAppCookies(req, res)['id']}
         place = '/HTML/dashboardexcept.html'
-        }
+        } else {res.redirect('/login')}
     }
   } catch {
     res.redirect('/login')

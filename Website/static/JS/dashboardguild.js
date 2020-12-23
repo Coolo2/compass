@@ -83,4 +83,4 @@ $.fn.followTo = function (pos) {
     });
 };
 
-$('#topcorner').followTo(200);
+$('#topcorner').followTo(215);

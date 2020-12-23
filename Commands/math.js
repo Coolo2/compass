@@ -1,5 +1,4 @@
 const Discord = require('discord.js-light');
-const client = new Discord.Client();
 const math = require('mathjs');
 const functions = require('../functions')
 

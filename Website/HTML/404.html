@@ -1,38 +1,48 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    
     <title>Compass Bot - Error</title>
-<link rel="icon" href="/Images/favicon.png">
+    <link rel="icon" href="/Images/favicon.png">
     <link href="/CSS/index.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Compass Bot (404)" />
+    <meta property="og:title" content="Compass Bot" />
     <meta property="og:description" content="Compass bot - An advanced, customizable Economy and Moderation Discord Bot." />
     <meta property="og:url" content="<%- address %>" />
     <meta property="og:image" content="/Images/icon.png" />
     <meta name="theme-color" content="#272b33">
 </head>
-<body style="background:#1C1F26">
-    <div class="container">
-        <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage"
-            src="/Images/cubes.png">
-        <button id="centerbutton" class="centerbutton" onclick="clickfunction()" type="button">You've come across an invalid page! Return home<span id="invitetext" class="invarrow"></span></button>
+<body id="thebody" style="background-color:#1C1F26;background-image: url('/Images/cubes.png');background-repeat: repeat;">
+    <div class="navbar" id="topper">
+        <a class="h" href="/">Home</a>
+        
+        <a class="h" href="/app">Dashboard</a></li>
+<a class="h" href="/status">Status</a></li>
+<a class="h" href="/options">Options</a></li>
+        <div class="dropdown">
+            <button class="dropbtn">More
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a class="h" href="/stats">Stats <i class="fa fa-line-chart" aria-hidden="true"></i></a>
+<a class="h" href="/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i></a>
+                
+                <a class="h" href="/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
+                <a class="h" href="/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+<a class="h" href="/p">Profiles <i class="fa fa-user" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <a style="float:right" class="h" target="_blank" href="/invite" >Invite me</a>
+        <a style="float:right"class="h" href="/supportserver" target="_blank">Join Support Server</a>
     </div>
+      <div style="padding:22px"></div>
+        <div style="margin-left:5%;margin-top:5%">
+            <span style="font-size:165px;color:white">404</span>
+            <div style="padding-top:10px"></div>
+            <span style="color:#DFE1E5;font-size:45px">You've ran into a 404 error (invalid url). Return home?</span>
+        </div>
 </body>
-<script>
-    window.onload = function () {
-        document.getElementById("centerbutton").classList.add("appear");
-        setTimeout(function () {
-            document.getElementById("invitetext").textContent = "  >";
-            document.getElementById("centerbutton").classList.add("bigger");
-        }, 500);
-    };
-
-    function clickfunction() {
-        window.open('/',"_self");
-    }
-    document.getElementById('myImage').setAttribute('draggable', false);
-</script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://jqfg9298q74g.statuspage.io/embed/script.js"></script>
+<script src="/JS/index.js"></script>
 </html>

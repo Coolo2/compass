@@ -3,8 +3,8 @@ const functions = require('../functions')
 const databasesetup = require('./databasesetup')
 const prefixes = require('./prefix')
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.split(",").join("")}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.split(",").join("")}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
 
 const SQLite = require("better-sqlite3");
 const fs = require('fs')
@@ -17,7 +17,6 @@ const sql = new SQLite('./Databases/balances.sqlite');
 const emojis = require('./emoji');
 
 const r = require('../Resources/rs');
-const { isInteger } = require("mathjs");
 
 function startup(server, member) {
     require('./databasesetup').startup(server, member)

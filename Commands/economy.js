@@ -5,8 +5,8 @@ const functions = require('../functions')
 
 const r = require('../Resources/rs')
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.split(",").join("")}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.split(",").join("")}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
 
 const cooldowns = require('./cooldowns')
 const returns = require('./returns')
@@ -39,7 +39,7 @@ function add(message) {
     const command = args.shift().toLowerCase();
     const member = args.splice(0,1).join(" ")
     amount = args.splice(0).join(" ")
-    if (command === 'addmoney') {
+    if (['addmoney', 'add-money'].includes(command)) {
         if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
         if (!message.member.hasPermission("MANAGE_GUILD")) {
             return message.channel.send(functions.error("You are missing manage server permissions to use this command"))
@@ -69,7 +69,7 @@ function remove(message) {
     const command = args.shift().toLowerCase();
     const member = args.splice(0,1).join(" ")
     amount = args.splice(0).join(" ")
-    if (command === 'removemoney') {
+    if (['removemoney', 'remove-money'].includes(command)) {
         if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
         if (!message.member.hasPermission("MANAGE_GUILD")) {
             return message.channel.send(functions.error("You are missing manage server permissions to use this command"))
@@ -362,19 +362,20 @@ function removereply(message) {
 function leaderboards(message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
-    if (['leaderboards', 'leaders', 'lb'].includes(command)) {
+    if (['leaderboards', 'leaders', 'lb', 'leaderboard', 'lbs'].includes(command)) {
         if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
         final = []
         finalj = {}
         for (tables of sql.prepare("select name from sqlite_master where type='table'").iterate()) {
             if (tables.name.replace("balances", "").startsWith(message.guild.id)) {
                 try{user = message.guild.members.cache.find(member => member.user.id === tables.name.replace(message.guild.id, "").replace("balances", "")).user
-                try {
-                    score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(user.id).balance
-                } catch {}
-                if (score == 0) return
-                finalj[score] = {username:user.username,id:user.id}
-                final.push(score)}catch{}
+                try {score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(user.id).balance} catch {score=0}
+                try {scorebank = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get("bank" + user.id).balance} catch {scorebank=0}
+                if (score + scorebank != 0) {
+                    finalj[score + scorebank] = {username:user.username,id:user.id}
+                    final.push(score + scorebank)
+                }
+            }catch{}
             }
         }
         final.sort(function(a, b) {
@@ -385,7 +386,7 @@ function leaderboards(message) {
         counter = 0
         final.forEach(item => {
             counter = counter + 1
-            lb = lb.concat(counter + `. **[${finalj[item].username}](${JSON.parse(fs.readFileSync('./Resources/website.json')).address + '/p/' + require('../Website/Modules/profiles').checkUser(finalj[item].id) + '/' + message.guild.id})**: ` + item.sep() + " " + emojis.get(message.guuk) + "\n")
+            lb = lb.concat(counter + `. **[${finalj[item].username}](${JSON.parse(fs.readFileSync('./Resources/website.json')).address + '/p/' + require('../Website/Modules/profiles').checkUser(finalj[item].id) + '/' + message.guild.id})**: ` + item.sep() + " " + emojis.get(message.guild) + "\n")
         })
         if (lb == "") {return message.channel.send(functions.embed("Leaderboard for " + message.guild.name, "*Its feeling kinda empty in here! Check out economy commands with **" + prefixes.get(message.guild) + "help economy**!*", r.d))}
         message.channel.send(functions.embed("Leaderboard for " + message.guild.name, lb, r.d))

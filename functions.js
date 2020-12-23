@@ -1,7 +1,5 @@
 const Discord = require("discord.js-light");
 
-const bot = require('./compass').bot
-
 const prefixes = require('./Commands/prefix')
 
 const r = require('./Resources/rs')
@@ -20,12 +18,20 @@ function getUserFromMention(mention) {
 	}
 }
 
-function CreateEmbed(title, description, color) {
-	const exampleEmbed = new Discord.MessageEmbed()
-		.setColor(color)
-		.setTitle(title)
-		.setDescription(description)
-		.setTimestamp()
+function CreateEmbed(title, description, color, noTimestamp) {
+	if (!noTimestamp) {
+		exampleEmbed = new Discord.MessageEmbed()
+			.setColor(color)
+			.setTitle(title)
+			.setDescription(description)
+			.setTimestamp()
+	} else {
+		exampleEmbed = new Discord.MessageEmbed()
+			.setColor(color)
+			.setTitle(title)
+			.setDescription(description)
+	}
+	
 	return exampleEmbed
 }
 
@@ -47,22 +53,9 @@ function randomchoice(choices) {
 	return choices[index];
 }
 
-function realuserfromarg(args) { 
-	try {
-		return bot.users.cache.find(member => member.username.toLowerCase().replace(/[0-9]/g, '') === args.toLowerCase().replace(/[0-9]/g, ''))
-	} catch {
-		try {
-			return bot.users.cache.find(member => member.id === args)
-		}
-		catch {
-			return "none"
-		} 
-	}
-}
-
 function userfromarg(message, args) { 
 	try {
-		return message.guild.members.cache.find(member => member.user.username.toLowerCase().replace(/[0-9]/g, '') === args.toLowerCase().replace(/[0-9]/g, '')).user
+		return message.guild.members.cache.find(member => member.user.username.toLowerCase().replace(/[0-9]/g, '').replace(new RegExp(` `, 'g'), ``) === args.toLowerCase().replace(/[0-9]/g, '').replace(/[0-9]/g, '').replace(new RegExp(` `, 'g'), ``)).user
 	} catch {
 		try {
 			return message.guild.members.cache.find(member => member.user.id === args).user
@@ -94,12 +87,25 @@ const fs = require('fs')
 function GetHelp(guild, section) {
 	helpjson = JSON.parse(fs.readFileSync('./Resources/commands.json'))
 	returnvalue = ""
+	counter = 1
 	for (k in helpjson[section]) {
 		var obj = helpjson[section][k]
-		returnvalue = returnvalue.concat(`** ${obj.usage.replace("[prefix]", require('.//Commands/prefix').get(guild))}**\n`)
+		returnvalue = returnvalue.concat(`**${counter}.** ${obj.usage.replace("[prefix]", require('.//Commands/prefix').get(guild))}\n`)
+		counter++
 	}
 	return returnvalue
 }
+
+function GetHelpStr(guild, section) {
+	helpjson = JSON.parse(fs.readFileSync('./Resources/commands.json'))
+	returnvalue = ""
+	for (k in helpjson[section]) {
+		var obj = helpjson[section][k]
+		returnvalue = returnvalue.concat(`\`${obj.name.replace("[prefix]", require('.//Commands/prefix').get(guild))}\`, `)
+	}
+	return returnvalue
+}
+
 function channelfromarg(guild, args) { 
 	try {
 		channel = guild.channels.cache.find(channel => channel.name === args)
@@ -185,4 +191,4 @@ module.exports.randomcommandusage = randomcommandusage
 module.exports.encode = encode 
 module.exports.decode = decode
 module.exports.commandArray = commandArray
-module.exports.realuserfromarg = realuserfromarg
+module.exports.GetHelpStr = GetHelpStr

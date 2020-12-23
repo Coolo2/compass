@@ -20,27 +20,27 @@
         <a class="h" href="<%= address %>/">Home</a>
         
         <a class="h" href="<%= address %>/app">Dashboard</a></li>
-<a class="h active" href="<%= address %>/p">Profiles</a></li>
+        <a class="h" href="<%= address %>/status">Status</a></li>
         <a class="h" href="<%= address %>/options">Options</a></li>
         <div class="dropdown">
-            <button class="dropbtn">More
+            <button class="dropbtn" style="background-color:gray">More
                 <i class="fa fa-caret-down"></i>
             </button>
             <div class="dropdown-content">
                 <a class="h" href="<%= address %>/stats">Stats <i class="fa fa-line-chart" aria-hidden="true"></i></a>
 <a class="h" href="<%= address %>/documentation">Documentation <i class="fa fa-book" aria-hidden="true"></i></a>
-                <a class="h" href="<%= address %>/about">About <i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                
                 <a class="h" href="<%= address %>/commands">Commands <i class="fa fa-list" aria-hidden="true"></i></a>
                 <a class="h" href="<%= address %>/changelogs">Changelogs <i class="fa fa-file-text-o" aria-hidden="true"></i></a>
-<a class="h" href="<%= address %>/status">Status <i class="fa fa-clock-o" aria-hidden="true"></i></a>
+<a class="h active" href="<%= address %>/p">Profiles <i class="fa fa-user" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>
     <div style="padding:21px"></div>
-    <div class="container">
-        <img style="width:100%;height:50%;pointer-events: none;" class="selectDisable" id="myImage"
-            src="/Images/cubes.png">
-        <div class="centered" onselectstart="return false" style="cursor: context-menu;">Compass bot - Profiles</div>
+    <div class="container" style="overflow-x:hidden">
+        <img style="width:2000px;height:300px;pointer-events: none;" class="selectDisable" id="myImage" src="/Images/cubes.png">
+        <div style="position:absolute;font-size:50px;left:10%;transform: translate(0, -50%);top:calc(50% - 35px)">Compass Bot</div>
+        <div style="position:absolute;left:10%;transform: translate(0, -50%);top:calc(50% + 20px);color:#DFE1E5">Profiles</div>
     </div>
     <div class="topcornerdiv" id="topcorner">
         <button
@@ -50,38 +50,11 @@
             style="float:right;margin-top:25px;background-color: #ffffff30;color:white;box-shadow: 0px 0px 4px 2px #00000050;border:none;border-radius: 5px;cursor:pointer;"
             onclick="change()">Switch accounts</button>
         <%- avatar %>
-        <p style="z-index:100;color:white" id="logintext">You're logged in as <span onmouseover="this.style.color='#9FA6B2'" onmouseout="this.style.color='white'" style="cursor:pointer;text-decoration:underline" onclick='window.open("<%- address %>/p/<%- id %>")'><%= name %></span></p>
+        <p style="z-index:100;color:white" id="logintext">You're logged in as <span onmouseover="this.style.color='#9FA6B2'" onmouseout="this.style.color='white'" style="cursor:pointer;text-decoration:underline" aria-label="View your profile" data-balloon-pos="left" onclick='window.open("<%- address %>/p/<%- id %>", "_self")'><%= name %></span></p>
 
     </div>
     <div class="text">
         <div class="dataSection" style="box-shadow: 0px 0px 20px 6px #00000050;border-radius:10px;background-color:#1C1F26;top:0;width:90%;margin-left:5%;padding-bottom:500px">
-            <!--<table width="100%" height="350px">
-                <tr>
-                    <td style="border:5px solid black" width="15%">
-                        <span class="profileoption" style="float:top;cursor:pointer;height:90%;width:90%;margin-left:5%" onclick="window.open('/p/coolo')">
-                            <div style="min-height:60%;border-radius:10px;background-image:url(https://i.ibb.co/Sr53YYx/work.png)"><br></div>
-                                <center>
-                                    <span style="color:white;display: inline-block;vertical-align:top;padding-top:10px">Coolo2</span>
-                                    <span style="display: inline-block;vertical-align:top;padding:4px 0px 5px 0px">
-                                    </span>
-                                </center>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="border:5px solid black" width="25%">30</td>
-                    <td style="border:5px solid black" width="26%">20</td>
-                    <td style="border:5px solid black" width="20%">20</td>
-                </tr>
-                
-            </table>
-            <table width="100%" height="350px">
-                <tr>
-                    <td style="border:5px solid black" width="27%">50</td>
-                    <td style="border:5px solid black" width="18%">50</td>
-                    <td style="border:5px solid black" width="21%">30</td>
-                    <td style="border:5px solid black" width="16%">20</td>
-                </tr>
-            </table>-->
             <%- table %>
         </div>
         </div>

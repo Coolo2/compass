@@ -10,8 +10,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 const fs = require('fs')
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.split(",").join("")}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.split(",").join("")}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
 
 var automatedRoutes = require('../automated');
 const bodyParser = require('body-parser');
@@ -22,6 +22,9 @@ app.use(bodyParser.urlencoded({
 }));
 bot = require('../../compass').bot
 const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
+
+router.use(bodyParser.urlencoded({extended: true}));
+router.use(bodyParser.json());
 
 function contents() {
   return fs.readFileSync('.//Resources/workreplies.json')
@@ -63,17 +66,16 @@ router.get('/api/balance/:guildid/:memberid', (req, res, next) => {
   return res.send(final)
 })
 
-router.get('/app/:guildid/:memberid/remove', (req, res, next) => {
+router.post('/app/:guildid/:memberid/remove', (req, res, next) => {
   guild = bot.guilds.cache.get(req.params.guildid)
   user = bot.users.cache.get(req.params.memberid)
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
-  reply = req.query.replydata
-  if (req.query.balance.jn()=="") {return res.redirect(`${address}/app/${guild.id}/members`)}
-  if (isNaN(req.query.balance.jn())) {return res.redirect(`${address}/app/${guild.id}/members`)}
+  if (req.body.balance.jn()=="") {return res.redirect(`${address}/app/${guild.id}/members`)}
+  if (isNaN(req.body.balance.jn())) {return res.redirect(`${address}/app/${guild.id}/members`)}
   if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") && !member.bot) {
     startup(guild, user)
-    toadd = Math.floor(req.query.balance.jn())
+    toadd = Math.floor(req.body.balance.jn())
     try {
       score = sql.prepare(`SELECT * FROM balances${guild.id}${user.id} WHERE user = ?`).get(user.id).balance
       sql.prepare(`INSERT OR REPLACE INTO balances${guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(user.id, (score - toadd));
@@ -90,17 +92,16 @@ router.get('/app/:guildid/:memberid/remove', (req, res, next) => {
 });
 
 
-router.get('/app/:guildid/:memberid/add', (req, res, next) => {
+router.post('/app/:guildid/:memberid/add', (req, res, next) => {
   guild = bot.guilds.cache.get(req.params.guildid)
   user = bot.users.cache.get(req.params.memberid)
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
-  reply = req.query.replydata
-  if (req.query.balance.jn()=="") {return res.redirect(`${address}/app/${guild.id}/members`)}
-  if (isNaN(req.query.balance.jn())) {return res.redirect(`${address}/app/${guild.id}/members`)}
+  if (req.body.balance.jn()=="") {return res.redirect(`${address}/app/${guild.id}/members`)}
+  if (isNaN(req.body.balance.jn())) {return res.redirect(`${address}/app/${guild.id}/members`)}
   if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") && !member.bot) {
     startup(guild, user)
-    toadd = Math.floor(req.query.balance.jn())
+    toadd = Math.floor(req.body.balance.jn())
     try {
       score = sql.prepare(`SELECT * FROM balances${guild.id}${user.id} WHERE user = ?`).get(user.id).balance
       sql.prepare(`INSERT OR REPLACE INTO balances${guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(user.id, (score + toadd));
@@ -115,17 +116,16 @@ router.get('/app/:guildid/:memberid/add', (req, res, next) => {
   }
 });
 
-router.get('/app/:guildid/:memberid/set', (req, res, next) => {
+router.post('/app/:guildid/:memberid/set', (req, res, next) => {
   guild = bot.guilds.cache.get(req.params.guildid)
   user = bot.users.cache.get(req.params.memberid)
   id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
   member = functions.memberfromarg(guild, id)
-  reply = req.query.replydata
-  if (req.query.balance.jn()=="") {return res.redirect(`${address}/app/${guild.id}/members`)}
-  if (isNaN(req.query.balance.jn())) {return res.redirect(`${address}/app/${guild.id}/members`)}
+  if (req.body.balance.jn()=="") {return res.redirect(`${address}/app/${guild.id}/members`)}
+  if (isNaN(req.body.balance.jn())) {return res.redirect(`${address}/app/${guild.id}/members`)}
   if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD") && !member.bot) {
     startup(guild, user)
-    toadd = Math.floor(req.query.balance.jn())
+    toadd = Math.floor(req.body.balance.jn())
     try {
       score = sql.prepare(`SELECT * FROM balances${guild.id}${user.id} WHERE user = ?`).get(user.id).balance
       sql.prepare(`INSERT OR REPLACE INTO balances${guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(user.id, toadd);
@@ -155,7 +155,7 @@ router.get('/app/:guildid/members', (req, res) => {
           disabled = "disabled"
         }
         if (!member.user.bot) {
-            humans = humans.concat(`<div class="members"><img src='${member.user.displayAvatarURL()}' width='50px' height='50px' style='border-radius:50px;top:50px;'><b>Member: <span onmouseover="this.style.color='#9FA6B2'" aria-label="View ${member.user.username}'s profile" data-balloon-pos="up" onmouseout="this.style.color='white'" style="cursor:pointer;text-decoration:underline" onclick='window.open("${address}/p/${require('./profiles').checkUser(member.user.id)}/${guild.id}", "_self")'>${member.user.username}</span></b> - Balance: ${require('../../Extras/balance').user(guild, member.user).sep()}<span style="padding-left:30px;"> </span><form action="${member.id}/add" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Add money" ${disabled}/></form><form action="${member.id}/remove" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Remove money" ${disabled}/></form><form action="${member.id}/set" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Set balance" ${disabled}/></form></div><div style="padding:10px;"></div>`)
+            humans = humans.concat(`<div class="members"><img src='${member.user.displayAvatarURL()}' width='50px' height='50px' style='border-radius:50px;top:50px;'><b>Member: <span onmouseover="this.style.color='#9FA6B2'" aria-label="View ${member.user.username}'s profile" data-balloon-pos="up" onmouseout="this.style.color='white'" style="cursor:pointer;text-decoration:underline" onclick='window.open("${address}/p/${require('./profiles').checkUser(member.user.id)}/${guild.id}", "_self")'>${member.user.username}</span></b> - Balance: ${require('../../Extras/balance').user(guild, member.user).sep()}<span style="padding-left:30px;"> </span><form action="${member.id}/add" method="post"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Add money" ${disabled}/></form><form action="${member.id}/remove" method="post"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Remove money" ${disabled}/></form><form action="${member.id}/set" method="post"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Set balance" ${disabled}/></form></div><div style="padding:10px;"></div>`)
         } else {
           bots = bots.concat(`<div class="members"><img src='${member.user.displayAvatarURL()}' width='50px' height='50px' style='border-radius:50px;top:50px;'><b>Bot: ${member.user.username}</b> - Balance: ${require('../../Extras/balance').user(guild, member.user).sep()}<span style="padding-left:30px;"> </span><form action="${member.id}/add" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Add money" ${disabled}/></form><form action="${member.id}/remove" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Remove money" ${disabled}/></form><form action="${member.id}/set" method="get"><input type="text" autocomplete="off" class="forminput${disabled}" name="balance" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Set balance" ${disabled}/></form></div><div style="padding:10px;"></div>`)
       }

@@ -6,8 +6,8 @@ const website = JSON.parse(require('fs').readFileSync('./Resources/website.json'
 const r = require('../Resources/rs');
 const Compass = require('../compass');
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.split(",").join("")}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.split(",").join("")}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
 
 function botinfo(message, bot) {
     const args = message.content.slice(prefix.length).split(' ');
@@ -35,6 +35,15 @@ function support(message) {
     }
 }
 
+function ping(bot, message) {
+    const args = message.content.slice(prefix.length).split(' ');
+    const command = args.shift().toLowerCase();
+    if (["ping", "latency"].includes(command)) {
+        message.channel.send(`🏓 Pong! ${(Date.now() - message.createdTimestamp)*-1}ms`);
+    }
+}
+
+
 readable = require('./cooldowns').readable
 
 function uptime(message) {
@@ -49,3 +58,4 @@ function uptime(message) {
 module.exports.uptime = uptime
 module.exports.botinfo = botinfo
 module.exports.support = support
+module.exports.ping = ping

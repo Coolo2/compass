@@ -5,63 +5,72 @@
             "description":"Kick a user",
             "usage":"[prefix]kick [user]",
             "permissions":"Kick members",
-            "aliases":["kick"]
+            "aliases":["kick"],
+            "slashCommand":false
         },
         "ban":{
             "name":"ban",
             "description":"Ban a user",
             "usage":"[prefix]ban [user]",
             "permissions":"Ban members",
-            "aliases":["ban"]
+            "aliases":["ban"],
+            "slashCommand":false
         },
         "warn":{
             "name":"warn",
             "description":"Warn/strike a user",
             "usage":"[prefix]warn [user] *[reason]",
             "permissions":"Manage messages",
-            "aliases":["warn"]
+            "aliases":["warn"],
+            "slashCommand":false
         },
         "warns":{
             "name":"warns",
             "description":"Get warns for a user or server",
             "usage":"[prefix]warns *[user]",
             "permissions":"none",
-            "aliases":["warns"]
+            "aliases":["warns"],
+            "slashCommand":false
         },
         "delwarn":{
             "name":"delwarn",
             "description":"Delete warns for a user or server",
             "usage":"[prefix]delwarn [id/all] *[user]",
             "permissions":"Manage messages",
-            "aliases":["delwarn"]
+            "aliases":["delwarn"],
+            "slashCommand":false
         },
         "purge":{
             "name":"purge",
             "description":"Purge a certain amount of messages",
             "usage":"[prefix]purge [amount]",
             "permissions":"Manage messages",
-            "aliases":["nuke", "purge", "massdelete"]
+            "aliases":["nuke", "purge", "massdelete"],
+            "slashCommand":false
         },
         "disable":{
             "name":"disable",
             "description":"Disable a channel from the bot working in",
             "usage":"[prefix]disable [channel]",
             "permissions":"Manage channels",
-            "aliases":["block", "disable"]
+            "aliases":["block", "disable"],
+            "slashCommand":false
         },
         "enable":{
             "name":"enable",
             "description":"Enable a disabled channel",
             "usage":"[prefix]enable [channel]",
             "permissions":"Manage channels",
-            "aliases":["unblock", "enable"]
+            "aliases":["unblock", "enable"],
+            "slashCommand":false
         },
         "prefix":{
             "name":"prefix",
             "description":"See and set server prefix",
             "usage":"[prefix]prefix *[prefix to set]",
             "permissions":"Manage server",
-            "aliases":["prefix", "setprefix", "serverprefix"]
+            "aliases":["prefix", "setprefix", "serverprefix"],
+            "slashCommand":false
         }
     },
     "EconomyGames": {
@@ -70,77 +79,104 @@
             "description":"Work and get money",
             "usage":"[prefix]work",
             "permissions":"none",
-            "aliases":["work"]
+            "aliases":["work"],
+            "slashCommand":false
         },
         "crime": {
             "name":"crime",
             "description":"Attempt a crime, either get a huge reward or get a fine!",
             "usage":"[prefix]crime",
             "permissions":"none",
-            "aliases":["crime"]
+            "aliases":["crime"],
+            "slashCommand":false
         },
         "rob": {
             "name":"rob",
             "description":"Attempt to rob someone, either successfully take money or get fined!",
             "usage":"[prefix]rob [user]",
             "permissions":"none",
-            "aliases":["rob", "steal"]
+            "aliases":["rob", "steal"],
+            "slashCommand":false
         },
         "daily": {
             "name":"daily",
             "description":"Get money on a daily basis",
             "usage":"[prefix]daily",
             "permissions":"none",
-            "aliases":["daily"]
+            "aliases":["daily"],
+            "slashCommand":false
         },
         "lower": {
             "name":"lower",
             "description":"Guess a higher number than the bot and win! Lower the guess, higher the winning.",
             "usage":"[prefix]lower [1-99] [bet]",
             "permissions":"none",
-            "aliases":["lower"]
+            "aliases":["lower"],
+            "slashCommand":false
         },
         "crash": {
             "name":"crash",
             "description":"Stop before you crash! Multiplier of profit gains every 2 seconds.",
             "usage":"[prefix]crash [bet]",
             "permissions":"none",
-            "aliases":["crash"]
+            "aliases":["crash"],
+            "slashCommand":false
         },
         "balance": {
             "name":"balance",
             "description":"Get a user's (or your own) balance",
             "usage":"[prefix]balance *[user]",
             "permissions":"none",
-            "aliases":["balance", "bal"]
+            "aliases":["balance", "bal"],
+            "slashCommand":false
         },
         "deposit": {
             "name":"deposit",
             "description":"Deposit to bank",
             "usage":"[prefix]deposit [amount/all]",
             "permissions":"none",
-            "aliases":["deposit", "dep", "d"]
+            "aliases":["deposit", "dep", "d"],
+            "slashCommand":false
         },
         "withdrawl": {
             "name":"withdrawl",
             "description":"Withdrawl to cash",
             "usage":"[prefix]withdrawl [amount/all]",
             "permissions":"none",
-            "aliases":["withdrawl", "with", "w"]
+            "aliases":["withdrawl", "with", "w"],
+            "slashCommand":false
+        },
+        "pay": {
+            "name":"pay",
+            "description":"Pay a user",
+            "usage":"[prefix]pay [user] [amount]",
+            "permissions":"none",
+            "aliases":["pay", "transfer", "give"],
+            "slashCommand":false
         },
         "redeem-code": {
             "name":"redeem-code",
             "description":"Redeem a server-wide or global code",
             "usage":"[prefix]redeem-code [code]",
             "permissions":"none",
-            "aliases":["redeem", "redeem-code", "redeemcode"]
+            "aliases":["redeem", "redeem-code", "redeemcode"],
+            "slashCommand":false
         },
         "leaderboard": {
             "name":"leaderboard",
             "description":"Get the server's economy leaderboard!",
             "usage":"[prefix]leaderboard",
             "permissions":"none",
-            "aliases":["lb", "leaders", "leaderboard"]
+            "aliases":["lb", "leaders", "leaderboard", "leaderboards", "lbs"],
+            "slashCommand":false
+        },
+        "profile": {
+            "name":"profile",
+            "description":"View a users server or global profile!",
+            "usage":"[prefix]profile *[server/global] *[user]",
+            "permissions":"none",
+            "aliases":["profile", "economyprofile"],
+            "slashCommand":false
         }
     },
     "EconomyOpts":{
@@ -149,84 +185,96 @@
             "description":"Generate a code to get credits (useful for giveways etc)",
             "usage":"[prefix]generate-code [code credit amount]",
             "permissions":"Manage server",
-            "aliases":["generate", "generate-code", "generatecode"]
+            "aliases":["generate", "generate-code", "generatecode"],
+            "slashCommand":false
         },
         "delete-code": {
             "name":"delete-code",
             "description":"Delete a server-wide code",
             "usage":"[prefix]delete-code [code]",
             "permissions":"Manage server",
-            "aliases":["delete", "delete-code", "deletecode"]
+            "aliases":["delete", "delete-code", "deletecode"],
+            "slashCommand":false
         },
         "set-cooldown": {
             "name":"set-cooldown",
             "description":"Set and view server cooldowns",
             "usage":"[prefix]set-cooldown *[work/crime] *[cooldown(m/s/h)]",
             "permissions":"Manage server",
-            "aliases":["sc", "set-cooldown", "cooldown", "cooldowns", "setcooldown"]
+            "aliases":["sc", "set-cooldown", "cooldown", "cooldowns", "setcooldown"],
+            "slashCommand":false
         },
         "set-return": {
             "name":"set-return",
             "description":"Set the lower and upper choices for the return randomizer",
             "usage":"[prefix]set-cooldown *[command] *[return-lower] *[return-upper]",
             "permissions":"Manage server",
-            "aliases":["set-return", "setreturn", "return", "returns", "returnamounts", "return-amounts"]
+            "aliases":["set-return", "setreturn", "return", "returns", "returnamounts", "return-amounts"],
+            "slashCommand":false
         },
         "replies": {
             "name":"replies",
             "description":"Get all work and crime replies for the server through web dashboard",
             "usage":"[prefix]replies",
             "permissions":"none",
-            "aliases":["replies", "rs"]
+            "aliases":["replies", "rs"],
+            "slashCommand":false
         },
         "addreply": {
             "name":"addreply",
             "description":"Add a work or crime reply to the server",
             "usage":"[prefix]addreply [work/crime-fine/crime-pay] [reply message ({amount} = amount, {balance}=balance)]",
             "permissions":"Manage server",
-            "aliases":["addreply"]
+            "aliases":["addreply"],
+            "slashCommand":false
         },
         "removereply": {
             "name":"removereply",
             "description":"Remove a work or crime pay/fine reply",
             "usage":"[prefix]removereply [work/crime-pay/crime-fine] [id/all]",
             "permissions":"Manage server",
-            "aliases":["removereply", "deletereply", "delreply"]
+            "aliases":["removereply", "deletereply", "delreply"],
+            "slashCommand":false
         },
         "addmoney": {
             "name":"addmoney",
             "description":"Add money to a user for the server!",
             "usage":"[prefix]addmoney [user] [amount]",
             "permissions":"Manage server",
-            "aliases":["addmoney"]
+            "aliases":["addmoney", "add-money"],
+            "slashCommand":false
         },
         "removemoney": {
             "name":"removemoney",
             "description":"Remove money to a user for the server!",
             "usage":"[prefix]removemoney [user] [amount]",
             "permissions":"Manage server",
-            "aliases":["removemoney"]
+            "aliases":["removemoney", "remove-money"],
+            "slashCommand":false
         },
         "sharereplies": {
             "name":"sharereplies",
             "description":"Share work replies with a ShareID",
             "usage":"[prefix]sharereplies",
             "permissions":"Manage server",
-            "aliases":["sharereplies", "shareid"]
+            "aliases":["sharereplies", "shareid"],
+            "slashCommand":false
         },
         "loadreplies": {
             "name":"loadreplies",
             "description":"Load replies from another server with a ShareID",
             "usage":"[prefix]loadreplies",
             "permissions":"Manage server",
-            "aliases":["loadreplies"]
+            "aliases":["loadreplies"],
+            "slashCommand":false
         },
         "currency": {
             "name":"currency",
             "description":"Get or set server currency (can be emoji or text)",
             "usage":"[prefix]currency *[currency to set]",
             "permissions":"Manage server",
-            "aliases":["currency", "emoji", "setemoji", "serveremoji", "setcurrency"]
+            "aliases":["currency", "emoji", "setemoji", "serveremoji", "setcurrency"],
+            "slashCommand":false
         }
     },
     "Fun": {
@@ -235,14 +283,32 @@
             "description":"Get a random dog picture",
             "usage":"[prefix]dog",
             "permissions":"none",
-            "aliases":["dog"]
+            "aliases":["dog"],
+            "slashCommand":false
         },
         "meme":{
             "name":"meme",
             "description":"Get a random meme from reddit",
             "usage":"[prefix]meme",
             "permissions":"none",
-            "aliases":["meme", "randomreddit", "randommeme"]
+            "aliases":["meme", "randomreddit", "randommeme"],
+            "slashCommand":false
+        },
+        "impostor":{
+            "name":"impostor",
+            "description":"Among Us eject someone!",
+            "usage":"[prefix]impostor *[user] \\*color=[userColor] \\*impostor[true/false]",
+            "permissions":"none",
+            "aliases":["eject", "impostor"],
+            "slashCommand":false
+        },
+        "wide":{
+            "name":"wide",
+            "description":"Widen someone!",
+            "usage":"[prefix]wide *[user]",
+            "permissions":"none",
+            "aliases":["wide", "widen"],
+            "slashCommand":false
         }
     },
     "Misc":{
@@ -251,28 +317,32 @@
             "description":"Suggest something for the bot",
             "usage":"[prefix]suggest [suggestion]",
             "permissions":"none",
-            "aliases":["suggest", "suggest-command"]
+            "aliases":["suggest", "suggest-command"],
+            "slashCommand":false
         },
         "issue": {
             "name":"issue",
             "description":"Report an issue with the bot",
             "usage":"[prefix]issue [issue]",
             "permissions":"none",
-            "aliases":["issue", "bug", "issue-report", "bug-report"]
+            "aliases":["issue", "bug", "issue-report", "bug-report"],
+            "slashCommand":false
         },
         "math": {
             "name":"math",
-            "description":"Calculate a math equasion",
+            "description":"Calculate a math equation",
             "usage":"[prefix]math [calculation]",
             "permissions":"none",
-            "aliases":["math"]
+            "aliases":["math"],
+            "slashCommand":"/math [equation: the equation to evaluate]"
         },
         "botinfo": {
             "name":"botinfo",
             "description":"Get info on the bot",
             "usage":"[prefix]botinfo",
             "permissions":"none",
-            "aliases":["botinfo"]
+            "aliases":["botinfo"],
+            "slashCommand":false
         },
         "uptime": {
             "name":"uptime",
@@ -281,26 +351,37 @@
             "permissions":"none",
             "aliases":["uptime"]
         },
+        "ping": {
+            "name":"ping",
+            "description":"Get the bots latency in ms",
+            "usage":"[prefix]ping",
+            "permissions":"none",
+            "aliases":["ping", "latency"],
+            "slashCommand":false
+        },
         "links": {
             "name":"links",
             "description":"Get bot links",
             "usage":"[prefix]links",
             "permissions":"none",
-            "aliases":["links", "link", "support", "invite", "website"]
+            "aliases":["links", "link", "support", "invite", "website"],
+            "slashCommand":false
         },
         "help": {
             "name":"help",
             "description":"Get all bot commands",
             "usage":"[prefix]help",
             "permissions":"none",
-            "aliases":["help", "commands", "cmds"]
+            "aliases":["help", "commands", "cmds"],
+            "slashCommand":false
         },
         "binary": {
             "name":"binary",
             "description":"Convert text to binary and vice versa",
             "usage":"[prefix]binary [binary/text to convert]",
             "permissions":"none",
-            "aliases":["ascii", "binary"]
+            "aliases":["ascii", "binary"],
+            "slashCommand":"/binary [text: the binary/text to convert]"
         }
     },
     "pages":{

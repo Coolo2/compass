@@ -1,5 +1,3 @@
-const Discord = require("discord.js-light");
-const bot = new Discord.Client({cacheGuilds: true,cacheChannels: true,cacheOverwrites: false,cacheRoles: false,cacheEmojis: false,fetchAllMembers:true,cachePresences: false});
 const functions = require('../functions')
 
 const prefixes = require('./prefix')
@@ -14,6 +12,7 @@ function help(message1) {
     const args = message1.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
     if (["help", "commands", "cmds"].includes(command)) {
+        helpjson = JSON.parse(fs.readFileSync('./Resources/commands.json'))
         arg = args.splice(0,1)
         allcmds = functions.commandArray()
         arglower = arg.join("").toLowerCase().replace("^", "")
@@ -53,7 +52,18 @@ function help(message1) {
                     .then(() => message.react("⏩"))
                 function getpage(message, page){
                     if (page == 0) {
-                        message.edit(functions.embed(`Help page ${page} - Introduction`, `Use the emojis to navigate around help - or see the [Web commands](${address}/commands).\nCompass is an advanced and deeply customizable economy and moderation bot.`, r.d))
+                        message.edit(
+                            functions.embed(
+                                `Help page ${page} - Introduction`, 
+                                `Use the emojis to navigate around help - or see the [Web commands](${address}/commands).\nCompass is an advanced and deeply customizable economy and moderation bot.`, 
+                                r.d)
+                                    .addField(`Moderation (${Object.keys(helpjson["Moderation"]).length})`, functions.GetHelpStr(message.guild, 'Moderation').slice(0, -2))
+                                    .addField(`Economy Games (${Object.keys(helpjson["EconomyGames"]).length})`, functions.GetHelpStr(message.guild, 'EconomyGames').slice(0, -2))
+                                    .addField(`Economy Options (${Object.keys(helpjson["EconomyOpts"]).length})`, functions.GetHelpStr(message.guild, 'EconomyOpts').slice(0, -2))
+                                    .addField(`Fun (${Object.keys(helpjson["Fun"]).length})`, functions.GetHelpStr(message.guild, 'Fun').slice(0, -2))
+                                    .addField(`Misc (${Object.keys(helpjson["Misc"]).length})`, functions.GetHelpStr(message.guild, 'Misc').slice(0, -2))
+                                    .addField(`More Information`, `Type **${prefixes.get(message.guild)}help [command/section]** to get more information on a command or section.\nOr, use the reactions below to navigate pages.`)
+                        )
                     }
                     if (page == 1) {
                         message.edit(functions.embed(`Help page ${page} - Moderation`, functions.GetHelp(message.guild, 'Moderation') + `\n\nType **${prefixes.get(message1.guild)}help [command]** to get more information on a command`, r.d))
@@ -80,14 +90,14 @@ function help(message1) {
                     }
                     if (reaction.emoji.name == "⏪") {
                         page = page - 1
-                        if (page < 1) {
+                        if (page < 0) {
                             page = 5
                         }
                     }
                     if (reaction.emoji.name == "⏩") {
                         page = page + 1
                         if (page > 5) {
-                            page = 1
+                            page = 0
                         }
                     }
                     getpage(message, page)

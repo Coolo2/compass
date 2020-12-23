@@ -3,13 +3,11 @@ const bot = new Discord.Client({
   cacheGuilds: true,
   cacheChannels: true,
   cacheOverwrites: false,
-  cacheRoles: false,
+  cacheRoles: true,
   cacheEmojis: false,
   fetchAllMembers:true,
   cachePresences: false,
-  disabledEvents:["channelPinsUpdate"],
 });
- 
 
 const fs = require('fs')
 const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
@@ -36,13 +34,15 @@ const cooldown = require('./Commands/cooldowns')
 const returns = require('./Commands/returns')
 const codes = require('./Commands/codes')
 const suggest = require('./Commands/suggestion')
+const profile = require('./Commands/profile')
+const admin = require('./Commands/admin')
 
 const r = require('./Resources/rs');
 
 module.exports.bot = bot
 
 bot.on('ready', () => {
-  bot.user.setActivity(`^help | ${JSON.parse(fs.readFileSync('.//Resources/website.json')).shown} | ${bot.guilds.cache.size} servers`);
+  bot.user.setActivity(`${setup.prefix}help | ${JSON.parse(fs.readFileSync('.//Resources/website.json')).shown} | ${bot.guilds.cache.size} servers`);
   console.log(`Logged in as ${bot.user.tag}!`);
 });
 
@@ -59,7 +59,7 @@ bot.on('guildMemberAdd', member => {
   if (f[guild.id]["joinmessage"] && f[guild.id]["joinmessage"].replace("noimg", "") != "false") {channel.send(f[guild.id]["joinmessage"].split("{user}").join("<@" + member.user.id + ">").split("{server}").join(guild.name))}
   if (fs.existsSync(dir + "/" + guild.id + '/welcome.html')) {
     html = `<body style="height:300px;width:500px;">` + fs.readFileSync(dir + "/" + guild.id + '/welcome.html', 'utf8').split("{server}").join(guild.name).split("{user}").join(member.user.username).split("{avatar}").join(member.user.displayAvatarURL())  + "</body>"
-    nodeHtmlToImage({html: html,transparent:true})
+    nodeHtmlToImage({html: html,transparent:true, puppeteerArgs:{headless: false,args: ['--no-sandbox', '--disable-setuid-sandbox']}})
       .then(buffer => {
         channel.send(new Discord.MessageAttachment(buffer, 'welcome-image.png'))
       })
@@ -75,7 +75,7 @@ bot.on('guildMemberRemove', member => {
   if (f[guild.id]["leavemessage"] && f[guild.id]["leavemessage"].replace("noimg", "") != "false") {channel.send(f[guild.id]["leavemessage"].split("{user}").join(member.user.username).split("{server}").join(guild.name))}
   if (fs.existsSync(dir + "/" + guild.id + '/leave.html')) {
     html = `<body style="height:300px;width:500px;">` + fs.readFileSync(dir + "/" + guild.id + '/leave.html', 'utf8').split("{server}").join(guild.name).split("{user}").join(member.user.username).split("{avatar}").join(member.user.displayAvatarURL())  + "</body>"
-    nodeHtmlToImage({html: html,transparent:true})
+    nodeHtmlToImage({html: html,transparent:true, puppeteerArgs:{headless: false,args: ['--no-sandbox', '--disable-setuid-sandbox']}})
       .then(buffer => {
         channel.send(new Discord.MessageAttachment(buffer, 'leave-image.png'))
       })
@@ -83,6 +83,9 @@ bot.on('guildMemberRemove', member => {
 });
 
 module.exports.launchedAt = new Date()
+
+SlashCMDSServer = [`eject`, `binary`, `math`]
+SlashCMDSGlobal = [`eject`, `binary`, `math`]
 
 bot.on('message', message => {
   if (message.author.bot) return
@@ -139,7 +142,19 @@ bot.on('message', message => {
   suggest.issue(bot, message)
   economy2.rob(bot, message)
   economy2.pay(bot, message)
+  profile.profile(bot, message)
+  apis.impostor(bot, message)
+  apis.wide(bot, message)
+  info.ping(bot, message)
+  admin.getSlash(bot, message, SlashCMDSServer, SlashCMDSGlobal)
+  admin.loadSlashGlobal(bot, message, SlashCMDSServer, SlashCMDSGlobal)
+  admin.loadSlashServer(bot, message, SlashCMDSServer, SlashCMDSGlobal)
+  admin.unloadSlashServer(bot, message, SlashCMDSServer, SlashCMDSGlobal)
 });
+
+bot.ws.on('INTERACTION_CREATE', async interaction => {
+  for (cmd of SlashCMDSServer) {require(`./CommandsSlash/${cmd}`).respond(bot, interaction)}
+})
 
 bot.on("error", error => console.log(error.message));
 
@@ -239,6 +254,14 @@ votes = {}
   console.log(`User with ID ${vote.user} just voted!`);
 })*/
 
+router.get('/sitemap', function (req, res) {
+  res.send(`
+https://compass.js.org/\n
+https://compass.js.org/commands\n
+https://compass.js.org/status
+  `)
+});
+
 router.get('*', function (req, res) {
   res.sendFile(path.join(__dirname + '/Website/HTML/404.html'));
 });
@@ -268,7 +291,7 @@ function loadData() {
     d = new Date()
     if (String(Math.ceil(d.toTimeString().split(":")[1]/5)*5).length != 2) {top = String(Math.ceil(d.toTimeString().split(":")[1]/5)*5) + "0"} else {top = String(Math.ceil(d.toTimeString().split(":")[1]/5)*5)}
     datetext = d
-    f[String(datetext)] = {"users":bot.users.cache.size, "guilds":bot.guilds.cache.size, "channels":bot.channels.cache.size, "free_memory":Math.round(os.freemem()/1000000), "used_memory":Math.round((os.totalmem()-os.freemem())/1000000)}
+    f[String(datetext)] = {"users":bot.users.cache.size, "guilds":bot.guilds.cache.size, "channels":bot.channels.cache.size, "free_memory":Math.round((process.memoryUsage().heapTotal-process.memoryUsage().heapUsed)/1000000), "used_memory":Math.round(process.memoryUsage().heapUsed/1000000)}
     if (Object.keys(f).length > 288) {delete f[Object.keys(f)[0]]}
     fs.writeFileSync('./Databases/minute.json', JSON.stringify(f))
     fs.writeFileSync('./Databases/day.json', JSON.stringify(f2))
