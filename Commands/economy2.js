@@ -6,8 +6,8 @@ const functions = require('../functions')
 const cooldowns = require('./cooldowns')
 const returns = require('./returns')
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
 
 const r = require('../Resources/rs')
 
@@ -45,8 +45,9 @@ function lower(message) {
         if (!choice || !bet || isNaN(choice.jn()) || isNaN(bet.jn()) || choice > 99 || choice < 1) {return message.channel.send(functions.error(`Invalid usage, please use: ${prefixes.get(message.guild)}lower [1-99] [bet]`))}
         bet = args[1].jn()
         if (parseInt(bet) > balance) {return message.channel.send(functions.error("You cannot bet more than your cash balance"))}
+        if (parseInt(bet) < 1) {return message.channel.send(functions.error(`You can not bet less than 1!`))}
         if (TalkedRecentlyOther.has(message.author.id + message.guild.id)) {
-            return message.channel.send(functions.embed("You're on cooldown", "Wait " + cooldowns.readable(String(getTimeLeft(TalkedRecentlyLeftOther[message.author.id + message.guild.id]))) + " to use another economy command!", r.f));
+            return message.channel.send(functions.embed("You're on cooldown", "Wait " + cooldowns.readable(String(getTimeLeft(TalkedRecentlyLeftOther[message.author.id + message.guild.id]))) + " to use another economy game command!", r.f));
         } else {
             TalkedRecentlyOther.add(message.author.id + message.guild.id);
             TalkedRecentlyLeftOther[message.author.id + message.guild.id] = setTimeout(() => {
@@ -85,6 +86,56 @@ function lower(message) {
     }
 }
 
+function roll(message) {
+    const args = message.content.slice(prefix.length).split(' ');
+    const command = args.shift().toLowerCase();
+    if (['roll', 'diceroll', 'roledice'].includes(command)) {
+        if (message.guild ===null) {return message.channel.send(functions.error("This command cannot be used in a DM channel"))}
+        startup(message.guild, message.author)
+        choice = args[0]
+        bet = args[1]
+        botChoice = functions.int(1, 6)
+        try {balance = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get(message.author.id).balance} catch {balance = 0}
+        if (!choice || !bet || isNaN(choice.jn()) || isNaN(bet.jn()) || choice > 6 || choice < 1) {return message.channel.send(functions.error(`Invalid usage, please use: ${prefixes.get(message.guild)}roll [1-6] [bet]`))}
+        bet = args[1].jn()
+        if (parseInt(bet) > balance) {return message.channel.send(functions.error("You cannot bet more than your cash balance"))}
+        if (parseInt(bet) < 1) {return message.channel.send(functions.error(`You can not bet less than 1!`))}
+        if (TalkedRecentlyOther.has(message.author.id + message.guild.id)) {
+            return message.channel.send(functions.embed("You're on cooldown", "Wait " + cooldowns.readable(String(getTimeLeft(TalkedRecentlyLeftOther[message.author.id + message.guild.id]))) + " to use another economy game command!", r.f));
+        } else {
+            TalkedRecentlyOther.add(message.author.id + message.guild.id);
+            TalkedRecentlyLeftOther[message.author.id + message.guild.id] = setTimeout(() => {
+                TalkedRecentlyOther.delete(message.author.id + message.guild.id);
+                delete TalkedRecentlyLeftOther[message.author.id + message.guild.id]
+            },   parseInt(cooldowns.get(message.guild, "other")) * 1000);
+        }
+
+        amountPlus = Math.round(parseInt(bet))
+        amountMinus = Math.round(parseInt(bet))
+        if (parseInt(choice)==botChoice) {final = amountPlus}
+        else {final = 0 - amountMinus}
+        try {
+            sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, balance + final);
+        }
+        catch {
+            sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, final);
+        }
+        if (final > 0) {
+            return message.channel.send(
+                functions.embed(`Roll - ${message.author.username}`, ``, r.s)
+                    .addField(`You won!`, `I rolled **${botChoice}** and you got **${(amountPlus).sep()}** ${emojis.get(message.guild)}`, true)
+                    .addField(`Balance`, `You are now on **${(balance + final).sep()}** ${emojis.get(message.guild)} cash`, false)
+            )
+        } else {
+            return message.channel.send(
+                functions.embed(`Roll - ${message.author.username}`, ``, r.f)
+                    .addField(`You lost`, `I rolled **${botChoice}** and you lost **${(amountMinus).sep()}** ${emojis.get(message.guild)}`, true)
+                    .addField(`Balance`, `You are now on **${(balance + final).sep()}** ${emojis.get(message.guild)} cash`, false)
+            )
+        }
+    }
+}
+
 main = require('../compass')
 
 const setup = JSON.parse(fs.readFileSync('./Resources/setup.json'))
@@ -115,16 +166,19 @@ function vote(message) {
     }
 }
 
-multipliers = [1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0]
+multipliers = [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0]
 
 multipliers_js = {
-    1:[1.2, 1.4, 1.6, 1.8],
-    2:[1.2, 1.4, 1.6, 1.8],
-    3:[2.0, 2.2, 2.4, 2.6],
-    4:[2.0, 2.2, 2.4, 2.6],
-    5:[2.8, 3.0, 3.2, 3.4],
-    6:[3.6, 3.8, 4.0, 4.2],
-    7:[4.4, 4.6, 4.8, 5.0]
+    1:[1.1, 1.2, 1.3, 1.4],
+    2:[1.1, 1.2, 1.3, 1.4],
+    3:[1.1, 1.2, 1.3, 1.4],
+    4:[1.1, 1.2, 1.3, 1.4],
+    5:[1.5, 1.6, 1.7, 1.8],
+    6:[1.5, 1.6, 1.7, 1.8],
+    7:[1.5, 1.6, 1.7, 1.8],
+    8:[1.9, 2.0, 2.1, 2.2],
+    9:[2.3, 2.4, 2.5, 2.6],
+    10:[2.7, 2.8, 2.9, 3.0],
 }
 
 function generate(message, multiplier, profit) {
@@ -146,14 +200,14 @@ async function crash(message) {
         bet = args[0]
         if (!bet || isNaN(bet.jn()) && !bet.includes(".")) {return message.channel.send(functions.error(`Invalid usage, use: ${prefixes.get(message.guild)}crash [bet]`))}
         crashBet[message.author.id] = bet.jn()
-        if (crashBet[message.author.id] < 1) {return message.channel.send(functions.error(`You can't bet less than 0!`))}
+        if (crashBet[message.author.id] < 1) {return message.channel.send(functions.error(`You can't bet less than 1!`))}
         try {balance = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get(message.author.id).balance} catch {balance = 0}
         if (crashBet[message.author.id] > balance) {return message.channel.send(functions.error("You can not bet more than you have in cash."))}
         embed = generate(message, 1.0, 0)    
         
-        therandom = functions.int(1, 7) 
+        therandom = functions.int(1, 10) 
         theEnd = functions.randomchoice(multipliers_js[therandom])
-        if (functions.int(1, 6) == 2) {theEnd = 1.2}
+        if (functions.int(1, 4) == 2) {theEnd = 1.1}
         
         crashMsg[message.author.id] = await message.channel.send(`Use **${prefixes.get(message.guild)}stop** to stop`, embed)
         crashCounters[message.author.id] = 0
@@ -172,7 +226,7 @@ async function crash(message) {
         try {balance = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get(message.author.id).balance} catch {balance = 0}
         try {sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, balance + Math.round(parseInt(crashBet[message.author.id]) * stopped) - parseInt(crashBet[message.author.id]))} catch{message.channel.send(`Error adding balance: please join <${setup.server}> for support`)}
         crashMsg[message.author.id].edit(
-            `~~Use **${prefixes.get(message.guild)}stop** to stop~~`, functions.embed(`Crash - ${message.author.username}`, ``, r.s).addField(`Stopped at`, `${stopped}x`, true).addField(`Profit`, `${(Math.round(parseInt(crashBet[message.author.id]) * stopped) - parseInt(crashBet[message.author.id])).sep()} ${emojis.get(message.guild)}`, true).addField(`Your balance`, `You are now on ${balance + Math.round(parseInt(crashBet[message.author.id]) * stopped) - parseInt(crashBet[message.author.id])} ${emojis.get(message.guild)}`)
+            `~~Use **${prefixes.get(message.guild)}stop** to stop~~`, functions.embed(`Crash - ${message.author.username}`, ``, r.s).addField(`Stopped at`, `${stopped}x`, true).addField(`Profit`, `${(Math.round(parseInt(crashBet[message.author.id]) * stopped) - parseInt(crashBet[message.author.id])).sep()} ${emojis.get(message.guild)}`, true).addField(`Your balance`, `You are now on ${(balance + Math.round(parseInt(crashBet[message.author.id]) * stopped) - parseInt(crashBet[message.author.id])).sep()} ${emojis.get(message.guild)}`)
         )
         interval=crashIntervals[message.author.id];delete crashBet[message.author.id];delete crashMsg[message.author.id];delete crashCounters[message.author.id];delete crashIntervals[message.author.id];
         clearInterval(interval);
@@ -232,6 +286,7 @@ function pay(bot, message) {
         if (userArgs == "") {return message.channel.send(functions.error(`You need to input a user to pay! ${prefixes.get(message.guild)}pay [user] [amount]`))}
         if (user=="none") {return message.channel.send(functions.error("Unknown user!"))}
         if (user.id == message.author.id) {return message.channel.send(functions.error(`You can not pay yourself!`))}
+        if (user.bot) {return message.channel.send(functions.error("You can't pay a bot"))}
         if (!amount || isNaN(amount.jn())) {return message.channel.send(functions.error(`Missing or invalid amount! ${prefixes.get(message.guild)}pay [user] [amount]`))}
         amount = Math.floor(amount.jn())
         if (amount < 1) {return message.channel.send(functions.error(`You can't pay less than 0!`))}
@@ -257,3 +312,4 @@ module.exports.vote = vote
 module.exports.lower = lower
 module.exports.rob = rob
 module.exports.pay = pay
+module.exports.roll = roll

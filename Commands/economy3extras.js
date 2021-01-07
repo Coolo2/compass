@@ -3,8 +3,8 @@ const SQLite = require("better-sqlite3");
 const sql = new SQLite('./Databases/balances.sqlite');
 const functions = require('../functions')
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
 
 const fs = require('fs')
 const emojis = require('./emoji');
@@ -50,16 +50,16 @@ function withdrawl(message) {
         if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
         startup(message.guild, message.author)
         amount = args[0]
-        if (amount != "all" && (!amount || isNaN(amount) ) ) {return message.channel.send(functions.error(`Invalid command syntax, use ${prefixes.get(message.guild)}withdraw [amount/all]`))}
+        if (amount != "all" && (!amount || isNaN(amount.jn()) ) ) {return message.channel.send(functions.error(`Invalid command syntax, use ${prefixes.get(message.guild)}withdraw [amount/all]`))}
         amount = args[0].jn()
         try {balance = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get(message.author.id).balance} catch {balance = 0}
         try {bank = sql.prepare(`SELECT * FROM balances${message.guild.id}${message.author.id} WHERE user = ?`).get("bank" + message.author.id).balance} catch {bank = 0}
         if (Math.floor(amount) > bank) {return message.channel.send(functions.error("You can not withdraw more than you have in bank"))}
         if (amount == "all") {amount = String(bank)}
-        if (amount == "0" || Math.floor(amount) < 0) {return message.channel.send(functions.error("You can't withdrawl anything less than 1"))}
+        if (amount == "0" || Math.floor(amount) < 0) {return message.channel.send(functions.error("You can't withdraw anything less than 1"))}
         sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run(message.author.id, balance + parseInt(amount));
         sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${message.author.id} (user, balance) VALUES (?, ?);`).run("bank" + message.author.id, (bank - parseInt(amount)));
-        return message.channel.send(functions.embed("Success", `Withdrawed **${amount.sep()}** ${emojis.get(message.guild)} to cash`, r.s))
+        return message.channel.send(functions.embed("Success", `Withdrew **${amount.sep()}** ${emojis.get(message.guild)} to cash`, r.s))
     }
 }
 

@@ -5,8 +5,8 @@ const functions = require('../functions')
 
 const r = require('../Resources/rs')
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
 
 const cooldowns = require('./cooldowns')
 const returns = require('./returns')
@@ -38,59 +38,69 @@ function add(message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
     const member = args.splice(0,1).join(" ")
-    amount = args.splice(0).join(" ")
+    amount = args.splice(0,1).join(" ")
+    try{where = args.splice(0).join(" ")}catch{where="cash"}
     if (['addmoney', 'add-money'].includes(command)) {
         if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
         if (!message.member.hasPermission("MANAGE_GUILD")) {
             return message.channel.send(functions.error("You are missing manage server permissions to use this command"))
         }
+        if (where == "cash" || where == "") {
+            wherename = "cash";where=""
+        } else {wherename="bank";where="bank"}
         user = functions.userfromarg(message, member)
         if (user=="none") {return message.channel.send(functions.error("Could not find a user."))}
         if (user.bot) {return message.channel.send(functions.error("Can't add money to a bot"))}
-        if (!amount) {return message.channel.send(functions.error("No amount to add inputted"))}
+        if (!amount || isNaN(amount.jn())) {return message.channel.send(functions.error(`Missing or invalid amount! ${prefixes.get(message.guild)}addmoney [user] [amount] *[cash/bank]`))}
         amount = amount.jn()
+        if (amount < 1) {return message.channel.send(functions.error(`You can't add less than 0!`))}
         startup(message.guild, user)
         toadd = parseInt(amount)
         try {
-            score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(user.id).balance
-            sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${user.id} (user, balance) VALUES (${user.id}, ${score + toadd});`).run();
+            score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(where + user.id).balance
+            sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(where + user.id, score + toadd);
         }
         catch (err) {
-            console.log(err)
-            sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(user.id, toadd);
+            sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(where + user.id, toadd);
         }
-        score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(user.id).balance
+        score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(where + user.id).balance
 
-        message.channel.send(functions.embed(`Successfully added money`, `Added ${amount.sep()} to ${user.username}'s balance. They are now on ${score.sep()}${emojis.get(message.guild)}`, r.s))
+        message.channel.send(functions.embed(`Successfully added money`, `Added ${toadd.sep()} to ${user.username}'s ${wherename} balance. They are now have ${score.sep()}${emojis.get(message.guild)} in ${wherename}`, r.s))
     }
 }
 function remove(message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
     const member = args.splice(0,1).join(" ")
-    amount = args.splice(0).join(" ")
+    amount = args.splice(0,1).join(" ")
+    try{where = args.splice(0).join(" ")}catch{where="cash"}
     if (['removemoney', 'remove-money'].includes(command)) {
         if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
         if (!message.member.hasPermission("MANAGE_GUILD")) {
             return message.channel.send(functions.error("You are missing manage server permissions to use this command"))
         }
+        if (where == "cash" || where == "") {
+            wherename = "cash";where=""
+        } else {wherename="bank";where="bank"}
+
         user = functions.userfromarg(message, member)
         if (user=="none") {return message.channel.send(functions.error("Could not find a user."))}
         if (user.bot) {return message.channel.send(functions.error("Can't add money to a bot"))}
-        if (!amount) {return message.channel.send(functions.error("No amount to remove inputted"))}
+        if (!amount || isNaN(amount.jn())) {return message.channel.send(functions.error(`Missing or invalid amount! ${prefixes.get(message.guild)}removemoney [user] [amount] *[cash/bank]`))}
         amount = amount.jn()
+        if (amount < 1) {return message.channel.send(functions.error(`You can't add less than 0!`))}
         startup(message.guild, user)
         toadd = parseInt(amount)
         try {
-            score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(user.id).balance
-            sql.prepare(`REPLACE INTO balances${message.guild.id}${user.id} (user, balance) VALUES (${user.id}, ${score - toadd});`).run();
+            score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(where + user.id).balance
+            sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(where + user.id, score - toadd);
         }
-        catch {
-            sql.prepare(`INSERT INTO balances${message.guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(user.id, 0-toadd);
+        catch (err) {
+            sql.prepare(`INSERT OR REPLACE INTO balances${message.guild.id}${user.id} (user, balance) VALUES (?, ?);`).run(where + user.id, 0-toadd);
         }
-        score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(user.id).balance
+        score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(where + user.id).balance
 
-        message.channel.send(functions.embed(`Successfully removed money`, `Removed ${amount.sep()} from ${user.username}'s balance. They are now on ${score.sep()}${emojis.get(message.guild)}`, r.s))
+        message.channel.send(functions.embed(`Successfully removed money`, `Removed ${toadd.sep()} from ${user.username}'s ${wherename} balance. They are now on ${score.sep()}${emojis.get(message.guild)} in ${wherename}`, r.s))
     }
 }
 
@@ -333,7 +343,7 @@ function removereply(message) {
                     message.channel.send(functions.embed("Removed crime reply!", `Removed crime reply with id **${replyid}**`, r.s))
                 }
                 else {
-                    message.channel.send(functions.error("Could not find crime reply ID " + replyid))
+                    message.channel.send(functions.error("Could not find crime reply ID " + replyid, true))
                 }
             } else {
                 try {
@@ -349,7 +359,7 @@ function removereply(message) {
                     message.channel.send(functions.embed("Removed work reply!", `Removed work reply with id **${replyid}**`, r.s))
                 }
                 else {
-                    message.channel.send(functions.error("Could not find work reply ID " + replyid))
+                    message.channel.send(functions.error("Could not find work reply ID " + replyid, true))
                 }
             }
             
@@ -359,23 +369,40 @@ function removereply(message) {
     }
 };
 
+function ordinal_suffix_of(i) {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return i + "st";
+    }
+    if (j == 2 && k != 12) {
+        return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+        return i + "rd";
+    }
+    return i + "th";
+}
+
 function leaderboards(message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
     if (['leaderboards', 'leaders', 'lb', 'leaderboard', 'lbs'].includes(command)) {
         if (message.guild ===null){return message.channel.send(functions.error("This command cannot be used in a DM channel"))};
+        total = 0
         final = []
         finalj = {}
         for (tables of sql.prepare("select name from sqlite_master where type='table'").iterate()) {
             if (tables.name.replace("balances", "").startsWith(message.guild.id)) {
                 try{user = message.guild.members.cache.find(member => member.user.id === tables.name.replace(message.guild.id, "").replace("balances", "")).user
-                try {score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(user.id).balance} catch {score=0}
-                try {scorebank = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get("bank" + user.id).balance} catch {scorebank=0}
-                if (score + scorebank != 0) {
-                    finalj[score + scorebank] = {username:user.username,id:user.id}
-                    final.push(score + scorebank)
-                }
-            }catch{}
+                    try {score = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get(user.id).balance} catch {score=0}
+                    try {scorebank = sql.prepare(`SELECT * FROM balances${message.guild.id}${user.id} WHERE user = ?`).get("bank" + user.id).balance} catch {scorebank=0}
+                    total += scorebank + score
+                    if (score + scorebank != 0) {
+                        finalj[score + scorebank] = {username:user.username,id:user.id}
+                        final.push(score + scorebank)
+                    }
+                }catch{}
             }
         }
         final.sort(function(a, b) {
@@ -384,12 +411,17 @@ function leaderboards(message) {
         final.reverse()
         lb = ""
         counter = 0
+        place = ``
         final.forEach(item => {
             counter = counter + 1
+            if (finalj[item].id == message.author.id) {place = ordinal_suffix_of(counter)}
             lb = lb.concat(counter + `. **[${finalj[item].username}](${JSON.parse(fs.readFileSync('./Resources/website.json')).address + '/p/' + require('../Website/Modules/profiles').checkUser(finalj[item].id) + '/' + message.guild.id})**: ` + item.sep() + " " + emojis.get(message.guild) + "\n")
         })
         if (lb == "") {return message.channel.send(functions.embed("Leaderboard for " + message.guild.name, "*Its feeling kinda empty in here! Check out economy commands with **" + prefixes.get(message.guild) + "help economy**!*", r.d))}
-        message.channel.send(functions.embed("Leaderboard for " + message.guild.name, lb, r.d))
+        message.channel.send(
+            functions.embed("Leaderboard for " + message.guild.name, lb, r.d, true)
+                .setFooter(`Total Economy Value: ${total} | You are in ${place} place`)
+        )
     }
 }
 module.exports.leaderboards = leaderboards

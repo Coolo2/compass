@@ -38,7 +38,7 @@ function warn(message) {
             reason = "none"
         }
         if (user=="none"){
-            return message.channel.send(functions.error("Could not find user."))
+            return message.channel.send(functions.error("Could not find user.", true))
         }
         sql.prepare(`INSERT OR REPLACE INTO id${message.guild.id} (id, user, reason) VALUES (?, ?, ?);`).run(warnid, user.id, reason);
         message.channel.send(functions.embed(`Successfully warned ${user.username}`, `Reason: ${reason}`, r.s).setFooter(`Warn id: ${warnid}`))
@@ -68,7 +68,7 @@ function warns(message) {
             search = args.splice(0,1000).join(" ")
             userobj = functions.userfromarg(message, search)
             if (userobj == "none") {
-                return message.channel.send(functions.error(`No user found from '${search}'`))
+                return message.channel.send(functions.error(`No user found from '${search}'`, true))
             }
             
             const embed = functions.embed(`Member warns`, `Here are the warns for ${userobj.username}`, r.d);
@@ -164,7 +164,7 @@ function delwarn(message) {
                 message.channel.send("Removed warn id " + warnid)
             }
             else {
-                message.channel.send(functions.error("Could not find warn for id " + warnid))
+                message.channel.send(functions.error("Could not find warn for id " + warnid, true))
             }
         }
     }

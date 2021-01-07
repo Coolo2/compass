@@ -27,13 +27,13 @@ function daily(message) {
         startup(message.guild, message.author)
         now = new Date().toDateString()
         access = false
-        prev = time.prepare(`SELECT * FROM 'times${message.guild.id}'`).get()
+        prev = time.prepare(`SELECT * FROM 'times${message.guild.id}'`).all()
         
         if (prev == undefined) {
             time.prepare(`INSERT OR REPLACE into times${message.guild.id} (user, time) VALUES (?, ?)`).run(message.author.id, now) 
             access = true
         } else {
-            done = false;for (item in prev) {if (prev[item] == message.author.id) done = true}
+            done = false;for (item of prev) {if (item.user == message.author.id) done = true}
             if (done == false) {
                 time.prepare(`INSERT OR REPLACE into times${message.guild.id} (user, time) VALUES (?, ?)`).run(message.author.id, now) 
                 access = true
@@ -42,7 +42,6 @@ function daily(message) {
         final = time.prepare(`SELECT * FROM times${message.guild.id} WHERE user='${message.author.id}'`).get() 
         
         if (final.time != now) {access = true} 
-        
 
         if (access == true) {
             toadd = functions.int(returns.get(message.guild, 'daily')[0], returns.get(message.guild, 'daily')[1]) 
@@ -59,7 +58,7 @@ function daily(message) {
                 "You got your daily!", 
                 `You completed your daily for ${message.guild.name} and got ${toadd + emojis.get(message.guild)}! You are now on ${score + emojis.get(message.guild)}!`, 
                 r.s))
-        } else {return message.channel.send(functions.error("You have already completed your daily today! Try again later!"))}
+        } else {return message.channel.send(functions.error("You have already completed your daily today! Try again tomorrow!"))}
     }
 }
 module.exports.daily = daily

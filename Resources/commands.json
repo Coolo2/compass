@@ -114,6 +114,14 @@
             "aliases":["lower"],
             "slashCommand":false
         },
+        "roll": {
+            "name":"roll",
+            "description":"Roll dice, guess what you will roll. If you guess correctly, you get money.",
+            "usage":"[prefix]roll [1-6] [bet]",
+            "permissions":"none",
+            "aliases":["roll", "diceroll", "roledice"],
+            "slashCommand":false
+        },
         "crash": {
             "name":"crash",
             "description":"Stop before you crash! Multiplier of profit gains every 2 seconds.",
@@ -138,12 +146,12 @@
             "aliases":["deposit", "dep", "d"],
             "slashCommand":false
         },
-        "withdrawl": {
-            "name":"withdrawl",
-            "description":"Withdrawl to cash",
-            "usage":"[prefix]withdrawl [amount/all]",
+        "withdraw": {
+            "name":"withdraw",
+            "description":"Withdraw to cash",
+            "usage":"[prefix]withdraw [amount/all]",
             "permissions":"none",
-            "aliases":["withdrawl", "with", "w"],
+            "aliases":["withdraw", "with", "w"],
             "slashCommand":false
         },
         "pay": {
@@ -239,7 +247,7 @@
         "addmoney": {
             "name":"addmoney",
             "description":"Add money to a user for the server!",
-            "usage":"[prefix]addmoney [user] [amount]",
+            "usage":"[prefix]addmoney [user] [amount] *[cash/bank]",
             "permissions":"Manage server",
             "aliases":["addmoney", "add-money"],
             "slashCommand":false
@@ -247,7 +255,7 @@
         "removemoney": {
             "name":"removemoney",
             "description":"Remove money to a user for the server!",
-            "usage":"[prefix]removemoney [user] [amount]",
+            "usage":"[prefix]removemoney [user] [amount] *[cash/bank]",
             "permissions":"Manage server",
             "aliases":["removemoney", "remove-money"],
             "slashCommand":false

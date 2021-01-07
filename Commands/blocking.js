@@ -16,7 +16,7 @@ function block(message) {
         blocked = JSON.parse(fs.readFileSync('.//Databases/blocked.json'))
         blocked.channels[blocked.channels.length] = channel.id
         fs.writeFile("./Databases/blocked.json", JSON.stringify(blocked), function(err) {
-            if (err) {message.channel.send(functions.error("Unknown error: " + err.message))}
+            if (err) {message.channel.send(functions.error("Unknown error: " + err.message, true))}
         });
         message.channel.send("Successfully blocked!")
     }
@@ -42,7 +42,7 @@ function unblock(message) {
         if (!blocked.channels.includes(channel.id)) {return message.channel.send(functions.error("This channel is not disabled"))}
         removeAllElements(blocked.channels, channel.id)
         fs.writeFile("./Databases/blocked.json", JSON.stringify(blocked), function(err) {
-            if (err) {return message.channel.send(functions.error("Unknown error: " + err.message))}
+            if (err) {return message.channel.send(functions.error("Unknown error: " + err.message, true))}
         });
         message.channel.send("Successfully enabled!")
     }

@@ -318,6 +318,16 @@ form {
     -webkit-transition: all 0.5s;
 }
 
+.formselectdisabled {
+    color:rgb(138, 138, 138);
+    background-color:#36393E;
+    padding:4px;
+    border-radius:2px;
+    border: 1px #636363 solid;
+    cursor:pointer;
+    -webkit-transition: all 0.5s;
+}
+
 input:focus, textarea:focus, select:focus{
     outline: none;
 }

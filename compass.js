@@ -127,6 +127,7 @@ bot.on('message', message => {
   database.crime(message)
   returns.returns(message)
   economy2.lower(message)
+  economy2.roll(message)
   economy3.deposit(message)
   economy3.withdrawl(message)
   economy3.balance(message)

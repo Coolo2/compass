@@ -8,8 +8,8 @@ var express = require('express'),
   router = express.Router();
 const app = express()
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
 
 const rs = require('../../Resources/rs')
 const codes = require('../../Commands/codes')
@@ -66,6 +66,26 @@ router.get('/admin', (req, res) => {
     
 });
 
+
+router.get('/admin/servers', (req, res) => {
+    id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+    if(setup.botadmins.includes(id)) {
+        guild = bot.guilds.cache.get(req.params.guildid)
+        member = functions.memberfromarg(guild, id)
+        user = bot.users.cache.get(String(id))
+        avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
+        return res.render(path.join(__dirname, '../HTML/servers.html'), {
+        name: decodeURIComponent(getAppCookies(req, res)['name']),
+        id: id,
+        avatar: `<img class="avatar" id="output" src="${avatar}">`,
+        address: address,
+        status: `${address}/status`,
+        })
+    } else {
+        res.redirect('/')
+    }
+    
+});
 
 
 router.post('/admin/newIncident', function (req, res) {
@@ -286,6 +306,12 @@ router.get('/admin/generateGlobalCode', (req, res) => {
     if (!isNumeric(value.jn())) {return res.redirect(`/admin/globalCodes`)}
     try{codes.generateGlobalCode(value.jn())}catch(err){console.log(err)}
     res.redirect(`/admin/globalCodes`)
+})
+
+router.get('/admin/serverarray', (req, res) => {
+    id = id = getAppCookies(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")
+    if(!setup.botadmins.includes(id)) { return res.redirect(`/`)}
+    return res.send(bot.guilds.cache.array())
 })
 
 router.get('/admin/verify/:suggestionID', (req, res) => {

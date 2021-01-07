@@ -26,6 +26,17 @@ function data(CLIENT_ID, CLIENT_SECRET, code) {
     }
 }
 
+function dataprofile(CLIENT_ID, CLIENT_SECRET, code) {
+    return {
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': address + "/saveprofile",
+        'scope': 'identify'
+    }
+}
+
 function joindata(CLIENT_ID, CLIENT_SECRET, code) {
     return {
         'client_id': CLIENT_ID,
@@ -79,3 +90,4 @@ module.exports.encode = encode
 module.exports.response = response
 module.exports.joindata = joindata
 module.exports.join = join
+module.exports.dataprofile = dataprofile

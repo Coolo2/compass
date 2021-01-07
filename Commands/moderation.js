@@ -13,7 +13,7 @@ function ban(message) {
             user = functions.userfromarg(message, args.splice(0).join(" "))
             const member = message.guild.member(user)
             if (!member) {
-                return message.channel.send(functions.error("Could not find a valid mention"))
+                return message.channel.send(functions.error("Could not find a valid mention", true))
             }
             if (message.member.hasPermission("BAN_MEMBERS")) {
                 try {
@@ -21,7 +21,7 @@ function ban(message) {
                     return message.channel.send(functions.embed(`Successfully banned`, "Banned " + user.username + " successfully", r.s))
                 } 
                 catch {
-                    return message.channel.send(functions.error(`I do not have permissions to ban ${user.username}`));
+                    return message.channel.send(functions.error(`I do not have permissions to ban ${user.username}`, true));
                 }   
             }
             else {
@@ -29,7 +29,7 @@ function ban(message) {
             }
         }
         else {
-            return message.channel.send(functions.error("You did not mention anyone"));
+            return message.channel.send(functions.error("You did not mention anyone", true));
         }
     }
 }

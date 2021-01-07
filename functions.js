@@ -35,13 +35,23 @@ function CreateEmbed(title, description, color, noTimestamp) {
 	return exampleEmbed
 }
 
-function ErrorEmbed(error) {
-	const exampleEmbed = new Discord.MessageEmbed()
-		.setColor(r.f)
-		.setTitle("Seems like you ran into an error")
-		.setDescription("```" + error + "```")
-		.setTimestamp()
-	return exampleEmbed
+function ErrorEmbed(error, severe) {
+	if (severe) {
+		const exampleEmbed = new Discord.MessageEmbed()
+			.setColor(r.f)
+			.setTitle("Seems like you ran into an error")
+			.setDescription("```" + error + "```")
+			.setTimestamp()
+		return exampleEmbed
+	} else {
+		const exampleEmbed = new Discord.MessageEmbed()
+			.setColor(r.m)
+			.setTitle("Oops!")
+			.setDescription(error)
+			.setTimestamp()
+		return exampleEmbed
+	}
+	
 }
 
 function getRndInteger(min, max) {
@@ -58,16 +68,22 @@ function userfromarg(message, args) {
 		return message.guild.members.cache.find(member => member.user.username.toLowerCase().replace(/[0-9]/g, '').replace(new RegExp(` `, 'g'), ``) === args.toLowerCase().replace(/[0-9]/g, '').replace(/[0-9]/g, '').replace(new RegExp(` `, 'g'), ``)).user
 	} catch {
 		try {
-			return message.guild.members.cache.find(member => member.user.id === args).user
+			return message.guild.members.cache.find(member => member.displayName.toLowerCase().replace(/[0-9]/g, '').replace(new RegExp(` `, 'g'), ``) == args.toLowerCase().replace(/[0-9]/g, '').replace(/[0-9]/g, '').replace(new RegExp(` `, 'g'), ``)).user
 		}
 		catch {
-			if (!message.mentions.users.first()) {
-				return "none"
+			try {
+				return message.guild.members.cache.find(member => member.user.id === args).user
 			}
-			else {
-				return message.mentions.users.first()
-			}
-		} 
+			catch {
+				if (!message.mentions.users.first()) {
+					return "none"
+				}
+				else {
+					return message.mentions.users.first()
+				}
+			} 
+		}
+		
 	}
 }
 

@@ -6,8 +6,8 @@ const website = JSON.parse(require('fs').readFileSync('./Resources/website.json'
 const r = require('../Resources/rs');
 const Compass = require('../compass');
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
 
 function botinfo(message, bot) {
     const args = message.content.slice(prefix.length).split(' ');
@@ -39,7 +39,7 @@ function ping(bot, message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
     if (["ping", "latency"].includes(command)) {
-        message.channel.send(`🏓 Pong! ${(Date.now() - message.createdTimestamp)*-1}ms`);
+        message.channel.send(`🏓 Pong! ${(Date.now() - message.createdTimestamp)}ms`);
     }
 }
 

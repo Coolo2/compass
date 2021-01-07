@@ -85,7 +85,7 @@ router.get('/app/:guildid/prefix', (req, res) => {
     li = ""
     bot.guilds.cache.forEach((guild) => {
       try {
-        if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id)) {
+        if (guild.member(user.id)) {
           if (guild.id == bot.guilds.cache.get(req.params.guildid).id) {style = "style='border-radius:10px'"} else {style=""}
           li = li.concat(`<div aria-label="${guild.name}" data-balloon-pos="right"><img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" ${style} onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}'></div>`)
           in1 = 1
@@ -98,7 +98,8 @@ router.get('/app/:guildid/prefix', (req, res) => {
     prefix = require('../../Commands/prefix').get(guild)
     returnvalue = returnvalue.concat(`<div class="members"><b>${guild.name}</b>'s prefix: <span style="padding-left:30px;"> </span>  <form action="/app/${guild.id}/changeprefix" method="get"><input type="text" class="forminput${disabled}" autocomplete="off" placeholder="${prefix}" name="replydata" ${disabled}/><input type="submit" class="formbutton${disabled}" value="Change" ${disabled}/></form>  </div><div style="padding:10px;"></div>`)
 
-    li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot')" id="dasb" src='https://i.ibb.co/dG0x5Ch/plus2.png'>`)
+    if (setup.botadmins.includes(id) && getAppCookies(req, res)['adminMode'] == 'on') {li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('/admin/servers', '_self')" id="dasb" src='https://www.clker.com/cliparts/k/D/D/T/y/o/more-button-hi.png'>`)}
+  li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot')" id="dasb" src='https://i.ibb.co/dG0x5Ch/plus2.png'>`)
     avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
     example = functions.randomcommandusage().replace("[prefix]", prefix)
     if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(member).hasPermission("MANAGE_GUILD")) {

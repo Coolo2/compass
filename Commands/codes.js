@@ -3,8 +3,8 @@ const functions = require('../functions')
 const databasesetup = require('./databasesetup')
 const prefixes = require('./prefix')
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
 
 const SQLite = require("better-sqlite3");
 const fs = require('fs')
@@ -175,6 +175,12 @@ function getGlobalCodes() {
     try{return JSON.parse(fs.readFileSync('./Databases/codes.json'))["global"]}
     catch {return {}}
 }
+
+function isInteger(value) {
+    return !isNaN(value) && 
+           parseInt(Number(value)) == value && 
+           !isNaN(parseInt(value, 10));
+  }
 
 module.exports.getGlobalCodes = getGlobalCodes
 module.exports.deleteGlobal = deleteGlobal

@@ -8,8 +8,8 @@ var express = require('express'),
     router = express.Router();
 const app = express()
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
 
 const rs = require('../../Resources/rs')
 const codes = require('../../Commands/codes')
@@ -34,6 +34,21 @@ const getAppCookies = (req, res) => {
         return parsedCookies;
     } catch (err){
         res.redirect('/login')
+    }
+};
+
+const getAppCookiesProfile = (req, res) => {
+    try {
+        const rawCookies = req.headers.cookie.split('; ');
+
+        const parsedCookies = {};
+        rawCookies.forEach(rawCookie => {
+            const parsedCookie = rawCookie.split('=');
+            parsedCookies[parsedCookie[0]] = parsedCookie[1];
+        });
+        return parsedCookies;
+    } catch (err){
+        res.redirect('/profilelogin')
     }
 };
 
@@ -90,7 +105,7 @@ router.post('/p/:userid/edit/description', function (req, res) {
     }
     else {
         if (profiles[userid]) {profiles[userid].description = description}
-        else {profiles[userid] = {description:description}}
+        else {profiles[userid] = {url:userid,description:description}}
         fs.writeFileSync('./Databases/profiles.json', JSON.stringify(profiles))
         res.send(description)
     }
@@ -192,7 +207,7 @@ function generateGrade(user, userid) {
     issueJSON = JSON.parse(fs.readFileSync('./Databases/issues.json')) 
     profileJSON = JSON.parse(fs.readFileSync('./Databases/profiles.json')) 
     suggestionJSON = JSON.parse(fs.readFileSync('./Databases/suggestions.json')) 
-    for (suggestion of suggestionJSON) {if (suggestion["user"] == user.id) {grade+=0.5} }
+    for (suggestion of suggestionJSON) {if (suggestion["user"] == user.id && suggestion.verified) {grade+=0.5} }
     for (issue of issueJSON) {if (issue["user"] == user.id) {grade+=0.5} }
     bot.guilds.cache.forEach((guild) => {if (guild.member(user.id)) {
         bal = require('../../Extras/balance').user(guild, user)
@@ -223,7 +238,7 @@ function generateGuildGrade(guild, user, userid) {
     issueJSON = JSON.parse(fs.readFileSync('./Databases/issues.json')) 
     profileJSON = JSON.parse(fs.readFileSync('./Databases/profiles.json')) 
     suggestionJSON = JSON.parse(fs.readFileSync('./Databases/suggestions.json')) 
-    for (suggestion of suggestionJSON) {if (suggestion["user"] == user.id) {grade+=0.1} }
+    for (suggestion of suggestionJSON) {if (suggestion["user"] == user.id && suggestion.verified) {grade+=0.1} }
     for (issue of issueJSON) {if (issue["user"] == user.id) {grade+=0.1} }
 
     bal = require('../../Extras/balance').user(guild, user)
@@ -356,11 +371,33 @@ router.get('/p/:userid', (req, res) => {
 
 router.get('/p', (req, res) => {
     profiles = JSON.parse(fs.readFileSync('./Databases/profiles.json'))
-    try{id = getAppCookies2(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")}catch{id=undefined}
+    try{id = getAppCookiesProfile(req, res)['user'].replace("5468631284719832746189768653", "").replace("5468631284719832746189768653", "")}catch{return res.redirect('/profilelogin')}
+    allmembers = []
+    bot.guilds.cache.forEach(guild => {
+        if (guild.member(id)) {
+            guild.members.cache.forEach(member => {allmembers.push(member.id)})
+        }
+    })
+    every = sql.prepare(`SELECT * from sqlite_master where type='table'`).all()
+    allstring = ``
+    for (item of every) {allstring = allstring + item.name}
     var shuffled = bot.users.cache.array().sort(function(){return .5 - Math.random()});
-    var selected=shuffled.slice(0,50);
     randomIDS = [id]
-    for (user_ of selected) {if (!user_.bot && user_.id != id) randomIDS.push(user_.id)}
+    for (user of shuffled) {
+        if (!randomIDS.includes(user.id) && (getBadgeStringArray(checkUser(user)).length > 0 || (allstring.includes(user.id) && !user.bot && allmembers.includes(user.id) ))) {
+            balance = 0
+            balanceBank = 0
+            for (item of every) {
+                if (item.name.includes(user.id)) {
+                    try {balance += sql.prepare(`SELECT * FROM ${item["name"]} WHERE user = ?`).get(user.id).balance} catch {}
+                    try {balanceBank += sql.prepare(`SELECT * FROM ${item["name"]} WHERE user = ?`).get("bank" + user.id).balance} catch {}
+                }  
+            }
+            if (balance + balanceBank > 1 || getBadgeStringArray(checkUser(user)).length > 0) {
+                randomIDS.push(user.id)
+            } 
+        } 
+    }
     data = ``
 
     data = data + `<table width="100%" height="350px"><tr>`;counter=0
@@ -369,18 +406,6 @@ router.get('/p', (req, res) => {
         if (counter == 4) {data = data + `</tr></table><table width="100%" height="350px"><tr>`;counter=0}
         try{user = bot.users.cache.get(id_)
             userid = checkUser(encodeURIComponent(user.id))
-            fullBalance = 0
-            for (item of sql.prepare(`SELECT * from sqlite_master where type='table'`).iterate()) {
-                doit=false;
-                try{if (bot.guilds.cache.get(item["name"].replace(user.id, "").replace("balances", "")).member(user.id)) {doit=true}}catch{}
-                if (item["name"].includes(user.id) && doit==true) {
-                    try {balance = sql.prepare(`SELECT * FROM ${item["name"]} WHERE user = ?`).get(user.id).balance} catch {balance = 0}
-                    try {balanceBank = sql.prepare(`SELECT * FROM ${item["name"]} WHERE user = ?`).get("bank" + user.id).balance} catch {balanceBank = 0}
-                    fullBalance += balance;
-                    fullBalance+=balanceBank;
-                }
-            }
-            if (fullBalance>5) {
                 data+=`<td style="padding:5px;" width="${functions.int(13,30)}%"><span class="profileoption" style="float:top;cursor:pointer;height:90%;width:90%;margin-left:5%" onclick="window.open('/p/${checkUser(user.id)}', '_self')">
                 <div class="profileoptionimage" style="background-position:center;min-height:60%;background-image: url(${user.displayAvatarURL() + '?size=1024'});background-size:100%;"><br></div>
                     <center>
@@ -390,12 +415,11 @@ router.get('/p', (req, res) => {
                     </center>
                 </span>
             </span></td>`;counter++;
-            }
         } catch{}
     }
     data = data + `</tr></table>`
     
-    if (id!=undefined) {avatar=`<img class="avatar" id="output" src="https://cdn.discordapp.com/avatars/${id}/${getAppCookies2(req, res)['avatar']}.png?size=1024">`;name = decodeURIComponent(getAppCookies(req, res)['name'])} else {avatar=`<p>NoAv</p>`;name = "None"}
+    if (id!=undefined) {avatar=`<img class="avatar" id="output" src="https://cdn.discordapp.com/avatars/${id}/${getAppCookies(req, res)['avatar']}.png?size=1024">`;name = decodeURIComponent(getAppCookies(req, res)['name'])} else {avatar=`<p>NoAv</p>`;name = "None"}
     return res.render(path.join(__dirname, '../HTML/Profiles/profiles.html'), {
         name: name,
         avatar:avatar,

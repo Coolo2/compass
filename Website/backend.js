@@ -17,6 +17,7 @@ const domainall = JSON.parse(fs.readFileSync('.//Resources/website.json')).domai
 const CLIENT_ID = "732208102652379187";
 const CLIENT_SECRET = "Qj4t6sMoeE_ecXCWdcAQFoI7L2v2Qxak";
 const redirect = encodeURIComponent(address + '/dashboard');
+const redirectprofile = encodeURIComponent(address + '/saveprofile');
 
 const redirectSUPPORT = encodeURIComponent(address + '/joinsupport');
 const setup = JSON.parse(fs.readFileSync('.//Resources/setup.json'))
@@ -131,6 +132,10 @@ router.get('/login', (req, res) => {
   res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&prompt=none&redirect_uri=${redirect}`);
 });
 
+router.get('/profilelogin', (req, res) => {
+  res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&prompt=none&redirect_uri=${redirectprofile}`);
+});
+
 router.get('/loginswitch', (req, res) => {
   res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}`);
 });
@@ -160,6 +165,25 @@ router.get('/stats', function(req, res) {
     allmem:Math.round(os.totalmem()/1000)
 });
 })
+
+router.get('/saveprofile', catchAsync(async (req, res) => {
+  if (!req.query.code) {
+    res.redirect("/")
+  }
+  else {
+  const code = req.query.code;
+  const data = oauth.dataprofile(CLIENT_ID, CLIENT_SECRET, code)
+
+  params = oauth.encode(data)
+  responses = await oauth.response(params)
+  json = await responses.json()
+  userinfo = await oauth.get_user_info(json)
+  res.cookie('user', "5468631284719832746189768653" + userinfo.id + "5468631284719832746189768653", {maxAge: 31556952000})
+  res.cookie('name', userinfo.username, {maxAge: 31556952000})
+  res.cookie('avatar', userinfo.avatar, {maxAge: 31556952000})
+  res.redirect('/p')
+  }
+}));
 
 oauth = require('./oauth2/oauth')
 router.get('/dashboard', catchAsync(async (req, res) => {
@@ -223,12 +247,13 @@ router.get('/app', (req, res) => {
   li = ""
   bot.guilds.cache.forEach((guild) => {
     try {
-      if ((getAppCookies(req, res)['adminMode'] == 'on' && setup.botadmins.includes(id)) || guild.member(user.id)) {
+      if (guild.member(user.id)) {
         li = li.concat(`<div aria-label="${guild.name}" data-balloon-pos="right"><img onerror="this.src='https://i.ibb.co/Np9kNG9/noicon2.png'" class="listimg dasb" onclick="window.open('/app/${guild.id}', '_self')" id="dasb" src='${guild.iconURL()}'></div>`)
         in1 = 1
       }
     } catch {}
   })
+  if (setup.botadmins.includes(id) && getAppCookies(req, res)['adminMode'] == 'on') {li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('/admin/servers', '_self')" id="dasb" src='https://www.clker.com/cliparts/k/D/D/T/y/o/more-button-hi.png'>`)}
   li = li.concat(`<div style='padding-top:60px;'></div><img class="listimg dasb" onclick="window.open('https://discord.com/api/oauth2/authorize?client_id=732208102652379187&permissions=8&scope=bot')" id="dasb" src='https://i.ibb.co/dG0x5Ch/plus2.png'>`)
   avatar = "https://cdn.discordapp.com/avatars/" + id + "/" + getAppCookies(req, res)['avatar'] + ".png?size=1024"
     res.render(__dirname + place, {

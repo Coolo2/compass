@@ -26,7 +26,7 @@ function take (bot, message) {
         }
         const server = functions.decode(args.splice(0,1).join(" "))
         const guild = bot.guilds.cache.get(server)
-        try {guild.name} catch {return message.channel.send(functions.error("Invalid share ID"))}
+        try {guild.name} catch {return message.channel.send(functions.error("Invalid share ID", true))}
         startup(message.guild, message.author)
         startup(guild, message.author)
         try {

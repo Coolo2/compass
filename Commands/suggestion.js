@@ -7,14 +7,14 @@ const fs = require('fs')
 
 const r = require('../Resources/rs');
 
-String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
-Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().replace(new RegExp(`,`, 'g'), ``)}
+String.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; String.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
+Number.prototype.sep = function() {return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; Number.prototype.jn = function () {return this.toString().toLowerCase().replace(new RegExp(`,`, 'g'), ``).replace(new RegExp(`k`, 'g'), `000`)}
 
 function suggest(bot, message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
     if (["suggest", "suggest-command"].includes(command)) {
-        if (args.join("") == "") {return message.channel.send(functions.error(`You did not input a suggestion`))}
+        if (args.join("") == "") {return message.channel.send(functions.error(`You did not input a suggestion`, true))}
         suggestions = JSON.parse(fs.readFileSync('./Databases/suggestions.json'))
         suggestions.push({user:message.author.id, suggestion:args.join(" "), verified:false, id:suggestions.length + 2})
         fs.writeFileSync('./Databases/suggestions.json', JSON.stringify(suggestions))
@@ -30,7 +30,7 @@ function issue(bot, message) {
     const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
     if (["issue", "bug", "issue-report", "bug-report"].includes(command)) {
-        if (args.join("") == "") {return message.channel.send(functions.error(`You did not input anthing to report`))}
+        if (args.join("") == "") {return message.channel.send(functions.error(`You did not input anthing to report`, true))}
         suggestions = JSON.parse(fs.readFileSync('./Databases/issues.json'))
         suggestions.push({user:message.author.id, issue:args.join(" "), id:suggestions.length + 2})
         fs.writeFileSync('./Databases/issues.json', JSON.stringify(suggestions))
